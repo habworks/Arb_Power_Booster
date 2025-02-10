@@ -1,0 +1,89 @@
+# Added for C Language
+# Prerequisites
+*.d
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
+#Added for Eclipse - Hab may need to edit later
+#Ignore the Debug Folder and everything in it
+Firmware/Debug/*.*
+
+.metadata
+.settings/
+
+#Ignore these specific file types
+*.rar
+*.o
+*.d
+*.crf
+*.htm
+*.dep
+*.map
+*.bak
+*.axf
+*.lnp
+*.lst
+*.ini
+*.suo
+
+
+#Added for Schematic & PCB (Altium / CircuitStudio)
+History/*
+Hardware/Arb_Power_Booster/History/*
+Hardware/Arb_Power_Booster/Logs/*
+Hardware/Libs/History/*.*
+*.SchDocPreview
+Hardware/SCH/__Previews/*.*
+Hardware/PCB/__Previews/*.*
+Hardware/PCB/*.html
+
+#Added for Visual Studio WinTestApp
+WinTestApp/ES_ACI/ES_TestApp/ES_TestApp/.vs/ES_TestApp/v17/.suo
+
+
