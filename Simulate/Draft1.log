@@ -1,0 +1,23 @@
+Missing ".ends" statement in file "MMSZ5239BS.MOD"
+Circuit: * C:\IMR_Projects\IMR\Arb_Power_Booster\Simulate\Draft1.asc
+
+WARNING: Less than two connections to node NC_01.  This node is used by R1.
+Direct Newton iteration for .op point succeeded.
+
+Date: Fri Feb 07 10:46:22 2025
+Total elapsed time: 0.100 seconds.
+
+tnom = 27
+temp = 27
+method = modified trap
+totiter = 2387
+traniter = 2377
+tranpoints = 1144
+accept = 1120
+rejected = 24
+matrix size = 17
+fillins = 12
+solver = Normal
+Matrix Compiler1: 1.69 KB object code size  0.2/0.1/[0.1]
+Matrix Compiler2: off  [0.1]/0.1/0.1
+

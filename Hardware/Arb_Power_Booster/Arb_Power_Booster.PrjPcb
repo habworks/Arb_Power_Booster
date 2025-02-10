@@ -46,7 +46,7 @@ AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
 AnnotateSuffix=
 AnnotateScope=All
-AnnotateOrder=-1
+AnnotateOrder=0
 DoLibraryUpdate=1
 DoDatabaseUpdate=1
 ClassGenCCAutoEnabled=1
@@ -63,7 +63,7 @@ AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
 AnnotateSuffix=
 AnnotateScope=All
-AnnotateOrder=-1
+AnnotateOrder=1
 DoLibraryUpdate=1
 DoDatabaseUpdate=1
 ClassGenCCAutoEnabled=1
@@ -88,7 +88,7 @@ ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
-DocumentUniqueId=
+DocumentUniqueId=WTIKOPUA
 
 [Document4]
 DocumentPath=..\LIB\IMR_LIB_SCH.SchLib
@@ -105,27 +105,95 @@ ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
+DocumentUniqueId=YSFEXSOF
+
+[Document5]
+DocumentPath=..\LIB\Trinks_Schlib1.SchLib
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=MEGYPLDN
+
+[Document6]
+DocumentPath=..\LIB\Trinks_PcbLib1.PcbLib
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=ILMNXHPS
+
+[Document7]
+DocumentPath=..\PCB\ArbPwrBoost.CSPcbDoc
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=AWWYMJQT
+
+[Document8]
+DocumentPath=Arb_Power_Booster.OutJob
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
 DocumentUniqueId=
 
 [Parameter1]
-Name=ProjectTitle
-Value=Arbitrary Power Booster
+Name=ProjectDate
+Value=02/06/25
 
 [Parameter2]
-Name=ProjectTime
-Value=08:00
+Name=ProjectDocumentNumber
+Value=IMR_0005
 
 [Parameter3]
 Name=ProjectRevision
 Value=1
 
 [Parameter4]
-Name=ProjectDocumentNumber
-Value=IMR_0005
+Name=ProjectTime
+Value=08:00
 
 [Parameter5]
-Name=ProjectDate
-Value=02/06/25
+Name=ProjectTitle
+Value=Arbitrary Power Booster
 
 [Configuration1]
 Name=Default Configuration
@@ -135,7 +203,9 @@ ReleaseItemId=
 CurrentRevision=
 Variant=[No Variations]
 GenerateBOM=0
-OutputJobsCount=0
+OutputJobsCount=1
+DocumentReferenceClass1=DocumentReference
+OutputJobFileName1=Arb_Power_Booster.OutJob
 
 [OutputGroup1]
 Name=Netlist Outputs

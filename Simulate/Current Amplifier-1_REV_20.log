@@ -1,0 +1,27 @@
+Circuit: * C:\IMR_Projects\IMR\Arb_Power_Booster\Simulate\Current Amplifier-1_REV_20.asc
+
+WARNING: Node NC_09 is floating.
+
+WARNING: Less than two connections to node NC_07.  This node is used by V4.
+WARNING: Less than two connections to node NC_08.  This node is used by V5.
+WARNING: Less than two connections to node NC_09.  This node is used by V5.
+Direct Newton iteration for .op point succeeded.
+
+Date: Mon Feb 10 09:03:24 2025
+Total elapsed time: 0.586 seconds.
+
+tnom = 27
+temp = 27
+method = modified trap
+totiter = 15250
+traniter = 15228
+tranpoints = 5584
+accept = 4264
+rejected = 1320
+matrix size = 350
+fillins = 353
+solver = Normal
+Thread vector: 22.3/7.9[7] 7.3/2.3[7] 5.4/1.6[7] 1.2/2.0[1]  2592/500
+Matrix Compiler1:    2393 opcodes  8.7/[4.9]/8.8
+Matrix Compiler2: 36.74 KB object code size  3.7/6.0/[1.1]
+
