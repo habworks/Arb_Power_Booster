@@ -1,6 +1,0 @@
-Added Component: Designator=J1(Pomona_73099-2)
-Added Component: Designator=J2(Pomona_73099-0)
-Added Pin To Net: NetName=NetJ1_1 Pin=J1-1
-Added Pin To Net: NetName=NetJ1_1 Pin=J2-1
-Added Net: Name=NetJ1_1
-Added Class: Name=ArbPwrBoost_P2
