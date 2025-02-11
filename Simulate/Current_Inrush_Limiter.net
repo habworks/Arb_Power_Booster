@@ -18,6 +18,8 @@ XU4 VO- VG_B VIN- DMNH6042SPDQ
 XU5 VO- VG_B VIN- DMNH6042SPDQ
 .tran 500E-3
 * Current inrush limiter. Works with zener or resistor R1 in circuit.  \n \nWhen using Zener diode clamps the VGS so as not to exceed the max VGS of the PMOS\nWhen using R1 the VGs limit is set by voltage divider of R1 and R2\n \nIn either case the C1 and R2 work to slow the turn on of the PMOSFET\nCircuit also has the benefit of reverse voltage connection because of the PMOSFET body diode
+* OPTIONAL: You can cascade the MOSFET to reduce \nthe total power (and in rush) they have to consume
+* OPTIONAL: You can cascade the MOSFET to reduce \nthe total power (and in rush) they have to consume
 .lib DMNH6042SPDQ.MOD
 .lib DMP6050SPS.MOD
 .lib MMSZ5239BS.MOD
