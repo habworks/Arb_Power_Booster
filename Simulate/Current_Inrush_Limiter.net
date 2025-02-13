@@ -16,6 +16,15 @@ R6 VO- 0 10K
 XU3 VIN- VG_B DI_MMSZ5239BS
 XU4 VO- VG_B VIN- DMNH6042SPDQ
 XU5 VO- VG_B VIN- DMNH6042SPDQ
+XU6 N004 N002 VCC VDD VO tlv9352
+V3 VCC 0 20V
+V4 VDD 0 -20V
+R7 N001 N003 10K
+R8 N003 0 1.236K
+R9 N004 0 10K
+R10 N002 N003 1K
+R11 VO N002 2.1K
+V5 N001 0 -10
 .tran 500E-3
 * Current inrush limiter. Works with zener or resistor R1 in circuit.  \n \nWhen using Zener diode clamps the VGS so as not to exceed the max VGS of the PMOS\nWhen using R1 the VGs limit is set by voltage divider of R1 and R2\n \nIn either case the C1 and R2 work to slow the turn on of the PMOSFET\nCircuit also has the benefit of reverse voltage connection because of the PMOSFET body diode
 * OPTIONAL: You can cascade the MOSFET to reduce \nthe total power (and in rush) they have to consume
@@ -23,5 +32,6 @@ XU5 VO- VG_B VIN- DMNH6042SPDQ
 .lib DMNH6042SPDQ.MOD
 .lib DMP6050SPS.MOD
 .lib MMSZ5239BS.MOD
+.lib tlv9352.lib
 .backanno
 .end

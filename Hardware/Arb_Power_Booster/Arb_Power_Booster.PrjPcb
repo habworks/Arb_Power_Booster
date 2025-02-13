@@ -91,6 +91,23 @@ GenerateClassCluster=0
 DocumentUniqueId=QIVOWRWU
 
 [Document4]
+DocumentPath=..\SCH\ArbPwrBoost_P4.SchDoc
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=FQVAIVOU
+
+[Document5]
 DocumentPath=..\LIB\IMR_LIB_PCB.PcbLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -107,25 +124,8 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=WTIKOPUA
 
-[Document5]
-DocumentPath=..\LIB\IMR_LIB_SCH.SchLib
-AnnotationEnabled=1
-AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
-AnnotateSuffix=
-AnnotateScope=All
-AnnotateOrder=-1
-DoLibraryUpdate=1
-DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
-ClassGenCCAutoRoomEnabled=1
-ClassGenNCAutoScope=None
-DItemRevisionGUID=
-GenerateClassCluster=0
-DocumentUniqueId=YSFEXSOF
-
 [Document6]
-DocumentPath=..\LIB\Trinks_Schlib1.SchLib
+DocumentPath=..\SCH\ArbPwrBoost_P5.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -139,26 +139,9 @@ ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
-DocumentUniqueId=MEGYPLDN
+DocumentUniqueId=WEBJQGMB
 
 [Document7]
-DocumentPath=..\LIB\Trinks_PcbLib1.PcbLib
-AnnotationEnabled=1
-AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
-AnnotateSuffix=
-AnnotateScope=All
-AnnotateOrder=-1
-DoLibraryUpdate=1
-DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
-ClassGenCCAutoRoomEnabled=1
-ClassGenNCAutoScope=None
-DItemRevisionGUID=
-GenerateClassCluster=0
-DocumentUniqueId=ILMNXHPS
-
-[Document8]
 DocumentPath=..\PCB\ArbPwrBoost.CSPcbDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -175,7 +158,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=AWWYMJQT
 
-[Document9]
+[Document8]
 DocumentPath=Arb_Power_Booster.OutJob
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -192,7 +175,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
 
-[Document10]
+[Document9]
 DocumentPath=..\LIB\IMR_LIB_SCH_R2.SchLib
 AnnotationEnabled=1
 AnnotateStartValue=1
