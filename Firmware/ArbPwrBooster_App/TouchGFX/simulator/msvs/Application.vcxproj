@@ -27,6 +27,12 @@
     <ClCompile Include="..\..\gui\src\screen_splash_screen\Screen_SplashPresenter.cpp"/>
     <ClCompile Include="..\..\gui\src\screen_splash_screen\Screen_SplashView.cpp"/>
     <ClCompile Include="..\..\generated\gui_generated\src\screen_splash_screen\Screen_SplashViewBase.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_config_screen\Screen_ConfigPresenter.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_config_screen\Screen_ConfigView.cpp"/>
+    <ClCompile Include="..\..\generated\gui_generated\src\screen_config_screen\Screen_ConfigViewBase.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_set_screen\Screen_SetPresenter.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_set_screen\Screen_SetView.cpp"/>
+    <ClCompile Include="..\..\generated\gui_generated\src\screen_set_screen\Screen_SetViewBase.cpp"/>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(ApplicationRoot)\assets\texts\texts.xml"/>
@@ -183,6 +189,12 @@
     <ClInclude Include="..\..\gui\include\gui\screen_splash_screen\Screen_SplashPresenter.hpp"/>
     <ClInclude Include="..\..\gui\include\gui\screen_splash_screen\Screen_SplashView.hpp"/>
     <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\screen_splash_screen\Screen_SplashViewBase.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_config_screen\Screen_ConfigPresenter.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_config_screen\Screen_ConfigView.hpp"/>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\screen_config_screen\Screen_ConfigViewBase.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_set_screen\Screen_SetPresenter.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_set_screen\Screen_SetView.hpp"/>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\screen_set_screen\Screen_SetViewBase.hpp"/>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="$(ApplicationRoot)\generated\simulator\touchgfx.rc"/>

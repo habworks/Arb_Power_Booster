@@ -196,6 +196,30 @@
     <Filter Include="Source Files\generated\gui_generated\screen_main_screen">
       <UniqueIdentifier>432570FF-6AEC-54A7-DF5F-15E3978F0E9C</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\gui\screen_set_screen">
+      <UniqueIdentifier>8864413D-0DAF-EFD6-AC69-2B0F74BC6CC6</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\gui\screen_set_screen">
+      <UniqueIdentifier>3885498A-207C-61D1-9D12-14BFFFD1EA70</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\gui\screen_config_screen">
+      <UniqueIdentifier>0970E6E5-2394-43AF-077A-0934C9DAF9B3</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gui\screen_config_screen">
+      <UniqueIdentifier>1DEF3DF9-EAFB-D1F6-C0E5-775F2B796D03</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\generated\gui_generated\screen_set_screen">
+      <UniqueIdentifier>8C6830D1-C4A7-E345-F714-22C59B03F6AF</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\generated\gui_generated\screen_set_screen">
+      <UniqueIdentifier>69ABE9BE-BD24-4706-363B-4CE2C5C850E6</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\generated\gui_generated\screen_config_screen">
+      <UniqueIdentifier>4830D62D-2947-7A24-5CD8-5739CDEF63BF</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\generated\gui_generated\screen_config_screen">
+      <UniqueIdentifier>ACECAF18-8305-E437-D9A0-E42C9053F31E</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(TouchGFXReleasePath)\framework\source\platform\driver\touch\SDL2TouchController.cpp">
@@ -245,6 +269,24 @@
     </ClCompile>
     <ClCompile Include="..\..\generated\gui_generated\src\screen_splash_screen\Screen_SplashViewBase.cpp">
       <Filter>Source Files\generated\gui_generated\screen_splash_screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gui\src\screen_config_screen\Screen_ConfigPresenter.cpp">
+      <Filter>Source Files\gui\screen_config_screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gui\src\screen_config_screen\Screen_ConfigView.cpp">
+      <Filter>Source Files\gui\screen_config_screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\generated\gui_generated\src\screen_config_screen\Screen_ConfigViewBase.cpp">
+      <Filter>Source Files\generated\gui_generated\screen_config_screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gui\src\screen_set_screen\Screen_SetPresenter.cpp">
+      <Filter>Source Files\gui\screen_set_screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gui\src\screen_set_screen\Screen_SetView.cpp">
+      <Filter>Source Files\gui\screen_set_screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\generated\gui_generated\src\screen_set_screen\Screen_SetViewBase.cpp">
+      <Filter>Source Files\generated\gui_generated\screen_set_screen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -705,6 +747,24 @@
     </ClInclude>
     <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\screen_splash_screen\Screen_SplashViewBase.hpp">
       <Filter>Header Files\generated\gui_generated\screen_splash_screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gui\include\gui\screen_config_screen\Screen_ConfigPresenter.hpp">
+      <Filter>Header Files\gui\screen_config_screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gui\include\gui\screen_config_screen\Screen_ConfigView.hpp">
+      <Filter>Header Files\gui\screen_config_screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\screen_config_screen\Screen_ConfigViewBase.hpp">
+      <Filter>Header Files\generated\gui_generated\screen_config_screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gui\include\gui\screen_set_screen\Screen_SetPresenter.hpp">
+      <Filter>Header Files\gui\screen_set_screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gui\include\gui\screen_set_screen\Screen_SetView.hpp">
+      <Filter>Header Files\gui\screen_set_screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\screen_set_screen\Screen_SetViewBase.hpp">
+      <Filter>Header Files\generated\gui_generated\screen_set_screen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,25 @@
 
 FONT_TABLE_LOCATION_FLASH_PRAGMA
 KEEP extern const touchgfx::GlyphNode glyphs_GOTHIC_TTF_20_4bpp[] FONT_TABLE_LOCATION_FLASH_ATTRIBUTE = {
-    {     0, 0x003F,   9,  14,  14,   1,  12,   0,   0, 0x00 } // question
+    {     0, 0x0020,   0,   0,   0,   0,   6,   0,   0, 0x00 }, // space
+    {     0, 0x002E,   4,   3,   3,   1,   6,   0,   0, 0x00 }, // period
+    {     6, 0x0030,  11,  14,  14,   0,  11,   0,   0, 0x00 }, // zero
+    {    90, 0x003A,   4,  11,  11,   1,   6,   0,   0, 0x00 }, // colon
+    {   112, 0x003F,   9,  14,  14,   1,  12,   0,   0, 0x00 }, // question
+    {   182, 0x0041,  15,  14,  14,   0,  15,   0,   0, 0x00 }, // A
+    {   294, 0x0044,  13,  14,  14,   1,  15,   0,   0, 0x00 }, // D
+    {   392, 0x0049,   2,  14,  14,   1,   5,   0,   0, 0x00 }, // I
+    {   406, 0x004C,   8,  14,  14,   1,   9,   0,   0, 0x00 }, // L
+    {   462, 0x0053,   9,  14,  14,   0,  10,   0,   0, 0x00 }, // S
+    {   532, 0x0061,  12,  11,  11,   1,  14,   0,   0, 0x00 }, // a
+    {   598, 0x0062,  12,  15,  15,   1,  14,   0,   0, 0x00 }, // b
+    {   688, 0x0065,  11,  11,  11,   1,  13,   0,   0, 0x00 }, // e
+    {   754, 0x0069,   4,  15,  15,   0,   4,   0,   0, 0x00 }, // i
+    {   784, 0x006C,   2,  15,  15,   1,   4,   0,   0, 0x00 }, // l
+    {   799, 0x006D,  17,  11,  11,   1,  19,   0,   0, 0x00 }, // m
+    {   898, 0x0073,   7,  11,  11,   0,   8,   0,   0, 0x00 }, // s
+    {   942, 0x0074,   7,  15,  15,   0,   7,   0,   0, 0x00 }, // t
+    {  1002, 0x0075,  10,  11,  11,   1,  12,   0,   0, 0x00 }  // u
 };
 
 // GOTHIC_TTF_20_4bpp
@@ -22,6 +40,6 @@ touchgfx::GeneratedFont& getFont_GOTHIC_TTF_20_4bpp();
 
 touchgfx::GeneratedFont& getFont_GOTHIC_TTF_20_4bpp()
 {
-    static touchgfx::GeneratedFont GOTHIC_TTF_20_4bpp(glyphs_GOTHIC_TTF_20_4bpp, 1, 20, 20, 0, 0, 4, 1, 0, 0, unicodes_GOTHIC_TTF_20_4bpp, kerning_GOTHIC_TTF_20_4bpp, 63, 0, 0, 0);
+    static touchgfx::GeneratedFont GOTHIC_TTF_20_4bpp(glyphs_GOTHIC_TTF_20_4bpp, 19, 20, 20, 0, 0, 4, 1, 0, 0, unicodes_GOTHIC_TTF_20_4bpp, kerning_GOTHIC_TTF_20_4bpp, 63, 0, 0, 0);
     return GOTHIC_TTF_20_4bpp;
 }

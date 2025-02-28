@@ -20,6 +20,19 @@ Screen_MainViewBase::Screen_MainViewBase() :
     image_Background.setBitmap(touchgfx::Bitmap(BITMAP_DARK_THEME_IMAGES_BACKGROUNDS_480X272_WAVY_LINES_ID));
     add(image_Background);
 
+    scalableImage_Config.setBitmap(touchgfx::Bitmap(BITMAP_ICON_THEME_IMAGES_ACTION_SETTINGS_50_50_FF0000_SVG_ID));
+    scalableImage_Config.setPosition(198, 192, 84, 80);
+    scalableImage_Config.setScalingAlgorithm(touchgfx::ScalableImage::NEAREST_NEIGHBOR);
+    add(scalableImage_Config);
+
+    flexButton_Config.setBoxWithBorderPosition(0, 0, 84, 80);
+    flexButton_Config.setBorderSize(5);
+    flexButton_Config.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
+    flexButton_Config.setAlpha(0);
+    flexButton_Config.setAction(flexButtonCallback);
+    flexButton_Config.setPosition(198, 192, 84, 80);
+    add(flexButton_Config);
+
     box_CH1_Enable_1.setPosition(419, 211, 56, 56);
     box_CH1_Enable_1.setColor(touchgfx::Color::getColorFromRGB(94, 235, 19));
     add(box_CH1_Enable_1);
@@ -27,9 +40,15 @@ Screen_MainViewBase::Screen_MainViewBase() :
     flexButton_CH2_Enable.setBoxWithBorderPosition(0, 0, 66, 66);
     flexButton_CH2_Enable.setBorderSize(5);
     flexButton_CH2_Enable.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
-    flexButton_CH2_Enable.setAlpha(116);
+    flexButton_CH2_Enable.setAlpha(75);
     flexButton_CH2_Enable.setPosition(414, 206, 66, 66);
     add(flexButton_CH2_Enable);
+
+    textArea_CH2_CurrentSet.setXY(262, 165);
+    textArea_CH2_CurrentSet.setColor(touchgfx::Color::getColorFromRGB(23, 148, 194));
+    textArea_CH2_CurrentSet.setLinespacing(0);
+    textArea_CH2_CurrentSet.setTypedText(touchgfx::TypedText(T___SINGLEUSE_6SWA));
+    add(textArea_CH2_CurrentSet);
 
     textArea_CH2_Enable.setXY(433, 228);
     textArea_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
@@ -38,7 +57,7 @@ Screen_MainViewBase::Screen_MainViewBase() :
     add(textArea_CH2_Enable);
 
     textArea_CH2_Set.setXY(361, 228);
-    textArea_CH2_Set.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
+    textArea_CH2_Set.setColor(touchgfx::Color::getColorFromRGB(23, 148, 194));
     textArea_CH2_Set.setLinespacing(0);
     textArea_CH2_Set.setTypedText(touchgfx::TypedText(T___SINGLEUSE_CESP));
     add(textArea_CH2_Set);
@@ -63,25 +82,25 @@ Screen_MainViewBase::Screen_MainViewBase() :
     flexButton_CH2_InputZ.setPosition(282, 206, 66, 66);
     add(flexButton_CH2_InputZ);
 
-    textArea_CH2_UnitsMin.setXY(365, 126);
+    textArea_CH2_UnitsMin.setXY(365, 106);
     textArea_CH2_UnitsMin.setColor(touchgfx::Color::getColorFromRGB(23, 148, 194));
     textArea_CH2_UnitsMin.setLinespacing(0);
     textArea_CH2_UnitsMin.setTypedText(touchgfx::TypedText(T___SINGLEUSE_25ZC));
     add(textArea_CH2_UnitsMin);
 
-    textArea_CH2_Amin.setXY(262, 126);
+    textArea_CH2_Amin.setXY(262, 106);
     textArea_CH2_Amin.setColor(touchgfx::Color::getColorFromRGB(23, 148, 194));
     textArea_CH2_Amin.setLinespacing(0);
     textArea_CH2_Amin.setTypedText(touchgfx::TypedText(T___SINGLEUSE_LO15));
     add(textArea_CH2_Amin);
 
-    textArea_CH2_UnitsMax.setXY(365, 86);
+    textArea_CH2_UnitsMax.setXY(365, 76);
     textArea_CH2_UnitsMax.setColor(touchgfx::Color::getColorFromRGB(23, 148, 194));
     textArea_CH2_UnitsMax.setLinespacing(0);
     textArea_CH2_UnitsMax.setTypedText(touchgfx::TypedText(T___SINGLEUSE_M8BM));
     add(textArea_CH2_UnitsMax);
 
-    textArea2_CH2_Amax.setXY(262, 86);
+    textArea2_CH2_Amax.setXY(262, 76);
     textArea2_CH2_Amax.setColor(touchgfx::Color::getColorFromRGB(23, 148, 194));
     textArea2_CH2_Amax.setLinespacing(0);
     textArea2_CH2_Amax.setTypedText(touchgfx::TypedText(T___SINGLEUSE_LA7G));
@@ -105,11 +124,6 @@ Screen_MainViewBase::Screen_MainViewBase() :
     textArea_CH2.setTypedText(touchgfx::TypedText(T___SINGLEUSE_WRLI));
     add(textArea_CH2);
 
-    scalableImage1.setBitmap(touchgfx::Bitmap(BITMAP_ICON_THEME_IMAGES_ACTION_SETTINGS_50_50_FF0000_SVG_ID));
-    scalableImage1.setPosition(198, 192, 84, 80);
-    scalableImage1.setScalingAlgorithm(touchgfx::ScalableImage::NEAREST_NEIGHBOR);
-    add(scalableImage1);
-
     line1.setPosition(236, 0, 4, 192);
     line1Painter.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     line1.setPainter(line1Painter);
@@ -118,6 +132,12 @@ Screen_MainViewBase::Screen_MainViewBase() :
     line1.setLineWidth(2);
     line1.setLineEndingStyle(touchgfx::Line::ROUND_CAP_ENDING);
     add(line1);
+
+    textArea_CH1_CurrentSet.setXY(22, 165);
+    textArea_CH1_CurrentSet.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
+    textArea_CH1_CurrentSet.setLinespacing(0);
+    textArea_CH1_CurrentSet.setTypedText(touchgfx::TypedText(T___SINGLEUSE_FFBY));
+    add(textArea_CH1_CurrentSet);
 
     box_CH1_Enable.setPosition(137, 211, 56, 56);
     box_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(94, 235, 19));
@@ -146,6 +166,7 @@ Screen_MainViewBase::Screen_MainViewBase() :
     flexButton_CH1_Set.setBorderSize(5);
     flexButton_CH1_Set.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
     flexButton_CH1_Set.setAlpha(75);
+    flexButton_CH1_Set.setAction(flexButtonCallback);
     flexButton_CH1_Set.setPosition(66, 206, 66, 66);
     add(flexButton_CH1_Set);
 
@@ -163,25 +184,25 @@ Screen_MainViewBase::Screen_MainViewBase() :
     flexButton_CH1_InputZ.setPosition(0, 206, 66, 66);
     add(flexButton_CH1_InputZ);
 
-    textArea_CH1_UnitsMin.setXY(125, 126);
+    textArea_CH1_UnitsMin.setXY(125, 106);
     textArea_CH1_UnitsMin.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
     textArea_CH1_UnitsMin.setLinespacing(0);
     textArea_CH1_UnitsMin.setTypedText(touchgfx::TypedText(T___SINGLEUSE_48LN));
     add(textArea_CH1_UnitsMin);
 
-    textArea_CH1_Amin.setXY(22, 126);
+    textArea_CH1_Amin.setXY(22, 106);
     textArea_CH1_Amin.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
     textArea_CH1_Amin.setLinespacing(0);
     textArea_CH1_Amin.setTypedText(touchgfx::TypedText(T___SINGLEUSE_GQNW));
     add(textArea_CH1_Amin);
 
-    textArea_CH1_UnitsMax.setXY(125, 86);
+    textArea_CH1_UnitsMax.setXY(125, 76);
     textArea_CH1_UnitsMax.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
     textArea_CH1_UnitsMax.setLinespacing(0);
     textArea_CH1_UnitsMax.setTypedText(touchgfx::TypedText(T___SINGLEUSE_DMP0));
     add(textArea_CH1_UnitsMax);
 
-    textArea2_CH1_Amax.setXY(22, 86);
+    textArea2_CH1_Amax.setXY(23, 76);
     textArea2_CH1_Amax.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
     textArea2_CH1_Amax.setLinespacing(0);
     textArea2_CH1_Amax.setTypedText(touchgfx::TypedText(T___SINGLEUSE_UYVU));
@@ -204,13 +225,6 @@ Screen_MainViewBase::Screen_MainViewBase() :
     textArea_CH1.setLinespacing(0);
     textArea_CH1.setTypedText(touchgfx::TypedText(T___SINGLEUSE_40EO));
     add(textArea_CH1);
-
-    flexButton3.setBoxWithBorderPosition(0, 0, 84, 80);
-    flexButton3.setBorderSize(5);
-    flexButton3.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
-    flexButton3.setAlpha(0);
-    flexButton3.setPosition(198, 192, 84, 80);
-    add(flexButton3);
 }
 
 Screen_MainViewBase::~Screen_MainViewBase()
@@ -231,5 +245,19 @@ void Screen_MainViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButt
         //When flexButton_CH1_InputZ clicked change screen to Screen_Splash
         //Go to Screen_Splash with screen transition towards West
         application().gotoScreen_SplashScreenSlideTransitionWest();
+    }
+    if (&src == &flexButton_CH1_Set)
+    {
+        //Interaction2
+        //When flexButton_CH1_Set clicked change screen to Screen_Set
+        //Go to Screen_Set with screen transition towards East
+        application().gotoScreen_SetScreenSlideTransitionEast();
+    }
+    if (&src == &flexButton_Config)
+    {
+        //Interaction3
+        //When flexButton_Config clicked change screen to Screen_Config
+        //Go to Screen_Config with screen transition towards East
+        application().gotoScreen_ConfigScreenSlideTransitionEast();
     }
 }

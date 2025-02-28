@@ -18,6 +18,10 @@
 #include <gui/screen_splash_screen/Screen_SplashPresenter.hpp>
 #include <gui/screen_main_screen/Screen_MainView.hpp>
 #include <gui/screen_main_screen/Screen_MainPresenter.hpp>
+#include <gui/screen_config_screen/Screen_ConfigView.hpp>
+#include <gui/screen_config_screen/Screen_ConfigPresenter.hpp>
+#include <gui/screen_set_screen/Screen_SetView.hpp>
+#include <gui/screen_set_screen/Screen_SetPresenter.hpp>
 
 
 /**
@@ -42,7 +46,9 @@ public:
      */
     typedef touchgfx::meta::TypeList< Screen_SplashView,
             touchgfx::meta::TypeList< Screen_MainView,
-            touchgfx::meta::Nil >
+            touchgfx::meta::TypeList< Screen_ConfigView,
+            touchgfx::meta::TypeList< Screen_SetView,
+            touchgfx::meta::Nil > > >
             > GeneratedViewTypes;
 
     /**
@@ -56,7 +62,9 @@ public:
      */
     typedef touchgfx::meta::TypeList< Screen_SplashPresenter,
             touchgfx::meta::TypeList< Screen_MainPresenter,
-            touchgfx::meta::Nil >
+            touchgfx::meta::TypeList< Screen_ConfigPresenter,
+            touchgfx::meta::TypeList< Screen_SetPresenter,
+            touchgfx::meta::Nil > > >
             > GeneratedPresenterTypes;
 
     /**
@@ -70,7 +78,8 @@ public:
      */
     typedef touchgfx::meta::TypeList< touchgfx::NoTransition,
             touchgfx::meta::TypeList< SlideTransition<WEST>,
-            touchgfx::meta::Nil >
+            touchgfx::meta::TypeList< SlideTransition<EAST>,
+            touchgfx::meta::Nil > >
             > GeneratedTransitionTypes;
 
     /**

@@ -6,6 +6,45 @@
   <Texts>
     <TextGroup Id="Group1" />
     <TextGroup Id="Unsorted">
+      <Text Id="__SingleUse_C9E9" Alignment="Left" TypographyId="CenturyGothic_Units">
+        <Translation Language="GB">Disable Limit</Translation>
+      </Text>
+      <Text Id="__SingleUse_09DY" Alignment="Left" TypographyId="Iceland_Title">
+        <Translation Language="GB">Arms</Translation>
+      </Text>
+      <Text Id="__SingleUse_CVX8" Alignment="Left" TypographyId="Iceland_Title">
+        <Translation Language="GB">0</Translation>
+      </Text>
+      <Text Id="__SingleUse_ZV9R" Alignment="Left" TypographyId="Iceland_Title">
+        <Translation Language="GB">0</Translation>
+      </Text>
+      <Text Id="__SingleUse_HJDJ" Alignment="Left" TypographyId="Iceland_Title">
+        <Translation Language="GB">0</Translation>
+      </Text>
+      <Text Id="__SingleUse_VEF3" Alignment="Left" TypographyId="Iceland_Title">
+        <Translation Language="GB">.</Translation>
+      </Text>
+      <Text Id="__SingleUse_48L8" Alignment="Left" TypographyId="Iceland_Title">
+        <Translation Language="GB">0</Translation>
+      </Text>
+      <Text Id="__SingleUse_XMC2" Alignment="Left" TypographyId="Iceland_Title">
+        <Translation Language="GB">CH1</Translation>
+      </Text>
+      <Text Id="__SingleUse_D9EX" Alignment="Left" TypographyId="Iceland_Title">
+        <Translation Language="GB">Set Limits:</Translation>
+      </Text>
+      <Text Id="__SingleUse_OQH2" Alignment="Left" TypographyId="CenturyGothic_Units">
+        <Translation Language="GB">Status:</Translation>
+      </Text>
+      <Text Id="__SingleUse_ZCK5" Alignment="Left" TypographyId="Iceland_Title">
+        <Translation Language="GB">Config:</Translation>
+      </Text>
+      <Text Id="__SingleUse_6SWA" Alignment="Left" TypographyId="CenturyGothic_Units">
+        <Translation Language="GB">Iset: 0.000A</Translation>
+      </Text>
+      <Text Id="__SingleUse_FFBY" Alignment="Left" TypographyId="CenturyGothic_Units">
+        <Translation Language="GB">Iset: 0.000A</Translation>
+      </Text>
       <Text Id="__SingleUse_QXXM" Alignment="Left" TypographyId="Default">
         <Translation Language="GB">ON</Translation>
       </Text>
@@ -34,7 +73,7 @@
         <Translation Language="GB">0.000</Translation>
       </Text>
       <Text Id="__SingleUse_WRLI" Alignment="Left" TypographyId="Iceland_Title">
-        <Translation Language="GB">CH1</Translation>
+        <Translation Language="GB">CH2</Translation>
       </Text>
       <Text Id="__SingleUse_AQLO" Alignment="Center" TypographyId="Default">
         <Translation Language="GB">1MΩ</Translation>

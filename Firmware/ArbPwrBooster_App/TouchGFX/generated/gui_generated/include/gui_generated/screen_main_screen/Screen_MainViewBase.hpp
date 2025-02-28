@@ -9,9 +9,9 @@
 #include <gui/screen_main_screen/Screen_MainPresenter.hpp>
 #include <touchgfx/widgets/Box.hpp>
 #include <touchgfx/widgets/Image.hpp>
+#include <touchgfx/widgets/ScalableImage.hpp>
 #include <touchgfx/containers/buttons/Buttons.hpp>
 #include <touchgfx/widgets/TextArea.hpp>
-#include <touchgfx/widgets/ScalableImage.hpp>
 #include <touchgfx/widgets/canvas/Line.hpp>
 #include <touchgfx/widgets/canvas/PainterRGB565.hpp>
 
@@ -32,8 +32,11 @@ protected:
      */
     touchgfx::Box __background;
     touchgfx::Image image_Background;
+    touchgfx::ScalableImage scalableImage_Config;
+    touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_Config;
     touchgfx::Box box_CH1_Enable_1;
     touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_CH2_Enable;
+    touchgfx::TextArea textArea_CH2_CurrentSet;
     touchgfx::TextArea textArea_CH2_Enable;
     touchgfx::TextArea textArea_CH2_Set;
     touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_CH2_Set;
@@ -46,9 +49,9 @@ protected:
     touchgfx::TextArea textArea_CH2_UnitsRMS;
     touchgfx::TextArea textArea_CH2_Arms;
     touchgfx::TextArea textArea_CH2;
-    touchgfx::ScalableImage scalableImage1;
     touchgfx::Line line1;
     touchgfx::PainterRGB565 line1Painter;
+    touchgfx::TextArea textArea_CH1_CurrentSet;
     touchgfx::Box box_CH1_Enable;
     touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_CH1_Enable;
     touchgfx::TextArea textArea_CH1_Enable;
@@ -63,7 +66,6 @@ protected:
     touchgfx::TextArea textArea_CH1_UnitsRMS;
     touchgfx::TextArea textArea_CH1_Arms;
     touchgfx::TextArea textArea_CH1;
-    touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton3;
 
 private:
 

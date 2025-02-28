@@ -27,7 +27,7 @@
             "Name": "textArea_SplashTitle",
             "X": 14,
             "Width": 452,
-            "Height": 61,
+            "Height": 73,
             "TextId": "__SingleUse_E56X",
             "TextRotation": "0",
             "Color": {
@@ -80,6 +80,54 @@
             "RelativeFilename": "__generated\\dark_theme_images_backgrounds_480x272_wavy_lines.png"
           },
           {
+            "Type": "ScalableImage",
+            "Name": "scalableImage_Config",
+            "X": 198,
+            "Y": 192,
+            "Width": 84,
+            "Height": 80,
+            "Filename": "__generated\\icon_theme_images_action_settings_50_50_FF0000.svg.png",
+            "ScalingAlgorithm": "Nearest-neighbor"
+          },
+          {
+            "Type": "FlexButton",
+            "Name": "flexButton_Config",
+            "X": 198,
+            "Y": 192,
+            "Width": 84,
+            "Height": 80,
+            "Alpha": 0,
+            "ButtonTrigger": {
+              "Type": "ClickButtonTrigger"
+            },
+            "ButtonStyles": [
+              {
+                "Type": "BoxWithBorderButtonStyle",
+                "Width": 84,
+                "Height": 80,
+                "LockToFlexButtonSize": true,
+                "BorderSize": 5,
+                "ColorReleased": {
+                  "Green": 102,
+                  "Blue": 153
+                },
+                "ColorPressed": {
+                  "Green": 153,
+                  "Blue": 204
+                },
+                "ColorBorderReleased": {
+                  "Green": 51,
+                  "Blue": 102
+                },
+                "ColorBorderPressed": {
+                  "Red": 51,
+                  "Green": 102,
+                  "Blue": 153
+                }
+              }
+            ]
+          },
+          {
             "Type": "Box",
             "Name": "box_CH1_Enable_1",
             "X": 419,
@@ -99,7 +147,7 @@
             "Y": 206,
             "Width": 66,
             "Height": 66,
-            "Alpha": 116,
+            "Alpha": 75,
             "ButtonTrigger": {
               "Type": "ClickButtonTrigger"
             },
@@ -132,6 +180,22 @@
           },
           {
             "Type": "TextArea",
+            "Name": "textArea_CH2_CurrentSet",
+            "X": 262,
+            "Y": 165,
+            "Width": 110,
+            "Height": 20,
+            "TextId": "__SingleUse_6SWA",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 23,
+              "Green": 148,
+              "Blue": 194
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
             "Name": "textArea_CH2_Enable",
             "X": 433,
             "Y": 228,
@@ -156,9 +220,9 @@
             "TextId": "__SingleUse_CESP",
             "TextRotation": "0",
             "Color": {
-              "Red": 212,
-              "Green": 199,
-              "Blue": 25
+              "Red": 23,
+              "Green": 148,
+              "Blue": 194
             },
             "AutoSize": true
           },
@@ -258,7 +322,7 @@
             "Type": "TextArea",
             "Name": "textArea_CH2_UnitsMin",
             "X": 365,
-            "Y": 126,
+            "Y": 106,
             "Width": 81,
             "Height": 40,
             "TextId": "__SingleUse_25ZC",
@@ -274,7 +338,7 @@
             "Type": "TextArea",
             "Name": "textArea_CH2_Amin",
             "X": 262,
-            "Y": 126,
+            "Y": 106,
             "Width": 94,
             "Height": 40,
             "TextId": "__SingleUse_LO15",
@@ -290,7 +354,7 @@
             "Type": "TextArea",
             "Name": "textArea_CH2_UnitsMax",
             "X": 365,
-            "Y": 86,
+            "Y": 76,
             "Width": 88,
             "Height": 40,
             "TextId": "__SingleUse_M8BM",
@@ -306,7 +370,7 @@
             "Type": "TextArea",
             "Name": "textArea2_CH2_Amax",
             "X": 262,
-            "Y": 86,
+            "Y": 76,
             "Width": 94,
             "Height": 40,
             "TextId": "__SingleUse_LA7G",
@@ -356,7 +420,7 @@
             "X": 247,
             "Y": -12,
             "Width": 101,
-            "Height": 61,
+            "Height": 73,
             "TextId": "__SingleUse_WRLI",
             "TextRotation": "0",
             "Color": {
@@ -365,16 +429,6 @@
               "Blue": 194
             },
             "AutoSize": true
-          },
-          {
-            "Type": "ScalableImage",
-            "Name": "scalableImage1",
-            "X": 198,
-            "Y": 192,
-            "Width": 84,
-            "Height": 80,
-            "Filename": "__generated\\icon_theme_images_action_settings_50_50_FF0000.svg.png",
-            "ScalingAlgorithm": "Nearest-neighbor"
           },
           {
             "Type": "Line",
@@ -392,6 +446,22 @@
             "EndY": 192.0,
             "LineWidth": 2.0,
             "LineEndingStyle": "Round"
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_CH1_CurrentSet",
+            "X": 22,
+            "Y": 165,
+            "Width": 110,
+            "Height": 20,
+            "TextId": "__SingleUse_FFBY",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 199,
+              "Blue": 25
+            },
+            "AutoSize": true
           },
           {
             "Type": "Box",
@@ -571,7 +641,7 @@
             "Type": "TextArea",
             "Name": "textArea_CH1_UnitsMin",
             "X": 125,
-            "Y": 126,
+            "Y": 106,
             "Width": 81,
             "Height": 40,
             "TextId": "__SingleUse_48LN",
@@ -587,7 +657,7 @@
             "Type": "TextArea",
             "Name": "textArea_CH1_Amin",
             "X": 22,
-            "Y": 126,
+            "Y": 106,
             "Width": 94,
             "Height": 40,
             "TextId": "__SingleUse_GQNW",
@@ -603,7 +673,7 @@
             "Type": "TextArea",
             "Name": "textArea_CH1_UnitsMax",
             "X": 125,
-            "Y": 86,
+            "Y": 76,
             "Width": 88,
             "Height": 40,
             "TextId": "__SingleUse_DMP0",
@@ -618,8 +688,8 @@
           {
             "Type": "TextArea",
             "Name": "textArea2_CH1_Amax",
-            "X": 22,
-            "Y": 86,
+            "X": 23,
+            "Y": 76,
             "Width": 94,
             "Height": 40,
             "TextId": "__SingleUse_UYVU",
@@ -669,8 +739,179 @@
             "X": 7,
             "Y": -12,
             "Width": 101,
-            "Height": 61,
+            "Height": 73,
             "TextId": "__SingleUse_40EO",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 199,
+              "Blue": 25
+            },
+            "AutoSize": true
+          }
+        ],
+        "Interactions": [
+          {
+            "InteractionName": "Interaction1",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "flexButton_CH1_InputZ"
+            },
+            "Action": {
+              "Type": "ActionGotoScreen",
+              "ScreenTransitionType": "ScreenTransitionSlide",
+              "ScreenTransitionDirection": "West",
+              "ActionComponent": "Screen_Splash"
+            }
+          },
+          {
+            "InteractionName": "Interaction2",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "flexButton_CH1_Set"
+            },
+            "Action": {
+              "Type": "ActionGotoScreen",
+              "ScreenTransitionType": "ScreenTransitionSlide",
+              "ScreenTransitionDirection": "East",
+              "ActionComponent": "Screen_Set"
+            }
+          },
+          {
+            "InteractionName": "Interaction3",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "flexButton_Config"
+            },
+            "Action": {
+              "Type": "ActionGotoScreen",
+              "ScreenTransitionType": "ScreenTransitionSlide",
+              "ScreenTransitionDirection": "East",
+              "ActionComponent": "Screen_Config"
+            }
+          }
+        ]
+      },
+      {
+        "Name": "Screen_Config",
+        "Components": [
+          {
+            "Type": "Image",
+            "Name": "image1",
+            "Width": 480,
+            "Height": 272,
+            "RelativeFilename": "__generated\\dark_theme_images_backgrounds_480x272_wavy_lines.png"
+          },
+          {
+            "Type": "FlexButton",
+            "Name": "flexButton_Home",
+            "X": 406,
+            "Y": 202,
+            "Width": 60,
+            "Height": 60,
+            "ButtonTrigger": {
+              "Type": "ClickButtonTrigger"
+            },
+            "ButtonStyles": [
+              {
+                "Type": "IconButtonStyle",
+                "X": 6,
+                "Y": 5,
+                "IconReleased": "__generated\\icon_theme_images_action_home_50_50_E8F6FB.svg.png",
+                "IconPressed": "__generated\\icon_theme_images_action_done_50_50_E8F6FB.svg.png"
+              },
+              {
+                "Type": "BoxWithBorderButtonStyle",
+                "Width": 60,
+                "Height": 60,
+                "LockToFlexButtonSize": true,
+                "BorderSize": 5,
+                "ColorReleased": {
+                  "Green": 102,
+                  "Blue": 153
+                },
+                "ColorPressed": {
+                  "Green": 153,
+                  "Blue": 204
+                },
+                "ColorBorderReleased": {
+                  "Green": 51,
+                  "Blue": 102
+                },
+                "ColorBorderPressed": {
+                  "Red": 51,
+                  "Green": 102,
+                  "Blue": 153
+                }
+              }
+            ]
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_TitleConfig",
+            "X": 7,
+            "Width": 171,
+            "Height": 73,
+            "TextId": "__SingleUse_ZCK5",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 171,
+              "Green": 20,
+              "Blue": 25
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_Status",
+            "X": 35,
+            "Y": 89,
+            "Width": 64,
+            "Height": 20,
+            "TextId": "__SingleUse_OQH2",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          }
+        ],
+        "Interactions": [
+          {
+            "InteractionName": "Interaction1",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "flexButton_Home"
+            },
+            "Action": {
+              "Type": "ActionGotoScreen",
+              "ScreenTransitionType": "ScreenTransitionSlide",
+              "ScreenTransitionDirection": "West",
+              "ActionComponent": "Screen_Main"
+            }
+          }
+        ]
+      },
+      {
+        "Name": "Screen_Set",
+        "Components": [
+          {
+            "Type": "Image",
+            "Name": "image1",
+            "Width": 480,
+            "Height": 272,
+            "RelativeFilename": "__generated\\dark_theme_images_backgrounds_480x272_wavy_lines.png"
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_CH_ToSet_1_2_2_1_1",
+            "X": 52,
+            "Y": 222,
+            "Width": 121,
+            "Height": 20,
+            "TextId": "__SingleUse_C9E9",
             "TextRotation": "0",
             "Color": {
               "Red": 212,
@@ -680,21 +921,257 @@
             "AutoSize": true
           },
           {
+            "Type": "TextArea",
+            "Name": "textArea_CH_ToSet_1_2",
+            "X": 189,
+            "Y": 75,
+            "Width": 31,
+            "Height": 73,
+            "TextId": "__SingleUse_HJDJ",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 199,
+              "Blue": 25
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_CH_ToSet_1_2_2",
+            "X": 220,
+            "Y": 75,
+            "Width": 31,
+            "Height": 73,
+            "TextId": "__SingleUse_CVX8",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 199,
+              "Blue": 25
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_CH_ToSet_1_2_2_1",
+            "X": 262,
+            "Y": 75,
+            "Width": 126,
+            "Height": 73,
+            "TextId": "__SingleUse_09DY",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 199,
+              "Blue": 25
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_CH_ToSet_1_2_1",
+            "X": 158,
+            "Y": 75,
+            "Width": 31,
+            "Height": 73,
+            "TextId": "__SingleUse_ZV9R",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 199,
+              "Blue": 25
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_CH_ToSet_1_1",
+            "X": 143,
+            "Y": 75,
+            "Width": 15,
+            "Height": 73,
+            "TextId": "__SingleUse_VEF3",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 199,
+              "Blue": 25
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_CH_ToSet_1",
+            "X": 112,
+            "Y": 75,
+            "Width": 31,
+            "Height": 73,
+            "TextId": "__SingleUse_48L8",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 199,
+              "Blue": 25
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_CH_ToSet",
+            "X": 7,
+            "Y": 40,
+            "Width": 101,
+            "Height": 73,
+            "TextId": "__SingleUse_XMC2",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 199,
+              "Blue": 25
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_TitleSet",
+            "X": 8,
+            "Y": -16,
+            "Width": 243,
+            "Height": 73,
+            "TextId": "__SingleUse_D9EX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 171,
+              "Green": 20,
+              "Blue": 25
+            },
+            "AutoSize": true
+          },
+          {
             "Type": "FlexButton",
-            "Name": "flexButton3",
-            "X": 198,
-            "Y": 192,
-            "Width": 84,
-            "Height": 80,
-            "Alpha": 0,
+            "Name": "flexButton1",
+            "X": 406,
+            "Y": 128,
+            "Width": 60,
+            "Height": 60,
             "ButtonTrigger": {
               "Type": "ClickButtonTrigger"
             },
             "ButtonStyles": [
               {
+                "Type": "IconButtonStyle",
+                "X": -9,
+                "Y": -8,
+                "IconReleased": "__generated\\icon_theme_images_navigation_arrow_drop_down_80_80_E8F6FB.svg.png",
+                "IconPressed": "__generated\\icon_theme_images_navigation_arrow_drop_down_80_80_E8F6FB.svg.png"
+              },
+              {
                 "Type": "BoxWithBorderButtonStyle",
-                "Width": 84,
-                "Height": 80,
+                "Width": 60,
+                "Height": 60,
+                "LockToFlexButtonSize": true,
+                "BorderSize": 5,
+                "ColorReleased": {
+                  "Green": 102,
+                  "Blue": 153
+                },
+                "ColorPressed": {
+                  "Green": 153,
+                  "Blue": 204
+                },
+                "ColorBorderReleased": {
+                  "Green": 51,
+                  "Blue": 102
+                },
+                "ColorBorderPressed": {
+                  "Red": 51,
+                  "Green": 102,
+                  "Blue": 153
+                }
+              }
+            ]
+          },
+          {
+            "Type": "FlexButton",
+            "Name": "flexButton1_1",
+            "X": 406,
+            "Y": 58,
+            "Width": 60,
+            "Height": 60,
+            "ButtonTrigger": {
+              "Type": "ClickButtonTrigger"
+            },
+            "ButtonStyles": [
+              {
+                "Type": "IconButtonStyle",
+                "X": -8,
+                "Y": -8,
+                "IconReleased": "__generated\\icon_theme_images_navigation_arrow_drop_up_80_80_E8F6FB.svg.png",
+                "IconPressed": "__generated\\icon_theme_images_navigation_arrow_drop_up_80_80_E8F6FB.svg.png"
+              },
+              {
+                "Type": "BoxWithBorderButtonStyle",
+                "Width": 60,
+                "Height": 60,
+                "LockToFlexButtonSize": true,
+                "BorderSize": 5,
+                "ColorReleased": {
+                  "Green": 102,
+                  "Blue": 153
+                },
+                "ColorPressed": {
+                  "Green": 153,
+                  "Blue": 204
+                },
+                "ColorBorderReleased": {
+                  "Green": 51,
+                  "Blue": 102
+                },
+                "ColorBorderPressed": {
+                  "Red": 51,
+                  "Green": 102,
+                  "Blue": 153
+                }
+              }
+            ]
+          },
+          {
+            "Type": "RadioButton",
+            "Name": "radioButton1",
+            "X": 7,
+            "Y": 214,
+            "Width": 36,
+            "Height": 36,
+            "FileNameSelected": "__generated\\alternate_theme_images_widgets_radiobutton_radio_medium_rounded_on_dark.png",
+            "FileNameSelectedPressed": "__generated\\alternate_theme_images_widgets_radiobutton_radio_medium_rounded_on_pressed.png",
+            "FileNameUnselected": "__generated\\alternate_theme_images_widgets_radiobutton_radio_medium_rounded_off.png",
+            "FileNameUnselectedPressed": "__generated\\alternate_theme_images_widgets_radiobutton_radio_medium_rounded_off_pressed.png",
+            "RadioButtonGroup": "radioButtonGroup1",
+            "Preset": "alternate_theme\\presets\\radiobutton\\radio\\medium_dark_rounded.json"
+          },
+          {
+            "Type": "FlexButton",
+            "Name": "flexButton_Home",
+            "X": 406,
+            "Y": 202,
+            "Width": 60,
+            "Height": 60,
+            "ButtonTrigger": {
+              "Type": "ClickButtonTrigger"
+            },
+            "ButtonStyles": [
+              {
+                "Type": "IconButtonStyle",
+                "X": 6,
+                "Y": 5,
+                "IconReleased": "__generated\\icon_theme_images_action_home_50_50_E8F6FB.svg.png",
+                "IconPressed": "__generated\\icon_theme_images_action_done_50_50_E8F6FB.svg.png"
+              },
+              {
+                "Type": "BoxWithBorderButtonStyle",
+                "Width": 60,
+                "Height": 60,
                 "LockToFlexButtonSize": true,
                 "BorderSize": 5,
                 "ColorReleased": {
@@ -723,13 +1200,13 @@
             "InteractionName": "Interaction1",
             "Trigger": {
               "Type": "TriggerClicked",
-              "TriggerComponent": "flexButton_CH1_InputZ"
+              "TriggerComponent": "flexButton_Home"
             },
             "Action": {
               "Type": "ActionGotoScreen",
               "ScreenTransitionType": "ScreenTransitionSlide",
               "ScreenTransitionDirection": "West",
-              "ActionComponent": "Screen_Splash"
+              "ActionComponent": "Screen_Main"
             }
           }
         ]
