@@ -31,10 +31,41 @@ extern"C" {
 #endif
 
 // DEFINES
-#define MAJOR_REV           0U
-#define MINOR_REV           0U
-#define TEST_REV            1U
+// Revisions
+#define FW_MAJOR_REV            0U
+#define FW_MINOR_REV            0U
+#define FW_TEST_REV             1U
+#define HW_REVISION             2U
 
+
+// TYPEDEFS AND ENUMS
+typedef enum
+{
+    SPLASH_SCREEN = 0,
+    MAIN_SCREEN,
+    CONFIG_SCREEN,
+    SET_SCREEN
+}Type_ScreenType;
+
+typedef enum
+{
+    CHANNEL_1 = 0,
+    CHANNEL_2
+}Type_Channel;
+
+typedef struct
+{
+    Type_ScreenType     Screen;
+    Type_Channel        ActiveChannel;
+}Type_ArbPwrBoosterStatus;
+
+
+// EXTERNS
+extern Type_ArbPwrBoosterStatus ArbPwrBoosterStatus;
+
+
+// FUNCTION PROTOTYES
+void Init_ArbPwrBooster(void);
 
 #ifdef __cplusplus
 }

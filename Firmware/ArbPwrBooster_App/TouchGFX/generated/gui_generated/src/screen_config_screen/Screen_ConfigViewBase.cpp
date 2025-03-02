@@ -127,3 +127,11 @@ void Screen_ConfigViewBase::flexButtonCallbackHandler(const touchgfx::AbstractBu
         application().gotoScreen_MainScreenSlideTransitionWest();
     }
 }
+
+void Screen_ConfigViewBase::afterTransition()
+{
+    //Interaction2
+    //When screen transition ends call virtual function
+    //Call update_Screen_Config
+    update_Screen_Config();
+}

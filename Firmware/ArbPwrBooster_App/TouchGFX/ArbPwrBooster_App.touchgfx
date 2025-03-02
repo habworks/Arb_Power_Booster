@@ -1125,6 +1125,16 @@
               "ScreenTransitionDirection": "West",
               "ActionComponent": "Screen_Main"
             }
+          },
+          {
+            "InteractionName": "Interaction2",
+            "Trigger": {
+              "Type": "TriggerScreenEntered"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "update_Screen_Config"
+            }
           }
         ]
       },

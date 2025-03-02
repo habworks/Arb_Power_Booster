@@ -19,6 +19,15 @@ public:
     Screen_ConfigViewBase();
     virtual ~Screen_ConfigViewBase();
     virtual void setupScreen();
+    virtual void afterTransition();
+
+    /*
+     * Virtual Action Handlers
+     */
+    virtual void update_Screen_Config()
+    {
+        // Override and implement this function in Screen_Config
+    }
 
 protected:
     FrontendApplication& application() {
