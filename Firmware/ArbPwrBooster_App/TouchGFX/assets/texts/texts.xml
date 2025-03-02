@@ -6,14 +6,50 @@
   <Texts>
     <TextGroup Id="Group1" />
     <TextGroup Id="Unsorted">
+      <Text Id="__SingleUse_IVPW" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">1</Translation>
+      </Text>
+      <Text Id="__SingleUse_D9IY" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">0.0.0</Translation>
+      </Text>
+      <Text Id="__SingleUse_L9UN" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">-19.8</Translation>
+      </Text>
+      <Text Id="__SingleUse_QLV6" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">20.2</Translation>
+      </Text>
+      <Text Id="__SingleUse_UN4D" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">0.000</Translation>
+      </Text>
+      <Text Id="__SingleUse_NVNE" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">0.000</Translation>
+      </Text>
+      <Text Id="__SingleUse_BOXU" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">0.000</Translation>
+      </Text>
+      <Text Id="__SingleUse_1XNY" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">0.000</Translation>
+      </Text>
+      <Text Id="__SingleUse_PSVZ" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">0.000</Translation>
+      </Text>
+      <Text Id="__SingleUse_L0RM" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">0.000</Translation>
+      </Text>
+      <Text Id="__SingleUse_H7TK" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">0.000</Translation>
+      </Text>
+      <Text Id="__SingleUse_1L1K" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">0.000</Translation>
+      </Text>
       <Text Id="__SingleUse_3AEP" Alignment="Left" TypographyId="CenturyGothic_Units">
         <Translation Language="GB">www.IMREngineering.com</Translation>
       </Text>
       <Text Id="__SingleUse_VZF1" Alignment="Left" TypographyId="CenturyGothic_Units">
-        <Translation Language="GB">HW REV: 1</Translation>
+        <Translation Language="GB">HW REV: &lt;value&gt;</Translation>
       </Text>
       <Text Id="__SingleUse_NZKS" Alignment="Left" TypographyId="CenturyGothic_Units">
-        <Translation Language="GB">FW REV: 0.0.0</Translation>
+        <Translation Language="GB">FW REV: &lt;value&gt;</Translation>
       </Text>
       <Text Id="__SingleUse_Y3W6" Alignment="Left" TypographyId="CenturyGothic_Units">
         <Translation Language="GB">OK</Translation>
@@ -22,10 +58,10 @@
         <Translation Language="GB">Reset Min Max</Translation>
       </Text>
       <Text Id="__SingleUse_M7GL" Alignment="Left" TypographyId="CenturyGothic_Units">
-        <Translation Language="GB">-19.8V</Translation>
+        <Translation Language="GB">&lt;value&gt;V</Translation>
       </Text>
       <Text Id="__SingleUse_7GWE" Alignment="Left" TypographyId="CenturyGothic_Units">
-        <Translation Language="GB">20.2V</Translation>
+        <Translation Language="GB">&lt;value&gt;V</Translation>
       </Text>
       <Text Id="__SingleUse_GKDW" Alignment="Left" TypographyId="CenturyGothic_Units">
         <Translation Language="GB">Positive Supply: </Translation>
@@ -67,10 +103,10 @@
         <Translation Language="GB">Config:</Translation>
       </Text>
       <Text Id="__SingleUse_6SWA" Alignment="Left" TypographyId="CenturyGothic_Units">
-        <Translation Language="GB">Iset: 0.000A</Translation>
+        <Translation Language="GB">Iset: &lt;value&gt;A</Translation>
       </Text>
       <Text Id="__SingleUse_FFBY" Alignment="Left" TypographyId="CenturyGothic_Units">
-        <Translation Language="GB">Iset: 0.000A</Translation>
+        <Translation Language="GB">Iset: &lt;value&gt;A</Translation>
       </Text>
       <Text Id="__SingleUse_QXXM" Alignment="Left" TypographyId="Default">
         <Translation Language="GB">ON</Translation>
@@ -85,19 +121,19 @@
         <Translation Language="GB">Amin</Translation>
       </Text>
       <Text Id="__SingleUse_LO15" Alignment="Left" TypographyId="Iceland_Numeric">
-        <Translation Language="GB">0.000</Translation>
+        <Translation Language="GB">&lt;value&gt;</Translation>
       </Text>
       <Text Id="__SingleUse_M8BM" Alignment="Left" TypographyId="Iceland_Numeric">
         <Translation Language="GB">Amax</Translation>
       </Text>
       <Text Id="__SingleUse_LA7G" Alignment="Left" TypographyId="Iceland_Numeric">
-        <Translation Language="GB">0.000</Translation>
+        <Translation Language="GB">&lt;value&gt;</Translation>
       </Text>
       <Text Id="__SingleUse_XNQ5" Alignment="Left" TypographyId="Iceland_Numeric">
         <Translation Language="GB">Arms</Translation>
       </Text>
       <Text Id="__SingleUse_ZPA4" Alignment="Left" TypographyId="Iceland_Numeric">
-        <Translation Language="GB">0.000</Translation>
+        <Translation Language="GB">&lt;value&gt;</Translation>
       </Text>
       <Text Id="__SingleUse_WRLI" Alignment="Left" TypographyId="Iceland_Title">
         <Translation Language="GB">CH2</Translation>
@@ -121,13 +157,13 @@
         <Translation Language="GB">Amax</Translation>
       </Text>
       <Text Id="__SingleUse_GQNW" Alignment="Left" TypographyId="Iceland_Numeric">
-        <Translation Language="GB">0.000</Translation>
+        <Translation Language="GB">&lt;value&gt;</Translation>
       </Text>
       <Text Id="__SingleUse_UYVU" Alignment="Left" TypographyId="Iceland_Numeric">
-        <Translation Language="GB">0.000</Translation>
+        <Translation Language="GB">&lt;value&gt;</Translation>
       </Text>
       <Text Id="__SingleUse_J7OA" Alignment="Left" TypographyId="Iceland_Numeric">
-        <Translation Language="GB">0.000</Translation>
+        <Translation Language="GB">&lt;value&gt;</Translation>
       </Text>
       <Text Id="__SingleUse_40EO" Alignment="Left" TypographyId="Iceland_Title">
         <Translation Language="GB">CH1</Translation>
@@ -143,6 +179,6 @@
     <Typography Id="Small" Font="verdana.ttf" Size="10" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" />
     <Typography Id="Iceland_Title" Font="Iceland-Regular.ttf" Size="60" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" />
     <Typography Id="Iceland_Numeric" Font="Iceland-Regular.ttf" Size="40" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacters="." WildcardCharacterRanges="0-9" />
-    <Typography Id="CenturyGothic_Units" Font="GOTHIC.TTF" Size="20" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" />
+    <Typography Id="CenturyGothic_Units" Font="GOTHIC.TTF" Size="20" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacters=".,-" WildcardCharacterRanges="0-9,A-Z" />
   </Typographies>
 </TextDatabase>

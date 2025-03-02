@@ -55,6 +55,9 @@ Screen_ConfigViewBase::Screen_ConfigViewBase() :
     textArea_NegSupplyMonitor.setXY(190, 108);
     textArea_NegSupplyMonitor.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     textArea_NegSupplyMonitor.setLinespacing(0);
+    Unicode::snprintf(textArea_NegSupplyMonitorBuffer, TEXTAREA_NEGSUPPLYMONITOR_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_L9UN).getText());
+    textArea_NegSupplyMonitor.setWildcard(textArea_NegSupplyMonitorBuffer);
+    textArea_NegSupplyMonitor.resizeToCurrentText();
     textArea_NegSupplyMonitor.setTypedText(touchgfx::TypedText(T___SINGLEUSE_M7GL));
     add(textArea_NegSupplyMonitor);
 
@@ -67,6 +70,9 @@ Screen_ConfigViewBase::Screen_ConfigViewBase() :
     textArea_PosSupplyMonitor.setXY(190, 84);
     textArea_PosSupplyMonitor.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     textArea_PosSupplyMonitor.setLinespacing(0);
+    Unicode::snprintf(textArea_PosSupplyMonitorBuffer, TEXTAREA_POSSUPPLYMONITOR_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_QLV6).getText());
+    textArea_PosSupplyMonitor.setWildcard(textArea_PosSupplyMonitorBuffer);
+    textArea_PosSupplyMonitor.resizeToCurrentText();
     textArea_PosSupplyMonitor.setTypedText(touchgfx::TypedText(T___SINGLEUSE_7GWE));
     add(textArea_PosSupplyMonitor);
 
@@ -79,12 +85,18 @@ Screen_ConfigViewBase::Screen_ConfigViewBase() :
     textArea_FW_Rev.setXY(320, 24);
     textArea_FW_Rev.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     textArea_FW_Rev.setLinespacing(0);
+    Unicode::snprintf(textArea_FW_RevBuffer, TEXTAREA_FW_REV_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_D9IY).getText());
+    textArea_FW_Rev.setWildcard(textArea_FW_RevBuffer);
+    textArea_FW_Rev.resizeToCurrentText();
     textArea_FW_Rev.setTypedText(touchgfx::TypedText(T___SINGLEUSE_NZKS));
     add(textArea_FW_Rev);
 
     textArea_HW_Rev.setXY(320, 49);
     textArea_HW_Rev.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     textArea_HW_Rev.setLinespacing(0);
+    Unicode::snprintf(textArea_HW_RevBuffer, TEXTAREA_HW_REV_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_IVPW).getText());
+    textArea_HW_Rev.setWildcard(textArea_HW_RevBuffer);
+    textArea_HW_Rev.resizeToCurrentText();
     textArea_HW_Rev.setTypedText(touchgfx::TypedText(T___SINGLEUSE_VZF1));
     add(textArea_HW_Rev);
 

@@ -11,6 +11,7 @@
 #include <touchgfx/widgets/Image.hpp>
 #include <touchgfx/containers/buttons/Buttons.hpp>
 #include <touchgfx/widgets/TextArea.hpp>
+#include <touchgfx/widgets/TextAreaWithWildcard.hpp>
 
 class Screen_ConfigViewBase : public touchgfx::View<Screen_ConfigPresenter>
 {
@@ -34,13 +35,25 @@ protected:
     touchgfx::IconButtonStyle< touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  >  flexButton_Home;
     touchgfx::TextArea textArea_StatusText;
     touchgfx::TextArea textArea_Status;
-    touchgfx::TextArea textArea_NegSupplyMonitor;
+    touchgfx::TextAreaWithOneWildcard textArea_NegSupplyMonitor;
     touchgfx::TextArea textArea_NegSupply;
-    touchgfx::TextArea textArea_PosSupplyMonitor;
+    touchgfx::TextAreaWithOneWildcard textArea_PosSupplyMonitor;
     touchgfx::TextArea textArea_PosSupply;
-    touchgfx::TextArea textArea_FW_Rev;
-    touchgfx::TextArea textArea_HW_Rev;
+    touchgfx::TextAreaWithOneWildcard textArea_FW_Rev;
+    touchgfx::TextAreaWithOneWildcard textArea_HW_Rev;
     touchgfx::TextArea textArea_TitleConfig;
+
+    /*
+     * Wildcard Buffers
+     */
+    static const uint16_t TEXTAREA_NEGSUPPLYMONITOR_SIZE = 10;
+    touchgfx::Unicode::UnicodeChar textArea_NegSupplyMonitorBuffer[TEXTAREA_NEGSUPPLYMONITOR_SIZE];
+    static const uint16_t TEXTAREA_POSSUPPLYMONITOR_SIZE = 10;
+    touchgfx::Unicode::UnicodeChar textArea_PosSupplyMonitorBuffer[TEXTAREA_POSSUPPLYMONITOR_SIZE];
+    static const uint16_t TEXTAREA_FW_REV_SIZE = 8;
+    touchgfx::Unicode::UnicodeChar textArea_FW_RevBuffer[TEXTAREA_FW_REV_SIZE];
+    static const uint16_t TEXTAREA_HW_REV_SIZE = 3;
+    touchgfx::Unicode::UnicodeChar textArea_HW_RevBuffer[TEXTAREA_HW_REV_SIZE];
 
 private:
 
