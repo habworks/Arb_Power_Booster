@@ -34,7 +34,7 @@ protected:
     touchgfx::Image image_Background;
     touchgfx::ScalableImage scalableImage_Config;
     touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_Config;
-    touchgfx::Box box_CH1_Enable_1;
+    touchgfx::Box box_CH2_Enable;
     touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_CH2_Enable;
     touchgfx::TextArea textArea_CH2_CurrentSet;
     touchgfx::TextArea textArea_CH2_Enable;

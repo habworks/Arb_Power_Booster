@@ -6,6 +6,33 @@
   <Texts>
     <TextGroup Id="Group1" />
     <TextGroup Id="Unsorted">
+      <Text Id="__SingleUse_3AEP" Alignment="Left" TypographyId="CenturyGothic_Units">
+        <Translation Language="GB">www.IMREngineering.com</Translation>
+      </Text>
+      <Text Id="__SingleUse_VZF1" Alignment="Left" TypographyId="CenturyGothic_Units">
+        <Translation Language="GB">HW REV: 1</Translation>
+      </Text>
+      <Text Id="__SingleUse_NZKS" Alignment="Left" TypographyId="CenturyGothic_Units">
+        <Translation Language="GB">FW REV: 0.0.0</Translation>
+      </Text>
+      <Text Id="__SingleUse_Y3W6" Alignment="Left" TypographyId="CenturyGothic_Units">
+        <Translation Language="GB">OK</Translation>
+      </Text>
+      <Text Id="__SingleUse_LHCN" Alignment="Left" TypographyId="CenturyGothic_Units">
+        <Translation Language="GB">Reset Min Max</Translation>
+      </Text>
+      <Text Id="__SingleUse_M7GL" Alignment="Left" TypographyId="CenturyGothic_Units">
+        <Translation Language="GB">-19.8V</Translation>
+      </Text>
+      <Text Id="__SingleUse_7GWE" Alignment="Left" TypographyId="CenturyGothic_Units">
+        <Translation Language="GB">20.2V</Translation>
+      </Text>
+      <Text Id="__SingleUse_GKDW" Alignment="Left" TypographyId="CenturyGothic_Units">
+        <Translation Language="GB">Positive Supply: </Translation>
+      </Text>
+      <Text Id="__SingleUse_62QI" Alignment="Left" TypographyId="CenturyGothic_Units">
+        <Translation Language="GB">Negative Supply: </Translation>
+      </Text>
       <Text Id="__SingleUse_C9E9" Alignment="Left" TypographyId="CenturyGothic_Units">
         <Translation Language="GB">Disable Limit</Translation>
       </Text>
@@ -34,7 +61,7 @@
         <Translation Language="GB">Set Limits:</Translation>
       </Text>
       <Text Id="__SingleUse_OQH2" Alignment="Left" TypographyId="CenturyGothic_Units">
-        <Translation Language="GB">Status:</Translation>
+        <Translation Language="GB">Device Status:</Translation>
       </Text>
       <Text Id="__SingleUse_ZCK5" Alignment="Left" TypographyId="Iceland_Title">
         <Translation Language="GB">Config:</Translation>

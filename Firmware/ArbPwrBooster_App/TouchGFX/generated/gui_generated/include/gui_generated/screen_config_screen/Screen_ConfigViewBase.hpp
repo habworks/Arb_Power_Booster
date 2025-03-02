@@ -29,9 +29,18 @@ protected:
      */
     touchgfx::Box __background;
     touchgfx::Image image1;
+    touchgfx::IconButtonStyle< touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  >  flexButton_SystemReset;
+    touchgfx::TextArea textArea_IMR_URL;
     touchgfx::IconButtonStyle< touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  >  flexButton_Home;
-    touchgfx::TextArea textArea_TitleConfig;
+    touchgfx::TextArea textArea_StatusText;
     touchgfx::TextArea textArea_Status;
+    touchgfx::TextArea textArea_NegSupplyMonitor;
+    touchgfx::TextArea textArea_NegSupply;
+    touchgfx::TextArea textArea_PosSupplyMonitor;
+    touchgfx::TextArea textArea_PosSupply;
+    touchgfx::TextArea textArea_FW_Rev;
+    touchgfx::TextArea textArea_HW_Rev;
+    touchgfx::TextArea textArea_TitleConfig;
 
 private:
 

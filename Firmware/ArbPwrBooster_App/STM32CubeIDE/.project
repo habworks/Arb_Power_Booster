@@ -809,6 +809,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/TouchGFX/generated/images/src/__generated/image_icon_theme_images_navigation_arrow_drop_up_80_80_E8F6FB.svg.cpp</locationURI>
 		</link>
 		<link>
+			<name>Application/User/generated/image_icon_theme_images_navigation_refresh_50_50_E8F6FB.svg.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/TouchGFX/generated/images/src/__generated/image_icon_theme_images_navigation_refresh_50_50_E8F6FB.svg.cpp</locationURI>
+		</link>
+		<link>
 			<name>Application/User/generated/image_CircuitTrace_480x272.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/TouchGFX/generated/images/src/image_CircuitTrace_480x272.cpp</locationURI>

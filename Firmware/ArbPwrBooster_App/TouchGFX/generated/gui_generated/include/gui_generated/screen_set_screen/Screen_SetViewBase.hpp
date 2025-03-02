@@ -31,20 +31,26 @@ protected:
      */
     touchgfx::Box __background;
     touchgfx::Image image1;
-    touchgfx::TextArea textArea_CH_ToSet_1_2_2_1_1;
-    touchgfx::TextArea textArea_CH_ToSet_1_2;
-    touchgfx::TextArea textArea_CH_ToSet_1_2_2;
-    touchgfx::TextArea textArea_CH_ToSet_1_2_2_1;
-    touchgfx::TextArea textArea_CH_ToSet_1_2_1;
-    touchgfx::TextArea textArea_CH_ToSet_1_1;
-    touchgfx::TextArea textArea_CH_ToSet_1;
-    touchgfx::TextArea textArea_CH_ToSet;
-    touchgfx::TextArea textArea_TitleSet;
-    touchgfx::IconButtonStyle< touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  >  flexButton1;
-    touchgfx::IconButtonStyle< touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  >  flexButton1_1;
-    touchgfx::RadioButtonGroup<1> radioButtonGroup1;
-    touchgfx::RadioButton radioButton1;
+    touchgfx::TextArea textArea_ResetMinMax;
+    touchgfx::IconButtonStyle< touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  >  flexButton_ResetMinMax;
     touchgfx::IconButtonStyle< touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  >  flexButton_Home;
+    touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_AmpsDigit_3;
+    touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_AmpsDigit_2;
+    touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_AmpsDigit_1;
+    touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_AmpsDigit_0;
+    touchgfx::TextArea textArea_DisableLimit;
+    touchgfx::TextArea textArea_Units;
+    touchgfx::RadioButtonGroup<1> radioButtonGroup1;
+    touchgfx::RadioButton radioButton_EnableLimit;
+    touchgfx::TextArea textArea_DecimalPoint;
+    touchgfx::TextArea textArea__AmpsDigit_3;
+    touchgfx::TextArea textArea__AmpsDigit_2;
+    touchgfx::TextArea textArea__AmpsDigit_1;
+    touchgfx::TextArea textArea_AmpsDigit_0;
+    touchgfx::TextArea textArea_CH_ToSet;
+    touchgfx::IconButtonStyle< touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  >  flexButton_DigitDown;
+    touchgfx::IconButtonStyle< touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  >  flexButton_DigitUp;
+    touchgfx::TextArea textArea_TitleSet;
 
 private:
 

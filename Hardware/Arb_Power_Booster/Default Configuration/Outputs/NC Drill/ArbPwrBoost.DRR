@@ -1,5 +1,5 @@
 ---------------------------------------------------------------------------
-NCDrill File Report For: ArbPwrBoost.CSPcbDoc   2/28/2025  6:02:21 PM
+NCDrill File Report For: ArbPwrBoost.CSPcbDoc   3/1/2025  7:32:42 AM
 ---------------------------------------------------------------------------
 
 Layer Pair : Top Layer to Bottom Layer
@@ -9,7 +9,7 @@ Tool         Hole Size           Hole Type     Hole Count Plated       Tool Trav
 ---------------------------------------------------------------------------
 T1        15mil (0.381mm)          Round          147              53.36 Inch (1355.24 mm)
 T2        20mil (0.508mm)          Round          4                2.92 Inch (74.20 mm)
-T3        30mil (0.762mm)          Round          86               37.28 Inch (947.03 mm)
+T3        30mil (0.762mm)          Round          86               37.15 Inch (943.73 mm)
 T4        35mil (0.889mm)          Round          23               22.19 Inch (563.60 mm)
 T5        36mil (0.9144mm)         Round          2                1.57 Inch (40.00 mm)
 T6        40mil (1.016mm)          Round          3                0.24 Inch (6.00 mm)
@@ -20,6 +20,6 @@ T10       87mil (2.2098mm)         Round          8                9.73 Inch (24
 T11       125mil (3.175mm)         Round          4                15.18 Inch (385.66 mm)
 T12       130mil (3.302mm)         Round          4                22.31 Inch (566.78 mm)
 ---------------------------------------------------------------------------
-Totals                                            337              191.42 Inch (4862.03 mm)
+Totals                                            337              191.29 Inch (4858.73 mm)
 
 Total Processing Time (hh:mm:ss) : 00:00:01

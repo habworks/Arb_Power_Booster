@@ -33,9 +33,9 @@ Screen_MainViewBase::Screen_MainViewBase() :
     flexButton_Config.setPosition(198, 192, 84, 80);
     add(flexButton_Config);
 
-    box_CH1_Enable_1.setPosition(419, 211, 56, 56);
-    box_CH1_Enable_1.setColor(touchgfx::Color::getColorFromRGB(94, 235, 19));
-    add(box_CH1_Enable_1);
+    box_CH2_Enable.setPosition(419, 211, 56, 56);
+    box_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(94, 235, 19));
+    add(box_CH2_Enable);
 
     flexButton_CH2_Enable.setBoxWithBorderPosition(0, 0, 66, 66);
     flexButton_CH2_Enable.setBorderSize(5);
