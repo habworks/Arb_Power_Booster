@@ -50,17 +50,6 @@ void FrontendApplicationBase::gotoScreen_SplashScreenNoTransitionImpl()
     touchgfx::makeTransition<Screen_SplashView, Screen_SplashPresenter, touchgfx::NoTransition, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
 }
 
-void FrontendApplicationBase::gotoScreen_SplashScreenSlideTransitionWest()
-{
-    transitionCallback = touchgfx::Callback<FrontendApplicationBase>(this, &FrontendApplicationBase::gotoScreen_SplashScreenSlideTransitionWestImpl);
-    pendingScreenTransitionCallback = &transitionCallback;
-}
-
-void FrontendApplicationBase::gotoScreen_SplashScreenSlideTransitionWestImpl()
-{
-    touchgfx::makeTransition<Screen_SplashView, Screen_SplashPresenter, touchgfx::SlideTransition<WEST>, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
-}
-
 // Screen_Main
 
 void FrontendApplicationBase::gotoScreen_MainScreenNoTransition()

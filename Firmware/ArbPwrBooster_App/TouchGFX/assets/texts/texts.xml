@@ -4,7 +4,14 @@
     <Language Id="GB" />
   </Languages>
   <Texts>
-    <TextGroup Id="Group1" />
+    <TextGroup Id="Group1">
+      <Text Id="One_Meg_Ohm" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">1MΩ</Translation>
+      </Text>
+      <Text Id="Fifty_Ohm" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">50Ω</Translation>
+      </Text>
+    </TextGroup>
     <TextGroup Id="Unsorted">
       <Text Id="__SingleUse_IVPW" Alignment="Left" TypographyId="Default">
         <Translation Language="GB">1</Translation>

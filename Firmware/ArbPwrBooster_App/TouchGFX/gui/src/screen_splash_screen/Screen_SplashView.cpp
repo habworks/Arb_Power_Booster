@@ -21,8 +21,21 @@ void Screen_SplashView::tearDownScreen()
 
 
 // ADDED FUNCTIONS
+/********************************************************************************************************
+* @brief Update the screen on entry.  It is called by the end of the Splash Screen transition interaction.
+*
+*
+* @author original: Hab Collector \n
+*
+* @note: Splash screen occurs after a POR - Can use this to init various parameters or do it elsewhere
+*
+* STEP 1: Set the active screen
+* STEP 2: Update Channel 1
+* STEP 3: Update Channel 2
+********************************************************************************************************/
 void Screen_SplashView::update_Screen_Splash(void)
 {
     ArbPwrBoosterStatus.Screen = SPLASH_SCREEN;
+    // HAB TODO: The init here is temporary - likely to be moved
     Init_ArbPwrBooster();
 }

@@ -803,20 +803,18 @@
         ],
         "Interactions": [
           {
-            "InteractionName": "Interaction1",
+            "InteractionName": "Interaction_CH1_SetZ",
             "Trigger": {
               "Type": "TriggerClicked",
               "TriggerComponent": "flexButton_CH1_InputZ"
             },
             "Action": {
-              "Type": "ActionGotoScreen",
-              "ScreenTransitionType": "ScreenTransitionSlide",
-              "ScreenTransitionDirection": "West",
-              "ActionComponent": "Screen_Splash"
+              "Type": "ActionCustom",
+              "FunctionName": "InputImpedanceSet_CH1"
             }
           },
           {
-            "InteractionName": "Interaction2",
+            "InteractionName": "Interaction_CH1_SetI",
             "Trigger": {
               "Type": "TriggerClicked",
               "TriggerComponent": "flexButton_CH1_Set"
@@ -829,7 +827,7 @@
             }
           },
           {
-            "InteractionName": "Interaction3",
+            "InteractionName": "Interaction_Config",
             "Trigger": {
               "Type": "TriggerClicked",
               "TriggerComponent": "flexButton_Config"
@@ -842,7 +840,7 @@
             }
           },
           {
-            "InteractionName": "Interaction4",
+            "InteractionName": "Interaction_UpdateMainScreen",
             "Trigger": {
               "Type": "TriggerScreenEntered"
             },
@@ -852,7 +850,7 @@
             }
           },
           {
-            "InteractionName": "Interaction5",
+            "InteractionName": "Interaction_CH1_OutputEnable",
             "Trigger": {
               "Type": "TriggerClicked",
               "TriggerComponent": "flexButton_CH1_Enable"
@@ -863,7 +861,7 @@
             }
           },
           {
-            "InteractionName": "Interaction6",
+            "InteractionName": "Interaction_CH2_OutputEnable",
             "Trigger": {
               "Type": "TriggerClicked",
               "TriggerComponent": "flexButton_CH2_Enable"
@@ -871,6 +869,17 @@
             "Action": {
               "Type": "ActionCustom",
               "FunctionName": "switchOutput_CH2"
+            }
+          },
+          {
+            "InteractionName": "Interaction_CH2_SetZ",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "flexButton_CH2_InputZ"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "InputImpedanceSet_CH2"
             }
           }
         ]

@@ -14,7 +14,9 @@ public:
     // ADDED FUNCTIONS
     virtual void update_Screen_Main(void);
     virtual void switchOutput_CH1(void);
+    virtual void InputImpedanceSet_CH1(void);
     virtual void switchOutput_CH2(void);
+    virtual void InputImpedanceSet_CH2(void);
 protected:
 };
 

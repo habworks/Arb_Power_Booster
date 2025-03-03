@@ -12,6 +12,8 @@ enum LANGUAGES
 
 enum TEXTS
 {
+    T_ONE_MEG_OHM,
+    T_FIFTY_OHM,
     T___SINGLEUSE_IVPW,
     T___SINGLEUSE_D9IY,
     T___SINGLEUSE_L9UN,

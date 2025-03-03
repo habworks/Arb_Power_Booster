@@ -28,7 +28,7 @@
 Type_ArbPwrBoosterStatus ArbPwrBoosterStatus;
 
 
-
+//HAB TODO: A lot of work to do here - may want to return a pointer I think would be best
 void Init_ArbPwrBooster(void)
 {
     ArbPwrBoosterStatus.Screen = SPLASH_SCREEN;

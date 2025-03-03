@@ -83,6 +83,7 @@ Screen_MainViewBase::Screen_MainViewBase() :
     flexButton_CH2_InputZ.setBorderSize(5);
     flexButton_CH2_InputZ.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
     flexButton_CH2_InputZ.setAlpha(75);
+    flexButton_CH2_InputZ.setAction(flexButtonCallback);
     flexButton_CH2_InputZ.setPosition(282, 206, 66, 66);
     add(flexButton_CH2_InputZ);
 
@@ -268,44 +269,51 @@ void Screen_MainViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButt
 {
     if (&src == &flexButton_CH1_InputZ)
     {
-        //Interaction1
-        //When flexButton_CH1_InputZ clicked change screen to Screen_Splash
-        //Go to Screen_Splash with screen transition towards West
-        application().gotoScreen_SplashScreenSlideTransitionWest();
+        //Interaction_CH1_SetZ
+        //When flexButton_CH1_InputZ clicked call virtual function
+        //Call InputImpedanceSet_CH1
+        InputImpedanceSet_CH1();
     }
     if (&src == &flexButton_CH1_Set)
     {
-        //Interaction2
+        //Interaction_CH1_SetI
         //When flexButton_CH1_Set clicked change screen to Screen_Set
         //Go to Screen_Set with screen transition towards East
         application().gotoScreen_SetScreenSlideTransitionEast();
     }
     if (&src == &flexButton_Config)
     {
-        //Interaction3
+        //Interaction_Config
         //When flexButton_Config clicked change screen to Screen_Config
         //Go to Screen_Config with screen transition towards East
         application().gotoScreen_ConfigScreenSlideTransitionEast();
     }
     if (&src == &flexButton_CH1_Enable)
     {
-        //Interaction5
+        //Interaction_CH1_OutputEnable
         //When flexButton_CH1_Enable clicked call virtual function
         //Call switchOutput_CH1
         switchOutput_CH1();
     }
     if (&src == &flexButton_CH2_Enable)
     {
-        //Interaction6
+        //Interaction_CH2_OutputEnable
         //When flexButton_CH2_Enable clicked call virtual function
         //Call switchOutput_CH2
         switchOutput_CH2();
+    }
+    if (&src == &flexButton_CH2_InputZ)
+    {
+        //Interaction_CH2_SetZ
+        //When flexButton_CH2_InputZ clicked call virtual function
+        //Call InputImpedanceSet_CH2
+        InputImpedanceSet_CH2();
     }
 }
 
 void Screen_MainViewBase::afterTransition()
 {
-    //Interaction4
+    //Interaction_UpdateMainScreen
     //When screen transition ends call virtual function
     //Call update_Screen_Main
     update_Screen_Main();

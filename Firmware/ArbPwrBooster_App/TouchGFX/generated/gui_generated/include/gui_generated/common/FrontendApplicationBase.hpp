@@ -23,8 +23,6 @@ public:
     // Screen_Splash
     void gotoScreen_SplashScreenNoTransition();
 
-    void gotoScreen_SplashScreenSlideTransitionWest();
-
     // Screen_Main
     void gotoScreen_MainScreenNoTransition();
 
@@ -43,8 +41,6 @@ protected:
 
     // Screen_Splash
     void gotoScreen_SplashScreenNoTransitionImpl();
-
-    void gotoScreen_SplashScreenSlideTransitionWestImpl();
 
     // Screen_Main
     void gotoScreen_MainScreenNoTransitionImpl();
