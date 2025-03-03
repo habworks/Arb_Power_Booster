@@ -41,6 +41,7 @@ Screen_MainViewBase::Screen_MainViewBase() :
     flexButton_CH2_Enable.setBorderSize(5);
     flexButton_CH2_Enable.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
     flexButton_CH2_Enable.setAlpha(75);
+    flexButton_CH2_Enable.setAction(flexButtonCallback);
     flexButton_CH2_Enable.setPosition(414, 206, 66, 66);
     add(flexButton_CH2_Enable);
 
@@ -155,18 +156,20 @@ Screen_MainViewBase::Screen_MainViewBase() :
     add(textArea_CH1_CurrentSet);
 
     box_CH1_Enable.setPosition(137, 211, 56, 56);
-    box_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(94, 235, 19));
+    box_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(167, 196, 178));
+    box_CH1_Enable.setAlpha(50);
     add(box_CH1_Enable);
 
     flexButton_CH1_Enable.setBoxWithBorderPosition(0, 0, 66, 66);
     flexButton_CH1_Enable.setBorderSize(5);
     flexButton_CH1_Enable.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
     flexButton_CH1_Enable.setAlpha(75);
+    flexButton_CH1_Enable.setAction(flexButtonCallback);
     flexButton_CH1_Enable.setPosition(132, 206, 66, 66);
     add(flexButton_CH1_Enable);
 
     textArea_CH1_Enable.setXY(150, 228);
-    textArea_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    textArea_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(112, 112, 111));
     textArea_CH1_Enable.setLinespacing(0);
     textArea_CH1_Enable.setTypedText(touchgfx::TypedText(T___SINGLEUSE_KX5W));
     add(textArea_CH1_Enable);
@@ -283,6 +286,20 @@ void Screen_MainViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButt
         //When flexButton_Config clicked change screen to Screen_Config
         //Go to Screen_Config with screen transition towards East
         application().gotoScreen_ConfigScreenSlideTransitionEast();
+    }
+    if (&src == &flexButton_CH1_Enable)
+    {
+        //Interaction5
+        //When flexButton_CH1_Enable clicked call virtual function
+        //Call switchOutput_CH1
+        switchOutput_CH1();
+    }
+    if (&src == &flexButton_CH2_Enable)
+    {
+        //Interaction6
+        //When flexButton_CH2_Enable clicked call virtual function
+        //Call switchOutput_CH2
+        switchOutput_CH2();
     }
 }
 

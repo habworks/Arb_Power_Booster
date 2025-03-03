@@ -55,14 +55,21 @@ typedef enum
 
 typedef enum
 {
+    OFF = 0,
+    ON = 1
+}Type_RelaySwitch;
+
+typedef enum
+{
     ONE_MEG_OHM = 0,
     FIFTY_OHM
 }Type_InputImpedance;
 
 typedef struct
 {
-    Type_InputImpedance     InputImpedance;
     double                  CurrentLimit;
+    Type_InputImpedance     InputImpedance;
+    Type_RelaySwitch        OutputSwitch;
 }Type_ChannelConfig;
 
 typedef struct

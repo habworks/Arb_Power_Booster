@@ -35,7 +35,9 @@ void Init_ArbPwrBooster(void)
     // Channel 1 Init
     ArbPwrBoosterStatus.CH1.InputImpedance = ONE_MEG_OHM;
     ArbPwrBoosterStatus.CH1.CurrentLimit = 1.25432;
+    ArbPwrBoosterStatus.CH1.OutputSwitch = OFF;
     // Channel 2 Init
     ArbPwrBoosterStatus.CH2.InputImpedance = FIFTY_OHM;
     ArbPwrBoosterStatus.CH2.CurrentLimit = 12.125;
+    ArbPwrBoosterStatus.CH2.OutputSwitch = OFF;
 }

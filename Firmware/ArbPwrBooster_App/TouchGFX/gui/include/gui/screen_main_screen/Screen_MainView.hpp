@@ -13,6 +13,8 @@ public:
     virtual void tearDownScreen();
     // ADDED FUNCTIONS
     virtual void update_Screen_Main(void);
+    virtual void switchOutput_CH1(void);
+    virtual void switchOutput_CH2(void);
 protected:
 };
 

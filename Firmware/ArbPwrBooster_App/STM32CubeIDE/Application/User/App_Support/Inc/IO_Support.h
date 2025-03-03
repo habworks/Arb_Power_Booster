@@ -37,20 +37,20 @@ extern"C" {
 #define MAIN_PWR_TOGGLE()       HAL_GPIO_TogglePin(MAIN_PWR_EN_GPIO_Port, MAIN_PWR_EN_Pin)
 #define MAIN_PWR_STATUS()       HAL_GPIO_ReadPin(MAIN_PWR_EN_GPIO_Port, MAIN_PWR_EN_Pin)
 
-#define EN_VO_1_ON()            HAL_GPIO_WritePin(EN_VO_1_EN_GPIO_Port, EN_VO_1_EN_Pin, GPIO_PIN_SET)
-#define EN_VO_1_OFF()           HAL_GPIO_WritePin(EN_VO_1_EN_GPIO_Port, EN_VO_1_EN_Pin, GPIO_PIN_RESET)
-#define EN_VO_1_TOGGLE()        HAL_GPIO_TogglePin(EN_VO_1_EN_GPIO_Port, EN_VO_1_EN_Pin)
-#define EN_VO_1_STATUS()        HAL_GPIO_ReadPin(EN_VO_1_EN_GPIO_Port, EN_VO_1_EN_Pin)
+#define CH1_OUTPUT_ENABLE()     HAL_GPIO_WritePin(EN_VO_1_GPIO_Port, EN_VO_1_Pin, GPIO_PIN_SET)
+#define CH1_OUTPUT_DISABLE()    HAL_GPIO_WritePin(EN_VO_1_GPIO_Port, EN_VO_1_Pin, GPIO_PIN_RESET)
+#define CH1_OUTPUT_TOGGLE()     HAL_GPIO_TogglePin(EN_VO_1_GPIO_Port, EN_VO_1_Pin)
+#define CH1_OUTPUT_STATUS()     HAL_GPIO_ReadPin(EN_VO_1_GPIO_Port, EN_VO_1_Pin)
 
 #define EN_50_Z_1_ON()          HAL_GPIO_WritePin(EN_50_Z_1_EN_GPIO_Port, EN_50_Z_1_EN_Pin, GPIO_PIN_SET)
 #define EN_50_Z_1_OFF()         HAL_GPIO_WritePin(EN_50_Z_1_EN_GPIO_Port, EN_50_Z_1_EN_Pin, GPIO_PIN_RESET)
 #define EN_50_Z_1_TOGGLE()      HAL_GPIO_TogglePin(EN_50_Z_1_EN_GPIO_Port, EN_50_Z_1_EN_Pin)
 #define EN_50_Z_1_STATUS()      HAL_GPIO_ReadPin(EN_50_Z_1_EN_GPIO_Port, EN_50_Z_1_EN_Pin)
 
-#define EN_VO_2_ON()            HAL_GPIO_WritePin(EN_VO_2_EN_GPIO_Port, EN_VO_2_EN_Pin, GPIO_PIN_SET)
-#define EN_VO_2_OFF()           HAL_GPIO_WritePin(EN_VO_2_EN_GPIO_Port, EN_VO_2_EN_Pin, GPIO_PIN_RESET)
-#define EN_VO_2_TOGGLE()        HAL_GPIO_TogglePin(EN_VO_2_EN_GPIO_Port, EN_VO_2_EN_Pin)
-#define EN_VO_2_STATUS()        HAL_GPIO_ReadPin(EN_VO_2_EN_GPIO_Port, EN_VO_2_EN_Pin)
+#define CH2_OUTPUT_ENABLE()     HAL_GPIO_WritePin(EN_VO_2_GPIO_Port, EN_VO_2_Pin, GPIO_PIN_SET)
+#define CH2_OUTPUT_DISABLE()    HAL_GPIO_WritePin(EN_VO_2_GPIO_Port, EN_VO_2_Pin, GPIO_PIN_RESET)
+#define CH2_OUTPUT_TOGGLE()     HAL_GPIO_TogglePin(EN_VO_2_GPIO_Port, EN_VO_2_Pin)
+#define CH2_OUTPUT_STATUS()     HAL_GPIO_ReadPin(EN_VO_2_GPIO_Port, EN_VO_2_Pin)
 
 #define EN_50_Z_2_ON()          HAL_GPIO_WritePin(EN_50_Z_2_EN_GPIO_Port, EN_50_Z_2_EN_Pin, GPIO_PIN_SET)
 #define EN_50_Z_2_OFF()         HAL_GPIO_WritePin(EN_50_Z_2_EN_GPIO_Port, EN_50_Z_2_EN_Pin, GPIO_PIN_RESET)
