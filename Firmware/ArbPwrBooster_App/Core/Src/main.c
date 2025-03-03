@@ -639,7 +639,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, FRAME_RATE_Pin|RENDER_TIME_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(MCU_ACTIVE_GPIO_Port, MCU_ACTIVE_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(MAIN_PWR_EN_GPIO_Port, MAIN_PWR_EN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : VSYNC_FREQ_Pin */
   GPIO_InitStruct.Pin = VSYNC_FREQ_Pin;
@@ -669,12 +669,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : MCU_ACTIVE_Pin */
-  GPIO_InitStruct.Pin = MCU_ACTIVE_Pin;
+  /*Configure GPIO pin : MAIN_PWR_EN_Pin */
+  GPIO_InitStruct.Pin = MAIN_PWR_EN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  HAL_GPIO_Init(MCU_ACTIVE_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(MAIN_PWR_EN_GPIO_Port, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

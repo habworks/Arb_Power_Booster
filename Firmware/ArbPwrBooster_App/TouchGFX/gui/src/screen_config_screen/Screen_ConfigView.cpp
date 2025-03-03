@@ -1,6 +1,8 @@
 #include <gui/screen_config_screen/Screen_ConfigView.hpp>
 // Hab Add
 #include "Main_Support.h"
+#include "IO_Support.h"
+
 
 Screen_ConfigView::Screen_ConfigView()
 {
@@ -21,8 +23,9 @@ void Screen_ConfigView::tearDownScreen()
 void Screen_ConfigView::update_Screen_Config(void)
 {
     ArbPwrBoosterStatus.Screen = CONFIG_SCREEN;
-//    Unicode::snprintfFloat(textArea1Buffer, TEXTAREA1_SIZE, "%2.3f", DisplayValue);
-//    textArea1.invalidate();
+
+    MAIN_PWR_TOGGLE(); // Test remove later
+
     // Update FW Revision
     Unicode::snprintf(textArea_FW_RevBuffer, TEXTAREA_FW_REV_SIZE, "%d.%d.%d", FW_MAJOR_REV, FW_MINOR_REV, FW_TEST_REV);
     textArea_FW_Rev.setWildcard(textArea_FW_RevBuffer);
