@@ -60,6 +60,10 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define VSYNC_FREQ_Pin GPIO_PIN_4
 #define VSYNC_FREQ_GPIO_Port GPIOB
+#define EN_50_Z_2_Pin GPIO_PIN_3
+#define EN_50_Z_2_GPIO_Port GPIOI
+#define EN_VO_1_Pin GPIO_PIN_2
+#define EN_VO_1_GPIO_Port GPIOI
 #define LCD_BL_CTRL_Pin GPIO_PIN_3
 #define LCD_BL_CTRL_GPIO_Port GPIOK
 #define LCD_DISP_Pin GPIO_PIN_12
@@ -68,8 +72,12 @@ void Error_Handler(void);
 #define FRAME_RATE_GPIO_Port GPIOC
 #define RENDER_TIME_Pin GPIO_PIN_6
 #define RENDER_TIME_GPIO_Port GPIOC
+#define EN_VO_2_Pin GPIO_PIN_7
+#define EN_VO_2_GPIO_Port GPIOG
 #define MAIN_PWR_EN_Pin GPIO_PIN_6
 #define MAIN_PWR_EN_GPIO_Port GPIOG
+#define EN_50_Z_1_Pin GPIO_PIN_15
+#define EN_50_Z_1_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

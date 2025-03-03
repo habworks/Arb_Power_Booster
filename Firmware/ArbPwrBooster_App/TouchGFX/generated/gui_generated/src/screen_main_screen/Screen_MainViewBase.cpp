@@ -47,7 +47,8 @@ Screen_MainViewBase::Screen_MainViewBase() :
     textArea_CH2_CurrentSet.setXY(262, 165);
     textArea_CH2_CurrentSet.setColor(touchgfx::Color::getColorFromRGB(23, 148, 194));
     textArea_CH2_CurrentSet.setLinespacing(0);
-    textArea_CH2_CurrentSet.setWildcard(touchgfx::TypedText(T___SINGLEUSE_UN4D).getText());
+    Unicode::snprintf(textArea_CH2_CurrentSetBuffer, TEXTAREA_CH2_CURRENTSET_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_UN4D).getText());
+    textArea_CH2_CurrentSet.setWildcard(textArea_CH2_CurrentSetBuffer);
     textArea_CH2_CurrentSet.resizeToCurrentText();
     textArea_CH2_CurrentSet.setTypedText(touchgfx::TypedText(T___SINGLEUSE_6SWA));
     add(textArea_CH2_CurrentSet);
@@ -283,4 +284,12 @@ void Screen_MainViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButt
         //Go to Screen_Config with screen transition towards East
         application().gotoScreen_ConfigScreenSlideTransitionEast();
     }
+}
+
+void Screen_MainViewBase::afterTransition()
+{
+    //Interaction4
+    //When screen transition ends call virtual function
+    //Call update_Screen_Main
+    update_Screen_Main();
 }

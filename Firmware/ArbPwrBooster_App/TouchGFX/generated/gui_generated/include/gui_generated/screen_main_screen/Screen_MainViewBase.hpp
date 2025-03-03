@@ -22,6 +22,15 @@ public:
     Screen_MainViewBase();
     virtual ~Screen_MainViewBase();
     virtual void setupScreen();
+    virtual void afterTransition();
+
+    /*
+     * Virtual Action Handlers
+     */
+    virtual void update_Screen_Main()
+    {
+        // Override and implement this function in Screen_Main
+    }
 
 protected:
     FrontendApplication& application() {
@@ -71,6 +80,8 @@ protected:
     /*
      * Wildcard Buffers
      */
+    static const uint16_t TEXTAREA_CH2_CURRENTSET_SIZE = 15;
+    touchgfx::Unicode::UnicodeChar textArea_CH2_CurrentSetBuffer[TEXTAREA_CH2_CURRENTSET_SIZE];
     static const uint16_t TEXTAREA_CH2_AMIN_SIZE = 10;
     touchgfx::Unicode::UnicodeChar textArea_CH2_AminBuffer[TEXTAREA_CH2_AMIN_SIZE];
     static const uint16_t TEXTAREA2_CH2_AMAX_SIZE = 10;

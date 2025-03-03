@@ -32,4 +32,10 @@ Type_ArbPwrBoosterStatus ArbPwrBoosterStatus;
 void Init_ArbPwrBooster(void)
 {
     ArbPwrBoosterStatus.Screen = SPLASH_SCREEN;
+    // Channel 1 Init
+    ArbPwrBoosterStatus.CH1.InputImpedance = ONE_MEG_OHM;
+    ArbPwrBoosterStatus.CH1.CurrentLimit = 1.25432;
+    // Channel 2 Init
+    ArbPwrBoosterStatus.CH2.InputImpedance = FIFTY_OHM;
+    ArbPwrBoosterStatus.CH2.CurrentLimit = 12.125;
 }

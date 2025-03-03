@@ -53,10 +53,24 @@ typedef enum
     CHANNEL_2
 }Type_Channel;
 
+typedef enum
+{
+    ONE_MEG_OHM = 0,
+    FIFTY_OHM
+}Type_InputImpedance;
+
+typedef struct
+{
+    Type_InputImpedance     InputImpedance;
+    double                  CurrentLimit;
+}Type_ChannelConfig;
+
 typedef struct
 {
     Type_ScreenType     Screen;
     Type_Channel        ActiveChannel;
+    Type_ChannelConfig  CH1;
+    Type_ChannelConfig  CH2;
 }Type_ArbPwrBoosterStatus;
 
 

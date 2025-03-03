@@ -11,6 +11,8 @@ public:
     virtual ~Screen_SplashView() {}
     virtual void setupScreen();
     virtual void tearDownScreen();
+    // ADDED FUNCTIONS
+    virtual void update_Screen_Splash(void);
 protected:
 };
 

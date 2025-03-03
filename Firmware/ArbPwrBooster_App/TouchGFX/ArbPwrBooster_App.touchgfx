@@ -65,6 +65,16 @@
               "ScreenTransitionType": "ScreenTransitionNone",
               "ActionComponent": "Screen_Main"
             }
+          },
+          {
+            "InteractionName": "Interaction3",
+            "Trigger": {
+              "Type": "TriggerScreenEntered"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "update_Screen_Splash"
+            }
           }
         ]
       },
@@ -183,7 +193,7 @@
             "Name": "textArea_CH2_CurrentSet",
             "X": 262,
             "Y": 165,
-            "Width": 110,
+            "Width": 121,
             "Height": 24,
             "TextId": "__SingleUse_6SWA",
             "TextRotation": "0",
@@ -194,7 +204,9 @@
             },
             "AutoSize": true,
             "Wildcard1": {
-              "TextId": "__SingleUse_UN4D"
+              "TextId": "__SingleUse_UN4D",
+              "UseBuffer": true,
+              "BufferSize": 15
             }
           },
           {
@@ -470,7 +482,7 @@
             "Name": "textArea_CH1_CurrentSet",
             "X": 22,
             "Y": 165,
-            "Width": 110,
+            "Width": 121,
             "Height": 24,
             "TextId": "__SingleUse_FFBY",
             "TextRotation": "0",
@@ -826,6 +838,16 @@
               "ScreenTransitionType": "ScreenTransitionSlide",
               "ScreenTransitionDirection": "East",
               "ActionComponent": "Screen_Config"
+            }
+          },
+          {
+            "InteractionName": "Interaction4",
+            "Trigger": {
+              "Type": "TriggerScreenEntered"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "update_Screen_Main"
             }
           }
         ]

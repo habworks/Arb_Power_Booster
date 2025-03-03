@@ -59,3 +59,11 @@ void Screen_SplashViewBase::interaction1EndedCallbackHandler(const touchgfx::Fad
     application().gotoScreen_MainScreenNoTransition();
 
 }
+
+void Screen_SplashViewBase::afterTransition()
+{
+    //Interaction3
+    //When screen transition ends call virtual function
+    //Call update_Screen_Splash
+    update_Screen_Splash();
+}

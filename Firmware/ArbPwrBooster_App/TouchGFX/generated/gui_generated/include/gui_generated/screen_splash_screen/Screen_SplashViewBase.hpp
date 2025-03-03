@@ -21,6 +21,15 @@ public:
     virtual ~Screen_SplashViewBase();
     virtual void setupScreen();
     virtual void transitionBegins();
+    virtual void afterTransition();
+
+    /*
+     * Virtual Action Handlers
+     */
+    virtual void update_Screen_Splash()
+    {
+        // Override and implement this function in Screen_Splash
+    }
 
 protected:
     FrontendApplication& application() {
