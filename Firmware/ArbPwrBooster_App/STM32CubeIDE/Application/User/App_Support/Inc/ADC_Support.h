@@ -1,6 +1,6 @@
 /** ****************************************************************************************************
- * @file 			Main_Support.h
- * @brief			This is the Header file used to support Main_Support.c
+ * @file 			ADC_Support.h
+ * @brief			This is the Header file used to support ADC_Support.c
  * ****************************************************************************************************
  * @author original Hab Collector (habco)\n
  *
@@ -24,72 +24,56 @@
  * @copyright       IMR Engineering, LLC
  ********************************************************************************************************/
 
-#ifndef APPLICATION_USER_APP_SUPPORT_INC_MAIN_SUPPORT_H_
-#define APPLICATION_USER_APP_SUPPORT_INC_MAIN_SUPPORT_H_
+#ifndef APPLICATION_USER_ADC_SUPPORT_H_
+#define APPLICATION_USER_ADC_SUPPORT_H_
 #ifdef __cplusplus
 extern"C" {
 #endif
 
 // DEFINES
-// Revisions
-#define FW_MAJOR_REV            0U
-#define FW_MINOR_REV            0U
-#define FW_TEST_REV             1U
-#define HW_REVISION             2U
+// ADC CHANNEL
+#define ADC1_NUMBER_OF_CHANNELS 3U
+#define ADC3_NUMBER_OF_CHANNELS 3U
+// ADC CONVERSION RELATED
+#define LSB_12BIT_VALUE         244.1E-6
+#define ADC_REFERENCE_VOLTAGE   3.300
+#define POS_20V_DIVIDER         1.0   //0.110
+#define NEG_20V_DIVIDER         1.0   //0.110
+// FACTORY CALIBRATION VALUES AT SPECIFIC ADDRESS
+#define TS_CAL1_ADDR            ((uint16_t*)0x1FFF75A8)     // Factory V_25 (25°C)
+#define TS_CAL2_ADDR            ((uint16_t*)0x1FFF75CA)     // Factory V_110 (110°C)
+#define VREFINT_CAL_ADDR        ((uint16_t*)0x1FFF75AA)     // Factor preset VerfInt
+//#define ADC_BASE_ADDR   0x40012000  // ADC register base address
+//#define ADC_CCR_OFFSET  0x308       // Offset for ADC_CCR register
+//#define ADC_CCR_ADDR    (ADC_BASE_ADDR + ADC_CCR_OFFSET)
 
 
 // TYPEDEFS AND ENUMS
 typedef enum
 {
-    SPLASH_SCREEN = 0,
-    MAIN_SCREEN,
-    CONFIG_SCREEN,
-    SET_SCREEN
-}Type_ScreenType;
+    CH1_AMP_MON = 0,
+    CH2_AMP_MON,
+    POS_20V_MON,
+    NEG_20V_MON,
+    TEMP_SENSOR,
+    INTERNAL_REF,
+    NUMBER_OF_CHANNELS
+}Type_ADC_Channel;
 
 typedef enum
 {
-    CHANNEL_1 = 0,
-    CHANNEL_2
-}Type_Channel;
-
-typedef enum
-{
-    OFF = 0,
-    ON = 1
-}Type_RelaySwitch;
-
-typedef enum
-{
-    ONE_MEG_OHM = 0,
-    FIFTY_OHM
-}Type_InputImpedance;
-
-typedef struct
-{
-    double                  CurrentLimit;
-    Type_InputImpedance     InputImpedance;
-    Type_RelaySwitch        OutputSwitch;
-}Type_ChannelConfig;
-
-typedef struct
-{
-    Type_ScreenType     Screen;
-    Type_Channel        ActiveChannel;
-    Type_ChannelConfig  CH1;
-    Type_ChannelConfig  CH2;
-}Type_ArbPwrBoosterStatus;
+    RANK_1 = 0,
+    RANK_2,
+    RANK_3
+}Type_ADC_ChannelRank;
 
 
-// EXTERNS
-extern Type_ArbPwrBoosterStatus ArbPwrBoosterStatus;
+// FUNCTION PROTOTYPES
+void Init_ADC_Hardware(void);
 
 
-// FUNCTION PROTOTYES
-void Init_ArbPwrBooster(void);
-void Init_ArbPwrBoosterHardware(void);
 
 #ifdef __cplusplus
 }
 #endif
-#endif /* APPLICATION_USER_APP_SUPPORT_INC_MAIN_SUPPORT_H_ */
+#endif /* APPLICATION_USER_ADC_SUPPORT_H_ */

@@ -224,7 +224,7 @@ Screen_MainViewBase::Screen_MainViewBase() :
     textArea_CH1_UnitsMax.setTypedText(touchgfx::TypedText(T___SINGLEUSE_DMP0));
     add(textArea_CH1_UnitsMax);
 
-    textArea2_CH1_Amax.setXY(23, 76);
+    textArea2_CH1_Amax.setXY(22, 76);
     textArea2_CH1_Amax.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
     textArea2_CH1_Amax.setLinespacing(0);
     Unicode::snprintf(textArea2_CH1_AmaxBuffer, TEXTAREA2_CH1_AMAX_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_H7TK).getText());

@@ -729,7 +729,7 @@
           {
             "Type": "TextArea",
             "Name": "textArea2_CH1_Amax",
-            "X": 23,
+            "X": 22,
             "Y": 76,
             "Width": 94,
             "Height": 40,
