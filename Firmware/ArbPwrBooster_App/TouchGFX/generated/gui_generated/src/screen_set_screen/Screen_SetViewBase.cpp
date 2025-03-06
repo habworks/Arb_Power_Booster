@@ -7,7 +7,9 @@
 #include <texts/TextKeysAndLanguages.hpp>
 
 Screen_SetViewBase::Screen_SetViewBase() :
-    flexButtonCallback(this, &Screen_SetViewBase::flexButtonCallbackHandler)
+    flexButtonCallback(this, &Screen_SetViewBase::flexButtonCallbackHandler),
+    radioButtonSelectedCallback(this, &Screen_SetViewBase::radioButtonSelectedCallbackHandler),
+    radioButtonDeselectedCallback(this, &Screen_SetViewBase::radioButtonDeselectedCallbackHandler)
 {
     __background.setPosition(0, 0, 480, 272);
     __background.setColor(touchgfx::Color::getColorFromRGB(0, 0, 0));
@@ -40,33 +42,6 @@ Screen_SetViewBase::Screen_SetViewBase() :
     flexButton_Home.setPosition(406, 202, 60, 60);
     add(flexButton_Home);
 
-    flexButton_AmpsDigit_3.setBoxWithBorderPosition(0, 0, 31, 39);
-    flexButton_AmpsDigit_3.setBorderSize(0);
-    flexButton_AmpsDigit_3.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
-    flexButton_AmpsDigit_3.setAlpha(0);
-    flexButton_AmpsDigit_3.setPosition(220, 97, 31, 39);
-    add(flexButton_AmpsDigit_3);
-
-    flexButton_AmpsDigit_2.setBoxWithBorderPosition(0, 0, 31, 39);
-    flexButton_AmpsDigit_2.setBorderSize(0);
-    flexButton_AmpsDigit_2.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
-    flexButton_AmpsDigit_2.setAlpha(0);
-    flexButton_AmpsDigit_2.setPosition(189, 97, 31, 39);
-    add(flexButton_AmpsDigit_2);
-
-    flexButton_AmpsDigit_1.setBoxWithBorderPosition(0, 0, 31, 39);
-    flexButton_AmpsDigit_1.setBorderSize(0);
-    flexButton_AmpsDigit_1.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
-    flexButton_AmpsDigit_1.setAlpha(0);
-    flexButton_AmpsDigit_1.setPosition(158, 97, 31, 39);
-    add(flexButton_AmpsDigit_1);
-
-    flexButton_AmpsDigit_0.setBoxWithBorderPosition(0, 0, 31, 39);
-    flexButton_AmpsDigit_0.setBorderSize(0);
-    flexButton_AmpsDigit_0.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
-    flexButton_AmpsDigit_0.setPosition(112, 97, 31, 39);
-    add(flexButton_AmpsDigit_0);
-
     textArea_EnableLimit.setXY(83, 143);
     textArea_EnableLimit.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
     textArea_EnableLimit.setLinespacing(0);
@@ -79,10 +54,14 @@ Screen_SetViewBase::Screen_SetViewBase() :
     textArea_Units.setTypedText(touchgfx::TypedText(T___SINGLEUSE_09DY));
     add(textArea_Units);
 
+    radioButtonGroup1.setRadioButtonSelectedHandler(radioButtonSelectedCallback);
+    
+    radioButtonGroup1.setRadioButtonDeselectedHandler(radioButtonDeselectedCallback);
+    
     radioButton_EnableLimit.setXY(25, 140);
-    radioButton_EnableLimit.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_RADIOBUTTON_RADIO_MEDIUM_ROUNDED_OFF_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_RADIOBUTTON_RADIO_MEDIUM_ROUNDED_OFF_PRESSED_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_RADIOBUTTON_RADIO_MEDIUM_ROUNDED_ON_DARK_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_RADIOBUTTON_RADIO_MEDIUM_ROUNDED_ON_PRESSED_ID));
-    radioButton_EnableLimit.setSelected(false);
-    radioButton_EnableLimit.setDeselectionEnabled(false);
+    radioButton_EnableLimit.setBitmaps(touchgfx::Bitmap(BITMAP_DARK_THEME_IMAGES_WIDGETS_RADIOBUTTON_CHECK_MEDIUM_ROUNDED_OFF_ID), touchgfx::Bitmap(BITMAP_DARK_THEME_IMAGES_WIDGETS_RADIOBUTTON_CHECK_MEDIUM_ROUNDED_OFF_PRESSED_ID), touchgfx::Bitmap(BITMAP_DARK_THEME_IMAGES_WIDGETS_RADIOBUTTON_CHECK_MEDIUM_ROUNDED_ON_ACTIVE_ID), touchgfx::Bitmap(BITMAP_DARK_THEME_IMAGES_WIDGETS_RADIOBUTTON_CHECK_MEDIUM_ROUNDED_ON_PRESSED_ID));
+    radioButton_EnableLimit.setSelected(true);
+    radioButton_EnableLimit.setDeselectionEnabled(true);
     radioButtonGroup1.add(radioButton_EnableLimit);
     add(radioButton_EnableLimit);
 
@@ -92,14 +71,29 @@ Screen_SetViewBase::Screen_SetViewBase() :
     textArea_DecimalPoint.setTypedText(touchgfx::TypedText(T___SINGLEUSE_VEF3));
     add(textArea_DecimalPoint);
 
-    textArea_AmpsDigit_3.setXY(220, 70);
+    flexButton_AmpsDigit_3.setBoxWithBorderPosition(0, 0, 31, 39);
+    flexButton_AmpsDigit_3.setBorderSize(0);
+    flexButton_AmpsDigit_3.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
+    flexButton_AmpsDigit_3.setAlpha(0);
+    flexButton_AmpsDigit_3.setAction(flexButtonCallback);
+    flexButton_AmpsDigit_3.setPosition(220, 97, 31, 39);
+    add(flexButton_AmpsDigit_3);
+
+    textArea_AmpsDigit_3.setPosition(220, 70, 31, 73);
     textArea_AmpsDigit_3.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
     textArea_AmpsDigit_3.setLinespacing(0);
     Unicode::snprintf(textArea_AmpsDigit_3Buffer, TEXTAREA_AMPSDIGIT_3_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_4UZC).getText());
     textArea_AmpsDigit_3.setWildcard(textArea_AmpsDigit_3Buffer);
-    textArea_AmpsDigit_3.resizeToCurrentText();
     textArea_AmpsDigit_3.setTypedText(touchgfx::TypedText(T___SINGLEUSE_CVX8));
     add(textArea_AmpsDigit_3);
+
+    flexButton_AmpsDigit_2.setBoxWithBorderPosition(0, 0, 31, 39);
+    flexButton_AmpsDigit_2.setBorderSize(0);
+    flexButton_AmpsDigit_2.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
+    flexButton_AmpsDigit_2.setAlpha(0);
+    flexButton_AmpsDigit_2.setAction(flexButtonCallback);
+    flexButton_AmpsDigit_2.setPosition(189, 97, 31, 39);
+    add(flexButton_AmpsDigit_2);
 
     textArea_AmpsDigit_2.setXY(189, 70);
     textArea_AmpsDigit_2.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
@@ -110,6 +104,14 @@ Screen_SetViewBase::Screen_SetViewBase() :
     textArea_AmpsDigit_2.setTypedText(touchgfx::TypedText(T___SINGLEUSE_HJDJ));
     add(textArea_AmpsDigit_2);
 
+    flexButton_AmpsDigit_1.setBoxWithBorderPosition(0, 0, 31, 39);
+    flexButton_AmpsDigit_1.setBorderSize(0);
+    flexButton_AmpsDigit_1.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
+    flexButton_AmpsDigit_1.setAlpha(0);
+    flexButton_AmpsDigit_1.setAction(flexButtonCallback);
+    flexButton_AmpsDigit_1.setPosition(158, 97, 31, 39);
+    add(flexButton_AmpsDigit_1);
+
     textArea_AmpsDigit_1.setXY(158, 70);
     textArea_AmpsDigit_1.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
     textArea_AmpsDigit_1.setLinespacing(0);
@@ -118,6 +120,13 @@ Screen_SetViewBase::Screen_SetViewBase() :
     textArea_AmpsDigit_1.resizeToCurrentText();
     textArea_AmpsDigit_1.setTypedText(touchgfx::TypedText(T___SINGLEUSE_ZV9R));
     add(textArea_AmpsDigit_1);
+
+    flexButton_AmpsDigit_0.setBoxWithBorderPosition(0, 0, 31, 39);
+    flexButton_AmpsDigit_0.setBorderSize(0);
+    flexButton_AmpsDigit_0.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
+    flexButton_AmpsDigit_0.setAction(flexButtonCallback);
+    flexButton_AmpsDigit_0.setPosition(112, 97, 31, 39);
+    add(flexButton_AmpsDigit_0);
 
     textArea_AmpsDigit_0.setXY(112, 70);
     textArea_AmpsDigit_0.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
@@ -139,6 +148,7 @@ Screen_SetViewBase::Screen_SetViewBase() :
     flexButton_DigitDown.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
     flexButton_DigitDown.setIconBitmaps(Bitmap(BITMAP_ICON_THEME_IMAGES_NAVIGATION_ARROW_DROP_DOWN_80_80_E8F6FB_SVG_ID), Bitmap(BITMAP_ICON_THEME_IMAGES_NAVIGATION_ARROW_DROP_DOWN_80_80_E8F6FB_SVG_ID));
     flexButton_DigitDown.setIconXY(-9, -8);
+    flexButton_DigitDown.setAction(flexButtonCallback);
     flexButton_DigitDown.setPosition(406, 128, 60, 60);
     add(flexButton_DigitDown);
 
@@ -147,6 +157,7 @@ Screen_SetViewBase::Screen_SetViewBase() :
     flexButton_DigitUp.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
     flexButton_DigitUp.setIconBitmaps(Bitmap(BITMAP_ICON_THEME_IMAGES_NAVIGATION_ARROW_DROP_UP_80_80_E8F6FB_SVG_ID), Bitmap(BITMAP_ICON_THEME_IMAGES_NAVIGATION_ARROW_DROP_UP_80_80_E8F6FB_SVG_ID));
     flexButton_DigitUp.setIconXY(-8, -8);
+    flexButton_DigitUp.setAction(flexButtonCallback);
     flexButton_DigitUp.setPosition(406, 58, 60, 60);
     add(flexButton_DigitUp);
 
@@ -164,24 +175,88 @@ Screen_SetViewBase::~Screen_SetViewBase()
 
 void Screen_SetViewBase::setupScreen()
 {
-
+    transitionBegins();
 }
 
 void Screen_SetViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButtonContainer& src)
 {
     if (&src == &flexButton_Home)
     {
-        //Interaction1
+        //Interaction_MainTransistion
         //When flexButton_Home clicked change screen to Screen_Main
         //Go to Screen_Main with screen transition towards West
         application().gotoScreen_MainScreenSlideTransitionWest();
     }
+    if (&src == &flexButton_AmpsDigit_0)
+    {
+        //Interaction_SetInteger
+        //When flexButton_AmpsDigit_0 clicked call virtual function
+        //Call setIntegerToUpdate
+        setIntegerToUpdate();
+    }
+    if (&src == &flexButton_AmpsDigit_1)
+    {
+        //Interaction_SetTenths
+        //When flexButton_AmpsDigit_1 clicked call virtual function
+        //Call setTenthsToUpdate
+        setTenthsToUpdate();
+    }
+    if (&src == &flexButton_AmpsDigit_2)
+    {
+        //Interaction_SetHundredths
+        //When flexButton_AmpsDigit_2 clicked call virtual function
+        //Call setHundredthsToUpdate
+        setHundredthsToUpdate();
+    }
+    if (&src == &flexButton_AmpsDigit_3)
+    {
+        //Interaction_SetThousandths
+        //When flexButton_AmpsDigit_3 clicked call virtual function
+        //Call setThousandthsToUpdate
+        setThousandthsToUpdate();
+    }
+    if (&src == &flexButton_DigitUp)
+    {
+        //Interaction_DigitUp
+        //When flexButton_DigitUp clicked call virtual function
+        //Call incrementDigitUp
+        incrementDigitUp();
+    }
+    if (&src == &flexButton_DigitDown)
+    {
+        //Interaction_DigitDown
+        //When flexButton_DigitDown clicked call virtual function
+        //Call incrementDigitDown
+        incrementDigitDown();
+    }
 }
 
-void Screen_SetViewBase::afterTransition()
+void Screen_SetViewBase::radioButtonSelectedCallbackHandler(const touchgfx::AbstractButton& src)
 {
-    //Interaction2
-    //When screen transition ends call virtual function
+    if (&src == &radioButton_EnableLimit)
+    {
+        //Interaction_EnableLimit
+        //When radioButton_EnableLimit selected call virtual function
+        //Call enableCurrentLimit
+        enableCurrentLimit();
+    }
+}
+
+void Screen_SetViewBase::radioButtonDeselectedCallbackHandler(const touchgfx::AbstractButton& src)
+{
+    if (&src == &radioButton_EnableLimit)
+    {
+        //Interaction_DisableLimit
+        //When radioButton_EnableLimit deselected call virtual function
+        //Call disableCurrentLimit
+        disableCurrentLimit();
+    }
+}
+
+void Screen_SetViewBase::transitionBegins()
+{
+    //Interaction_UpdateSetScreen
+    //When screen transition begins call virtual function
     //Call update_Screen_Set
     update_Screen_Set();
 }

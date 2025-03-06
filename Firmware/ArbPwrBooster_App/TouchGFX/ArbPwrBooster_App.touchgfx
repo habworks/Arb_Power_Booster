@@ -1344,6 +1344,69 @@
             ]
           },
           {
+            "Type": "TextArea",
+            "Name": "textArea_EnableLimit",
+            "X": 83,
+            "Y": 143,
+            "Width": 117,
+            "Height": 24,
+            "TextId": "__SingleUse_C9E9",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 199,
+              "Blue": 25
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_Units",
+            "X": 262,
+            "Y": 70,
+            "Width": 126,
+            "Height": 73,
+            "TextId": "__SingleUse_09DY",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 199,
+              "Blue": 25
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "RadioButton",
+            "Name": "radioButton_EnableLimit",
+            "X": 25,
+            "Y": 140,
+            "Width": 36,
+            "Height": 36,
+            "Selected": true,
+            "Deselectable": true,
+            "FileNameSelected": "__generated\\dark_theme_images_widgets_radiobutton_check_medium_rounded_on_active.png",
+            "FileNameSelectedPressed": "__generated\\dark_theme_images_widgets_radiobutton_check_medium_rounded_on_pressed.png",
+            "FileNameUnselected": "__generated\\dark_theme_images_widgets_radiobutton_check_medium_rounded_off.png",
+            "FileNameUnselectedPressed": "__generated\\dark_theme_images_widgets_radiobutton_check_medium_rounded_off_pressed.png",
+            "RadioButtonGroup": "radioButtonGroup1"
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_DecimalPoint",
+            "X": 143,
+            "Y": 70,
+            "Width": 15,
+            "Height": 73,
+            "TextId": "__SingleUse_VEF3",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 199,
+              "Blue": 25
+            },
+            "AutoSize": true
+          },
+          {
             "Type": "FlexButton",
             "Name": "flexButton_AmpsDigit_3",
             "X": 220,
@@ -1379,6 +1442,26 @@
                 }
               }
             ]
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_AmpsDigit_3",
+            "X": 220,
+            "Y": 70,
+            "Width": 31,
+            "Height": 73,
+            "TextId": "__SingleUse_CVX8",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 199,
+              "Blue": 25
+            },
+            "Wildcard1": {
+              "TextId": "__SingleUse_4UZC",
+              "UseBuffer": true,
+              "BufferSize": 2
+            }
           },
           {
             "Type": "FlexButton",
@@ -1418,6 +1501,27 @@
             ]
           },
           {
+            "Type": "TextArea",
+            "Name": "textArea_AmpsDigit_2",
+            "X": 189,
+            "Y": 70,
+            "Width": 31,
+            "Height": 73,
+            "TextId": "__SingleUse_HJDJ",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 199,
+              "Blue": 25
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_X013",
+              "UseBuffer": true,
+              "BufferSize": 2
+            }
+          },
+          {
             "Type": "FlexButton",
             "Name": "flexButton_AmpsDigit_1",
             "X": 158,
@@ -1455,6 +1559,27 @@
             ]
           },
           {
+            "Type": "TextArea",
+            "Name": "textArea_AmpsDigit_1",
+            "X": 158,
+            "Y": 70,
+            "Width": 31,
+            "Height": 73,
+            "TextId": "__SingleUse_ZV9R",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 199,
+              "Blue": 25
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_KT6N",
+              "UseBuffer": true,
+              "BufferSize": 2
+            }
+          },
+          {
             "Type": "FlexButton",
             "Name": "flexButton_AmpsDigit_0",
             "X": 112,
@@ -1489,131 +1614,6 @@
                 }
               }
             ]
-          },
-          {
-            "Type": "TextArea",
-            "Name": "textArea_EnableLimit",
-            "X": 83,
-            "Y": 143,
-            "Width": 117,
-            "Height": 24,
-            "TextId": "__SingleUse_C9E9",
-            "TextRotation": "0",
-            "Color": {
-              "Red": 212,
-              "Green": 199,
-              "Blue": 25
-            },
-            "AutoSize": true
-          },
-          {
-            "Type": "TextArea",
-            "Name": "textArea_Units",
-            "X": 262,
-            "Y": 70,
-            "Width": 126,
-            "Height": 73,
-            "TextId": "__SingleUse_09DY",
-            "TextRotation": "0",
-            "Color": {
-              "Red": 212,
-              "Green": 199,
-              "Blue": 25
-            },
-            "AutoSize": true
-          },
-          {
-            "Type": "RadioButton",
-            "Name": "radioButton_EnableLimit",
-            "X": 25,
-            "Y": 140,
-            "Width": 36,
-            "Height": 36,
-            "FileNameSelected": "__generated\\alternate_theme_images_widgets_radiobutton_radio_medium_rounded_on_dark.png",
-            "FileNameSelectedPressed": "__generated\\alternate_theme_images_widgets_radiobutton_radio_medium_rounded_on_pressed.png",
-            "FileNameUnselected": "__generated\\alternate_theme_images_widgets_radiobutton_radio_medium_rounded_off.png",
-            "FileNameUnselectedPressed": "__generated\\alternate_theme_images_widgets_radiobutton_radio_medium_rounded_off_pressed.png",
-            "RadioButtonGroup": "radioButtonGroup1",
-            "Preset": "alternate_theme\\presets\\radiobutton\\radio\\medium_dark_rounded.json"
-          },
-          {
-            "Type": "TextArea",
-            "Name": "textArea_DecimalPoint",
-            "X": 143,
-            "Y": 70,
-            "Width": 15,
-            "Height": 73,
-            "TextId": "__SingleUse_VEF3",
-            "TextRotation": "0",
-            "Color": {
-              "Red": 212,
-              "Green": 199,
-              "Blue": 25
-            },
-            "AutoSize": true
-          },
-          {
-            "Type": "TextArea",
-            "Name": "textArea_AmpsDigit_3",
-            "X": 220,
-            "Y": 70,
-            "Width": 31,
-            "Height": 73,
-            "TextId": "__SingleUse_CVX8",
-            "TextRotation": "0",
-            "Color": {
-              "Red": 212,
-              "Green": 199,
-              "Blue": 25
-            },
-            "AutoSize": true,
-            "Wildcard1": {
-              "TextId": "__SingleUse_4UZC",
-              "UseBuffer": true,
-              "BufferSize": 2
-            }
-          },
-          {
-            "Type": "TextArea",
-            "Name": "textArea_AmpsDigit_2",
-            "X": 189,
-            "Y": 70,
-            "Width": 31,
-            "Height": 73,
-            "TextId": "__SingleUse_HJDJ",
-            "TextRotation": "0",
-            "Color": {
-              "Red": 212,
-              "Green": 199,
-              "Blue": 25
-            },
-            "AutoSize": true,
-            "Wildcard1": {
-              "TextId": "__SingleUse_X013",
-              "UseBuffer": true,
-              "BufferSize": 2
-            }
-          },
-          {
-            "Type": "TextArea",
-            "Name": "textArea_AmpsDigit_1",
-            "X": 158,
-            "Y": 70,
-            "Width": 31,
-            "Height": 73,
-            "TextId": "__SingleUse_ZV9R",
-            "TextRotation": "0",
-            "Color": {
-              "Red": 212,
-              "Green": 199,
-              "Blue": 25
-            },
-            "AutoSize": true,
-            "Wildcard1": {
-              "TextId": "__SingleUse_KT6N",
-              "UseBuffer": true,
-              "BufferSize": 2
-            }
           },
           {
             "Type": "TextArea",
@@ -1759,7 +1759,7 @@
         ],
         "Interactions": [
           {
-            "InteractionName": "Interaction1",
+            "InteractionName": "Interaction_MainTransistion",
             "Trigger": {
               "Type": "TriggerClicked",
               "TriggerComponent": "flexButton_Home"
@@ -1772,13 +1772,101 @@
             }
           },
           {
-            "InteractionName": "Interaction2",
+            "InteractionName": "Interaction_UpdateSetScreen",
             "Trigger": {
-              "Type": "TriggerScreenEntered"
+              "Type": "TriggerScreenTransitionBegins"
             },
             "Action": {
               "Type": "ActionCustom",
               "FunctionName": "update_Screen_Set"
+            }
+          },
+          {
+            "InteractionName": "Interaction_EnableLimit",
+            "Trigger": {
+              "Type": "TriggerRadioButtonSelected",
+              "TriggerComponent": "radioButton_EnableLimit"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "enableCurrentLimit"
+            }
+          },
+          {
+            "InteractionName": "Interaction_DisableLimit",
+            "Trigger": {
+              "Type": "TriggerRadioButtonDeselected",
+              "TriggerComponent": "radioButton_EnableLimit"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "disableCurrentLimit"
+            }
+          },
+          {
+            "InteractionName": "Interaction_SetInteger",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "flexButton_AmpsDigit_0"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "setIntegerToUpdate"
+            }
+          },
+          {
+            "InteractionName": "Interaction_SetTenths",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "flexButton_AmpsDigit_1"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "setTenthsToUpdate"
+            }
+          },
+          {
+            "InteractionName": "Interaction_SetHundredths",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "flexButton_AmpsDigit_2"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "setHundredthsToUpdate"
+            }
+          },
+          {
+            "InteractionName": "Interaction_SetThousandths",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "flexButton_AmpsDigit_3"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "setThousandthsToUpdate"
+            }
+          },
+          {
+            "InteractionName": "Interaction_DigitUp",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "flexButton_DigitUp"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "incrementDigitUp"
+            }
+          },
+          {
+            "InteractionName": "Interaction_DigitDown",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "flexButton_DigitDown"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "incrementDigitDown"
             }
           }
         ]

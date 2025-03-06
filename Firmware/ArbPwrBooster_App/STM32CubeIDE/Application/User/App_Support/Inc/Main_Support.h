@@ -53,6 +53,9 @@ extern"C" {
 #define DISABLE_BASE_COLOR_RED  0x96
 #define DISABLE_BASE_COLOR_GRN  0x96
 #define DISABLE_BASE_COLOR_BLU  0x96
+// ALPHA FADING
+#define ALPAH_FULL_VISIBLE      0xFF
+#define ALPHA_ZERO_VISIBLE      0x00
 
 
 // TYPEDEFS AND ENUMS
@@ -82,6 +85,14 @@ typedef enum
     FIFTY_OHM
 }Type_InputImpedance;
 
+typedef enum
+{
+    INTEGER = 0,
+    TENTHS,
+    HUNDREDTHS,
+    THOUSANDTHS
+}Type_SetLimitDigit;
+
 typedef struct
 {
     bool                    Enable;
@@ -98,6 +109,7 @@ typedef struct
 typedef struct
 {
     Type_ScreenType     Screen;
+    Type_SetLimitDigit  SetLimitDigit;
     Type_Channel        ActiveChannel;
     Type_ChannelConfig  CH1;
     Type_ChannelConfig  CH2;

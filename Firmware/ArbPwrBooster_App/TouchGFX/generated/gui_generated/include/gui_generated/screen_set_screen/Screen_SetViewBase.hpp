@@ -21,12 +21,44 @@ public:
     Screen_SetViewBase();
     virtual ~Screen_SetViewBase();
     virtual void setupScreen();
-    virtual void afterTransition();
+    virtual void transitionBegins();
 
     /*
      * Virtual Action Handlers
      */
     virtual void update_Screen_Set()
+    {
+        // Override and implement this function in Screen_Set
+    }
+    virtual void enableCurrentLimit()
+    {
+        // Override and implement this function in Screen_Set
+    }
+    virtual void disableCurrentLimit()
+    {
+        // Override and implement this function in Screen_Set
+    }
+    virtual void setIntegerToUpdate()
+    {
+        // Override and implement this function in Screen_Set
+    }
+    virtual void setTenthsToUpdate()
+    {
+        // Override and implement this function in Screen_Set
+    }
+    virtual void setHundredthsToUpdate()
+    {
+        // Override and implement this function in Screen_Set
+    }
+    virtual void setThousandthsToUpdate()
+    {
+        // Override and implement this function in Screen_Set
+    }
+    virtual void incrementDigitUp()
+    {
+        // Override and implement this function in Screen_Set
+    }
+    virtual void incrementDigitDown()
     {
         // Override and implement this function in Screen_Set
     }
@@ -44,18 +76,18 @@ protected:
     touchgfx::TextArea textArea_ResetMinMax;
     touchgfx::IconButtonStyle< touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  >  flexButton_ResetMinMax;
     touchgfx::IconButtonStyle< touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  >  flexButton_Home;
-    touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_AmpsDigit_3;
-    touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_AmpsDigit_2;
-    touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_AmpsDigit_1;
-    touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_AmpsDigit_0;
     touchgfx::TextArea textArea_EnableLimit;
     touchgfx::TextArea textArea_Units;
     touchgfx::RadioButtonGroup<1> radioButtonGroup1;
     touchgfx::RadioButton radioButton_EnableLimit;
     touchgfx::TextArea textArea_DecimalPoint;
+    touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_AmpsDigit_3;
     touchgfx::TextAreaWithOneWildcard textArea_AmpsDigit_3;
+    touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_AmpsDigit_2;
     touchgfx::TextAreaWithOneWildcard textArea_AmpsDigit_2;
+    touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_AmpsDigit_1;
     touchgfx::TextAreaWithOneWildcard textArea_AmpsDigit_1;
+    touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_AmpsDigit_0;
     touchgfx::TextAreaWithOneWildcard textArea_AmpsDigit_0;
     touchgfx::TextArea textArea_CH_ToSet;
     touchgfx::IconButtonStyle< touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  >  flexButton_DigitDown;
@@ -80,11 +112,15 @@ private:
      * Callback Declarations
      */
     touchgfx::Callback<Screen_SetViewBase, const touchgfx::AbstractButtonContainer&> flexButtonCallback;
+    touchgfx::Callback<Screen_SetViewBase, const touchgfx::AbstractButton&> radioButtonSelectedCallback;
+    touchgfx::Callback<Screen_SetViewBase, const touchgfx::AbstractButton&> radioButtonDeselectedCallback;
 
     /*
      * Callback Handler Declarations
      */
     void flexButtonCallbackHandler(const touchgfx::AbstractButtonContainer& src);
+    void radioButtonSelectedCallbackHandler(const touchgfx::AbstractButton& src);
+    void radioButtonDeselectedCallbackHandler(const touchgfx::AbstractButton& src);
 
 };
 
