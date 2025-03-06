@@ -13,6 +13,7 @@
 #include <touchgfx/containers/buttons/Buttons.hpp>
 #include <touchgfx/widgets/RadioButton.hpp>
 #include <touchgfx/widgets/RadioButtonGroup.hpp>
+#include <touchgfx/widgets/TextAreaWithWildcard.hpp>
 
 class Screen_SetViewBase : public touchgfx::View<Screen_SetPresenter>
 {
@@ -20,6 +21,15 @@ public:
     Screen_SetViewBase();
     virtual ~Screen_SetViewBase();
     virtual void setupScreen();
+    virtual void afterTransition();
+
+    /*
+     * Virtual Action Handlers
+     */
+    virtual void update_Screen_Set()
+    {
+        // Override and implement this function in Screen_Set
+    }
 
 protected:
     FrontendApplication& application() {
@@ -38,19 +48,31 @@ protected:
     touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_AmpsDigit_2;
     touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_AmpsDigit_1;
     touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_AmpsDigit_0;
-    touchgfx::TextArea textArea_DisableLimit;
+    touchgfx::TextArea textArea_EnableLimit;
     touchgfx::TextArea textArea_Units;
     touchgfx::RadioButtonGroup<1> radioButtonGroup1;
     touchgfx::RadioButton radioButton_EnableLimit;
     touchgfx::TextArea textArea_DecimalPoint;
-    touchgfx::TextArea textArea__AmpsDigit_3;
-    touchgfx::TextArea textArea__AmpsDigit_2;
-    touchgfx::TextArea textArea__AmpsDigit_1;
-    touchgfx::TextArea textArea_AmpsDigit_0;
+    touchgfx::TextAreaWithOneWildcard textArea_AmpsDigit_3;
+    touchgfx::TextAreaWithOneWildcard textArea_AmpsDigit_2;
+    touchgfx::TextAreaWithOneWildcard textArea_AmpsDigit_1;
+    touchgfx::TextAreaWithOneWildcard textArea_AmpsDigit_0;
     touchgfx::TextArea textArea_CH_ToSet;
     touchgfx::IconButtonStyle< touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  >  flexButton_DigitDown;
     touchgfx::IconButtonStyle< touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  >  flexButton_DigitUp;
     touchgfx::TextArea textArea_TitleSet;
+
+    /*
+     * Wildcard Buffers
+     */
+    static const uint16_t TEXTAREA_AMPSDIGIT_3_SIZE = 2;
+    touchgfx::Unicode::UnicodeChar textArea_AmpsDigit_3Buffer[TEXTAREA_AMPSDIGIT_3_SIZE];
+    static const uint16_t TEXTAREA_AMPSDIGIT_2_SIZE = 2;
+    touchgfx::Unicode::UnicodeChar textArea_AmpsDigit_2Buffer[TEXTAREA_AMPSDIGIT_2_SIZE];
+    static const uint16_t TEXTAREA_AMPSDIGIT_1_SIZE = 2;
+    touchgfx::Unicode::UnicodeChar textArea_AmpsDigit_1Buffer[TEXTAREA_AMPSDIGIT_1_SIZE];
+    static const uint16_t TEXTAREA_AMPSDIGIT_0_SIZE = 3;
+    touchgfx::Unicode::UnicodeChar textArea_AmpsDigit_0Buffer[TEXTAREA_AMPSDIGIT_0_SIZE];
 
 private:
 

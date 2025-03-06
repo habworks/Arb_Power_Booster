@@ -67,11 +67,11 @@ Screen_SetViewBase::Screen_SetViewBase() :
     flexButton_AmpsDigit_0.setPosition(112, 97, 31, 39);
     add(flexButton_AmpsDigit_0);
 
-    textArea_DisableLimit.setXY(83, 143);
-    textArea_DisableLimit.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
-    textArea_DisableLimit.setLinespacing(0);
-    textArea_DisableLimit.setTypedText(touchgfx::TypedText(T___SINGLEUSE_C9E9));
-    add(textArea_DisableLimit);
+    textArea_EnableLimit.setXY(83, 143);
+    textArea_EnableLimit.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
+    textArea_EnableLimit.setLinespacing(0);
+    textArea_EnableLimit.setTypedText(touchgfx::TypedText(T___SINGLEUSE_C9E9));
+    add(textArea_EnableLimit);
 
     textArea_Units.setXY(262, 70);
     textArea_Units.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
@@ -92,27 +92,39 @@ Screen_SetViewBase::Screen_SetViewBase() :
     textArea_DecimalPoint.setTypedText(touchgfx::TypedText(T___SINGLEUSE_VEF3));
     add(textArea_DecimalPoint);
 
-    textArea__AmpsDigit_3.setXY(220, 70);
-    textArea__AmpsDigit_3.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
-    textArea__AmpsDigit_3.setLinespacing(0);
-    textArea__AmpsDigit_3.setTypedText(touchgfx::TypedText(T___SINGLEUSE_CVX8));
-    add(textArea__AmpsDigit_3);
+    textArea_AmpsDigit_3.setXY(220, 70);
+    textArea_AmpsDigit_3.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
+    textArea_AmpsDigit_3.setLinespacing(0);
+    Unicode::snprintf(textArea_AmpsDigit_3Buffer, TEXTAREA_AMPSDIGIT_3_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_4UZC).getText());
+    textArea_AmpsDigit_3.setWildcard(textArea_AmpsDigit_3Buffer);
+    textArea_AmpsDigit_3.resizeToCurrentText();
+    textArea_AmpsDigit_3.setTypedText(touchgfx::TypedText(T___SINGLEUSE_CVX8));
+    add(textArea_AmpsDigit_3);
 
-    textArea__AmpsDigit_2.setXY(189, 70);
-    textArea__AmpsDigit_2.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
-    textArea__AmpsDigit_2.setLinespacing(0);
-    textArea__AmpsDigit_2.setTypedText(touchgfx::TypedText(T___SINGLEUSE_HJDJ));
-    add(textArea__AmpsDigit_2);
+    textArea_AmpsDigit_2.setXY(189, 70);
+    textArea_AmpsDigit_2.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
+    textArea_AmpsDigit_2.setLinespacing(0);
+    Unicode::snprintf(textArea_AmpsDigit_2Buffer, TEXTAREA_AMPSDIGIT_2_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_X013).getText());
+    textArea_AmpsDigit_2.setWildcard(textArea_AmpsDigit_2Buffer);
+    textArea_AmpsDigit_2.resizeToCurrentText();
+    textArea_AmpsDigit_2.setTypedText(touchgfx::TypedText(T___SINGLEUSE_HJDJ));
+    add(textArea_AmpsDigit_2);
 
-    textArea__AmpsDigit_1.setXY(158, 70);
-    textArea__AmpsDigit_1.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
-    textArea__AmpsDigit_1.setLinespacing(0);
-    textArea__AmpsDigit_1.setTypedText(touchgfx::TypedText(T___SINGLEUSE_ZV9R));
-    add(textArea__AmpsDigit_1);
+    textArea_AmpsDigit_1.setXY(158, 70);
+    textArea_AmpsDigit_1.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
+    textArea_AmpsDigit_1.setLinespacing(0);
+    Unicode::snprintf(textArea_AmpsDigit_1Buffer, TEXTAREA_AMPSDIGIT_1_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_KT6N).getText());
+    textArea_AmpsDigit_1.setWildcard(textArea_AmpsDigit_1Buffer);
+    textArea_AmpsDigit_1.resizeToCurrentText();
+    textArea_AmpsDigit_1.setTypedText(touchgfx::TypedText(T___SINGLEUSE_ZV9R));
+    add(textArea_AmpsDigit_1);
 
     textArea_AmpsDigit_0.setXY(112, 70);
     textArea_AmpsDigit_0.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
     textArea_AmpsDigit_0.setLinespacing(0);
+    Unicode::snprintf(textArea_AmpsDigit_0Buffer, TEXTAREA_AMPSDIGIT_0_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_FV3Z).getText());
+    textArea_AmpsDigit_0.setWildcard(textArea_AmpsDigit_0Buffer);
+    textArea_AmpsDigit_0.resizeToCurrentText();
     textArea_AmpsDigit_0.setTypedText(touchgfx::TypedText(T___SINGLEUSE_48L8));
     add(textArea_AmpsDigit_0);
 
@@ -164,4 +176,12 @@ void Screen_SetViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButto
         //Go to Screen_Main with screen transition towards West
         application().gotoScreen_MainScreenSlideTransitionWest();
     }
+}
+
+void Screen_SetViewBase::afterTransition()
+{
+    //Interaction2
+    //When screen transition ends call virtual function
+    //Call update_Screen_Set
+    update_Screen_Set();
 }

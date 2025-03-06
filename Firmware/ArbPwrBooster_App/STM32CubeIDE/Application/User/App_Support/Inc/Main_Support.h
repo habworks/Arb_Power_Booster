@@ -30,12 +30,29 @@
 extern"C" {
 #endif
 
+#include "Hab_Types.h"
+
 // DEFINES
 // Revisions
 #define FW_MAJOR_REV            0U
 #define FW_MINOR_REV            0U
 #define FW_TEST_REV             1U
 #define HW_REVISION             2U
+// BASE COLOR CH1
+#define CH1_BASE_COLOR          0xD4, 0xC7, 0x19
+#define CH1_BASE_COLOR_RED      0xD4
+#define CH1_BASE_COLOR_GRN      0xC7
+#define CH1_BASE_COLOR_BLU      0x19
+// BASE COLOR CH2
+#define CH2_BASE_COLOR          0x17, 0x94, 0xC2
+#define CH2_BASE_COLOR_RED      0x17
+#define CH2_BASE_COLOR_GRN      0x94
+#define CH2_BASE_COLOR_BLU      0xC2
+// DISABLE COLOR
+#define DISABLE_BASE_COLOR      0x96, 0x96, 0x96
+#define DISABLE_BASE_COLOR_RED  0x96
+#define DISABLE_BASE_COLOR_GRN  0x96
+#define DISABLE_BASE_COLOR_BLU  0x96
 
 
 // TYPEDEFS AND ENUMS
@@ -67,7 +84,13 @@ typedef enum
 
 typedef struct
 {
-    double                  CurrentLimit;
+    bool                    Enable;
+    double                  Current;
+}Type_SetLimits;
+
+typedef struct
+{
+    Type_SetLimits          Limit;
     Type_InputImpedance     InputImpedance;
     Type_RelaySwitch        OutputSwitch;
 }Type_ChannelConfig;
@@ -86,8 +109,10 @@ extern Type_ArbPwrBoosterStatus ArbPwrBoosterStatus;
 
 
 // FUNCTION PROTOTYES
-void Init_ArbPwrBooster(void);
+void Init_ArbPwrBoosterClass(void);
 void Init_ArbPwrBoosterHardware(void);
+void digitsFromDouble(double RationalNumber, uint8_t *Integer, uint8_t *Tenths, uint8_t *Hundredths, uint8_t *Thousandths);
+double digitsToDouble(uint8_t *Integer, uint8_t *Tenths, uint8_t *Hundredths, uint8_t *Thousandths);
 
 #ifdef __cplusplus
 }

@@ -11,6 +11,8 @@ public:
     virtual ~Screen_SetView() {}
     virtual void setupScreen();
     virtual void tearDownScreen();
+    // ADDED FUNCTIONS
+    virtual void update_Screen_Set(void);
 protected:
 };
 

@@ -44,13 +44,13 @@ void Screen_MainView::update_Screen_Main(void)
 
     // STEP 2: Update Channel 1
     // Update Current Set Values for channel1
-    Unicode::snprintfFloat(textArea_CH1_CurrentSetBuffer, TEXTAREA_CH1_CURRENTSET_SIZE, "%05.3f", ArbPwrBoosterStatus.CH1.CurrentLimit);
+    Unicode::snprintfFloat(textArea_CH1_CurrentSetBuffer, TEXTAREA_CH1_CURRENTSET_SIZE, "%05.3f", ArbPwrBoosterStatus.CH1.Limit.Current);
     textArea_CH1_CurrentSet.setWildcard(textArea_CH1_CurrentSetBuffer);
     textArea_CH1_CurrentSet.invalidate();
 
     // STEP 3: Update Channel 2
     // Update Current Set Values for channel2
-    Unicode::snprintfFloat(textArea_CH2_CurrentSetBuffer, TEXTAREA_CH2_CURRENTSET_SIZE, "%06.3f", ArbPwrBoosterStatus.CH2.CurrentLimit);
+    Unicode::snprintfFloat(textArea_CH2_CurrentSetBuffer, TEXTAREA_CH2_CURRENTSET_SIZE, "%06.3f", ArbPwrBoosterStatus.CH2.Limit.Current);
     textArea_CH2_CurrentSet.setWildcard(textArea_CH2_CurrentSetBuffer);
     textArea_CH2_CurrentSet.invalidate();
 
@@ -194,3 +194,34 @@ void Screen_MainView::InputImpedanceSet_CH2(void)
     textArea_CH2_InputZ.invalidate();
 
 } // END OF InputImpedanceSet_CH2
+
+
+
+/********************************************************************************************************
+* @brief Sets the active channel as 1 for the purpose of setting limits
+*
+* @author original: Hab Collector \n
+*
+* STEP 1: Set the active channel
+********************************************************************************************************/
+void Screen_MainView::setActiveLimit_CH1(void)
+{
+    // STEP 1: Set the active channel
+    ArbPwrBoosterStatus.ActiveChannel = CHANNEL_1;
+
+} // END OF setActiveLimit_CH1
+
+
+
+/********************************************************************************************************
+* @brief Sets the active channel as 2 for the purpose of setting limits
+*
+* @author original: Hab Collector \n
+*
+* STEP 1: Set the active channel
+********************************************************************************************************/
+void Screen_MainView::setActiveLimit_CH2(void)
+{
+    ArbPwrBoosterStatus.ActiveChannel = CHANNEL_2;
+
+} // END OF setActiveLimit_CH2

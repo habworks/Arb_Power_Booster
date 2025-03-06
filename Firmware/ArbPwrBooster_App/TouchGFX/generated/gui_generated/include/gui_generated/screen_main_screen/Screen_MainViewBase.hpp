@@ -47,6 +47,14 @@ public:
     {
         // Override and implement this function in Screen_Main
     }
+    virtual void setActiveLimit_CH1()
+    {
+        // Override and implement this function in Screen_Main
+    }
+    virtual void setActiveLimit_CH2()
+    {
+        // Override and implement this function in Screen_Main
+    }
 
 protected:
     FrontendApplication& application() {

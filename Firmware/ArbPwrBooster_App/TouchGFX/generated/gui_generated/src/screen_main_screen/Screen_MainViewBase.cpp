@@ -70,6 +70,7 @@ Screen_MainViewBase::Screen_MainViewBase() :
     flexButton_CH2_Set.setBorderSize(5);
     flexButton_CH2_Set.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
     flexButton_CH2_Set.setAlpha(75);
+    flexButton_CH2_Set.setAction(flexButtonCallback);
     flexButton_CH2_Set.setPosition(348, 206, 66, 66);
     add(flexButton_CH2_Set);
 
@@ -274,16 +275,9 @@ void Screen_MainViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButt
         //Call InputImpedanceSet_CH1
         InputImpedanceSet_CH1();
     }
-    if (&src == &flexButton_CH1_Set)
-    {
-        //Interaction_CH1_SetI
-        //When flexButton_CH1_Set clicked change screen to Screen_Set
-        //Go to Screen_Set with screen transition towards East
-        application().gotoScreen_SetScreenSlideTransitionEast();
-    }
     if (&src == &flexButton_Config)
     {
-        //Interaction_Config
+        //Interaction_ConfigTransistion
         //When flexButton_Config clicked change screen to Screen_Config
         //Go to Screen_Config with screen transition towards East
         application().gotoScreen_ConfigScreenSlideTransitionEast();
@@ -308,6 +302,30 @@ void Screen_MainViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButt
         //When flexButton_CH2_InputZ clicked call virtual function
         //Call InputImpedanceSet_CH2
         InputImpedanceSet_CH2();
+    }
+    if (&src == &flexButton_CH1_Set)
+    {
+        //Interaction_CH1_SetI
+        //When flexButton_CH1_Set clicked call virtual function
+        //Call setActiveLimit_CH1
+        setActiveLimit_CH1();
+    
+        //Interaction_CH1_SetTransistion
+        //When Interaction_CH1_SetI completed change screen to Screen_Set
+        //Go to Screen_Set with screen transition towards East
+        application().gotoScreen_SetScreenSlideTransitionEast();
+    }
+    if (&src == &flexButton_CH2_Set)
+    {
+        //Interaction_CH2_SetI
+        //When flexButton_CH2_Set clicked call virtual function
+        //Call setActiveLimit_CH2
+        setActiveLimit_CH2();
+    
+        //Interaction_CH2_SetTransistion
+        //When Interaction_CH2_SetI completed change screen to Screen_Set
+        //Go to Screen_Set with screen transition towards East
+        application().gotoScreen_SetScreenSlideTransitionEast();
     }
 }
 

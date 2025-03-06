@@ -1,4 +1,4 @@
-/** ****************************************************************************************************
+/*******************************************************************************************************
  * @file 			IO_Support.h
  * @brief			This is the Header file used to support IO_Support.c
  * ****************************************************************************************************
@@ -67,6 +67,10 @@ extern"C" {
 #define ADC3_C_RATE_DISABLE()  HAL_GPIO_WritePin(ADC3_CRATE_GPIO_Port, ADC3_CRATE_Pin, GPIO_PIN_RESET)
 #define ADC3_C_RATE_TOGGLE()   HAL_GPIO_TogglePin(ADC3_CRATE_GPIO_Port, ADC3_CRATE_Pin)
 #define ADC3_C_RATE_STATUS()   HAL_GPIO_ReadPin(ADC3_CRATE_GPIO_Port, ADC3_CRATE_Pin)
+
+
+// FUNCTION PROTOTYPES
+void Init_GPIO_Hardware(void);
 
 #ifdef __cplusplus
 }

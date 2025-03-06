@@ -814,10 +814,10 @@
             }
           },
           {
-            "InteractionName": "Interaction_CH1_SetI",
+            "InteractionName": "Interaction_CH1_SetTransistion",
             "Trigger": {
-              "Type": "TriggerClicked",
-              "TriggerComponent": "flexButton_CH1_Set"
+              "Type": "TriggerInteractionCompleted",
+              "InteractionToTriggerOn": "Interaction_CH1_SetI"
             },
             "Action": {
               "Type": "ActionGotoScreen",
@@ -827,7 +827,7 @@
             }
           },
           {
-            "InteractionName": "Interaction_Config",
+            "InteractionName": "Interaction_ConfigTransistion",
             "Trigger": {
               "Type": "TriggerClicked",
               "TriggerComponent": "flexButton_Config"
@@ -880,6 +880,43 @@
             "Action": {
               "Type": "ActionCustom",
               "FunctionName": "InputImpedanceSet_CH2"
+            }
+          },
+          {
+            "InteractionName": "Interaction_CH1_SetI",
+            "HasCompletedTrigger": true,
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "flexButton_CH1_Set"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "setActiveLimit_CH1"
+            }
+          },
+          {
+            "InteractionName": "Interaction_CH2_SetTransistion",
+            "Trigger": {
+              "Type": "TriggerInteractionCompleted",
+              "InteractionToTriggerOn": "Interaction_CH2_SetI"
+            },
+            "Action": {
+              "Type": "ActionGotoScreen",
+              "ScreenTransitionType": "ScreenTransitionSlide",
+              "ScreenTransitionDirection": "East",
+              "ActionComponent": "Screen_Set"
+            }
+          },
+          {
+            "InteractionName": "Interaction_CH2_SetI",
+            "HasCompletedTrigger": true,
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "flexButton_CH2_Set"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "setActiveLimit_CH2"
             }
           }
         ]
@@ -1455,10 +1492,10 @@
           },
           {
             "Type": "TextArea",
-            "Name": "textArea_DisableLimit",
+            "Name": "textArea_EnableLimit",
             "X": 83,
             "Y": 143,
-            "Width": 121,
+            "Width": 117,
             "Height": 24,
             "TextId": "__SingleUse_C9E9",
             "TextRotation": "0",
@@ -1517,7 +1554,7 @@
           },
           {
             "Type": "TextArea",
-            "Name": "textArea__AmpsDigit_3",
+            "Name": "textArea_AmpsDigit_3",
             "X": 220,
             "Y": 70,
             "Width": 31,
@@ -1529,11 +1566,16 @@
               "Green": 199,
               "Blue": 25
             },
-            "AutoSize": true
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_4UZC",
+              "UseBuffer": true,
+              "BufferSize": 2
+            }
           },
           {
             "Type": "TextArea",
-            "Name": "textArea__AmpsDigit_2",
+            "Name": "textArea_AmpsDigit_2",
             "X": 189,
             "Y": 70,
             "Width": 31,
@@ -1545,11 +1587,16 @@
               "Green": 199,
               "Blue": 25
             },
-            "AutoSize": true
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_X013",
+              "UseBuffer": true,
+              "BufferSize": 2
+            }
           },
           {
             "Type": "TextArea",
-            "Name": "textArea__AmpsDigit_1",
+            "Name": "textArea_AmpsDigit_1",
             "X": 158,
             "Y": 70,
             "Width": 31,
@@ -1561,7 +1608,12 @@
               "Green": 199,
               "Blue": 25
             },
-            "AutoSize": true
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_KT6N",
+              "UseBuffer": true,
+              "BufferSize": 2
+            }
           },
           {
             "Type": "TextArea",
@@ -1577,7 +1629,12 @@
               "Green": 199,
               "Blue": 25
             },
-            "AutoSize": true
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_FV3Z",
+              "UseBuffer": true,
+              "BufferSize": 3
+            }
           },
           {
             "Type": "TextArea",
@@ -1717,10 +1774,11 @@
           {
             "InteractionName": "Interaction2",
             "Trigger": {
-              "Type": "TriggerNone"
+              "Type": "TriggerScreenEntered"
             },
             "Action": {
-              "Type": "ActionNone"
+              "Type": "ActionCustom",
+              "FunctionName": "update_Screen_Set"
             }
           }
         ]
