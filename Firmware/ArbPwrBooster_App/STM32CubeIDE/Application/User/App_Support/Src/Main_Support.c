@@ -32,7 +32,7 @@
 #include <stdio.h>
 
 
-Type_ArbPwrBoosterStatus ArbPwrBoosterStatus;
+Type_ArbPwrBoosterStatus ArbPwrBooster;
 
 
 //HAB TODO: A lot of work to do here - may want to return a pointer I think would be best
@@ -45,17 +45,17 @@ void Init_ArbPwrBoosterHardware(void)
 
 void Init_ArbPwrBoosterClass(void)
 {
-    ArbPwrBoosterStatus.Screen = SPLASH_SCREEN;
+    ArbPwrBooster.Screen = SPLASH_SCREEN;
     // Channel 1 Init
-    ArbPwrBoosterStatus.CH1.InputImpedance = ONE_MEG_OHM;
-    ArbPwrBoosterStatus.CH1.Limit.Enable = false;
-    ArbPwrBoosterStatus.CH1.Limit.Current = -10.25432;
-    ArbPwrBoosterStatus.CH1.OutputSwitch = OFF;
+    ArbPwrBooster.CH1.InputImpedance = ONE_MEG_OHM;
+    ArbPwrBooster.CH1.Limit.Enable = false;
+    ArbPwrBooster.CH1.Limit.Current = -10.25432;
+    ArbPwrBooster.CH1.OutputSwitch = OFF;
     // Channel 2 Init
-    ArbPwrBoosterStatus.CH2.InputImpedance = FIFTY_OHM;
-    ArbPwrBoosterStatus.CH2.Limit.Enable = true;
-    ArbPwrBoosterStatus.CH2.Limit.Current = 5.125;
-    ArbPwrBoosterStatus.CH2.OutputSwitch = OFF;
+    ArbPwrBooster.CH2.InputImpedance = FIFTY_OHM;
+    ArbPwrBooster.CH2.Limit.Enable = true;
+    ArbPwrBooster.CH2.Limit.Current = 5.125;
+    ArbPwrBooster.CH2.OutputSwitch = OFF;
 }
 
 

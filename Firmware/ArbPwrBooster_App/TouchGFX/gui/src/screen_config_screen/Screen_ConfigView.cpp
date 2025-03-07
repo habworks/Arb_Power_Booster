@@ -37,7 +37,7 @@ void Screen_ConfigView::tearDownScreen()
 void Screen_ConfigView::update_Screen_Config(void)
 {
     // STEP 1: Set the active screen
-    ArbPwrBoosterStatus.Screen = CONFIG_SCREEN;
+    ArbPwrBooster.Screen = CONFIG_SCREEN;
 
     // STEP 2: Update FW Revision
     Unicode::snprintf(textArea_FW_RevBuffer, TEXTAREA_FW_REV_SIZE, "%d.%d.%d", FW_MAJOR_REV, FW_MINOR_REV, FW_TEST_REV);

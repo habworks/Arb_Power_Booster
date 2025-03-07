@@ -40,17 +40,17 @@ void Screen_MainView::tearDownScreen()
 void Screen_MainView::update_Screen_Main(void)
 {
     // STEP 1: Set the active screen
-    ArbPwrBoosterStatus.Screen = MAIN_SCREEN;
+    ArbPwrBooster.Screen = MAIN_SCREEN;
 
     // STEP 2: Update Channel 1
     // Update Current Set Values for channel1
-    Unicode::snprintfFloat(textArea_CH1_CurrentSetBuffer, TEXTAREA_CH1_CURRENTSET_SIZE, "%05.3f", ArbPwrBoosterStatus.CH1.Limit.Current);
+    Unicode::snprintfFloat(textArea_CH1_CurrentSetBuffer, TEXTAREA_CH1_CURRENTSET_SIZE, "%05.3f", ArbPwrBooster.CH1.Limit.Current);
     textArea_CH1_CurrentSet.setWildcard(textArea_CH1_CurrentSetBuffer);
     textArea_CH1_CurrentSet.invalidate();
 
     // STEP 3: Update Channel 2
     // Update Current Set Values for channel2
-    Unicode::snprintfFloat(textArea_CH2_CurrentSetBuffer, TEXTAREA_CH2_CURRENTSET_SIZE, "%06.3f", ArbPwrBoosterStatus.CH2.Limit.Current);
+    Unicode::snprintfFloat(textArea_CH2_CurrentSetBuffer, TEXTAREA_CH2_CURRENTSET_SIZE, "%06.3f", ArbPwrBooster.CH2.Limit.Current);
     textArea_CH2_CurrentSet.setWildcard(textArea_CH2_CurrentSetBuffer);
     textArea_CH2_CurrentSet.invalidate();
 
@@ -75,21 +75,21 @@ void Screen_MainView::switchOutput_CH1(void)
     // HAB TODO: May want to add some pre-qualifers to turning on output
     // HAB TODO: Add defines for these magic numbers
     // STEP 1: Toggle the output relay ON / OFF
-    if (ArbPwrBoosterStatus.CH1.OutputSwitch == OFF)
+    if (ArbPwrBooster.CH1.OutputSwitch == OFF)
     {
         CH1_OUTPUT_ENABLE();
-        box_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(0x5E, 0xEB, 0x13));
-        box_CH1_Enable.setAlpha(255);
-        textArea_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(0xFF, 0xFF, 0xFF));
-        ArbPwrBoosterStatus.CH1.OutputSwitch = ON;
+        box_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_ON_BOX_COLOR));
+        box_CH1_Enable.setAlpha(ALPAH_FULL_VISIBLE);
+        textArea_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_ON_TXT_COLOR));
+        ArbPwrBooster.CH1.OutputSwitch = ON;
     }
     else
     {
         CH1_OUTPUT_DISABLE();
-        box_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(0xA7, 0xC4, 0xB2));
-        box_CH1_Enable.setAlpha(50);
-        textArea_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(0x70, 0x70, 0x70));
-        ArbPwrBoosterStatus.CH1.OutputSwitch = OFF;
+        box_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_BOX_COLOR));
+        box_CH1_Enable.setAlpha(ALPHA_50_VISIBLE);
+        textArea_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_TXT_COLOR));
+        ArbPwrBooster.CH1.OutputSwitch = OFF;
     }
     box_CH1_Enable.invalidate();
     textArea_CH1_Enable.invalidate();
@@ -112,21 +112,21 @@ void Screen_MainView::switchOutput_CH2(void)
 {
     // HAB TODO: May want to add some pre-qualifers to turning on output
     // STEP 1: Toggle the output relay ON / OFF
-    if (ArbPwrBoosterStatus.CH2.OutputSwitch == OFF)
+    if (ArbPwrBooster.CH2.OutputSwitch == OFF)
     {
         CH2_OUTPUT_ENABLE();
-        box_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(0x5E, 0xEB, 0x13));
-        box_CH2_Enable.setAlpha(255);
-        textArea_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(0xFF, 0xFF, 0xFF));
-        ArbPwrBoosterStatus.CH2.OutputSwitch = ON;
+        box_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_ON_BOX_COLOR));
+        box_CH2_Enable.setAlpha(ALPAH_FULL_VISIBLE);
+        textArea_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_ON_TXT_COLOR));
+        ArbPwrBooster.CH2.OutputSwitch = ON;
     }
     else
     {
         CH2_OUTPUT_DISABLE();
-        box_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(0xA7, 0xC4, 0xB2));
-        box_CH2_Enable.setAlpha(50);
-        textArea_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(0x70, 0x70, 0x70));
-        ArbPwrBoosterStatus.CH2.OutputSwitch = OFF;
+        box_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_BOX_COLOR));
+        box_CH2_Enable.setAlpha(ALPHA_50_VISIBLE);
+        textArea_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_TXT_COLOR));
+        ArbPwrBooster.CH2.OutputSwitch = OFF;
     }
     box_CH2_Enable.invalidate();
     textArea_CH2_Enable.invalidate();
@@ -148,17 +148,17 @@ void Screen_MainView::switchOutput_CH2(void)
 void Screen_MainView::InputImpedanceSet_CH1(void)
 {
     // STEP 1: Toggle input impedance
-    if (ArbPwrBoosterStatus.CH1.InputImpedance == ONE_MEG_OHM)
+    if (ArbPwrBooster.CH1.InputImpedance == ONE_MEG_OHM)
     {
         CH1_INPUT_50_ENABLE();
         textArea_CH1_InputZ.setTypedText(TypedText(T_FIFTY_OHM));
-        ArbPwrBoosterStatus.CH1.InputImpedance = FIFTY_OHM;
+        ArbPwrBooster.CH1.InputImpedance = FIFTY_OHM;
     }
     else
     {
         CH1_INPUT_50_DISABLE();
         textArea_CH1_InputZ.setTypedText(TypedText(T_ONE_MEG_OHM));
-        ArbPwrBoosterStatus.CH1.InputImpedance = ONE_MEG_OHM;
+        ArbPwrBooster.CH1.InputImpedance = ONE_MEG_OHM;
     }
     textArea_CH1_InputZ.invalidate();
 
@@ -179,17 +179,17 @@ void Screen_MainView::InputImpedanceSet_CH1(void)
 void Screen_MainView::InputImpedanceSet_CH2(void)
 {
     // STEP 1: Toggle input impedance
-    if (ArbPwrBoosterStatus.CH2.InputImpedance == ONE_MEG_OHM)
+    if (ArbPwrBooster.CH2.InputImpedance == ONE_MEG_OHM)
     {
         CH2_INPUT_50_ENABLE();
         textArea_CH2_InputZ.setTypedText(TypedText(T_FIFTY_OHM));
-        ArbPwrBoosterStatus.CH2.InputImpedance = FIFTY_OHM;
+        ArbPwrBooster.CH2.InputImpedance = FIFTY_OHM;
     }
     else
     {
         CH2_INPUT_50_DISABLE();
         textArea_CH2_InputZ.setTypedText(TypedText(T_ONE_MEG_OHM));
-        ArbPwrBoosterStatus.CH2.InputImpedance = ONE_MEG_OHM;
+        ArbPwrBooster.CH2.InputImpedance = ONE_MEG_OHM;
     }
     textArea_CH2_InputZ.invalidate();
 
@@ -207,7 +207,7 @@ void Screen_MainView::InputImpedanceSet_CH2(void)
 void Screen_MainView::setActiveLimit_CH1(void)
 {
     // STEP 1: Set the active channel
-    ArbPwrBoosterStatus.ActiveChannel = CHANNEL_1;
+    ArbPwrBooster.ActiveChannel = CHANNEL_1;
 
 } // END OF setActiveLimit_CH1
 
@@ -222,6 +222,6 @@ void Screen_MainView::setActiveLimit_CH1(void)
 ********************************************************************************************************/
 void Screen_MainView::setActiveLimit_CH2(void)
 {
-    ArbPwrBoosterStatus.ActiveChannel = CHANNEL_2;
+    ArbPwrBooster.ActiveChannel = CHANNEL_2;
 
 } // END OF setActiveLimit_CH2

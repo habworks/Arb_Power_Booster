@@ -40,23 +40,24 @@ extern"C" {
 #define HW_REVISION             2U
 // BASE COLOR CH1
 #define CH1_BASE_COLOR          0xD4, 0xC7, 0x19
-#define CH1_BASE_COLOR_RED      0xD4
-#define CH1_BASE_COLOR_GRN      0xC7
-#define CH1_BASE_COLOR_BLU      0x19
+#define CH1_BASE_COLOR_RED      ((uint8_t)(0xD4))
+#define CH1_BASE_COLOR_GRN      ((uint8_t)(0xC7))
+#define CH1_BASE_COLOR_BLU      ((uint8_t)(0x19))
 // BASE COLOR CH2
 #define CH2_BASE_COLOR          0x17, 0x94, 0xC2
-#define CH2_BASE_COLOR_RED      0x17
-#define CH2_BASE_COLOR_GRN      0x94
-#define CH2_BASE_COLOR_BLU      0xC2
+#define CH2_BASE_COLOR_RED      ((uint8_t)(0x17))
+#define CH2_BASE_COLOR_GRN      ((uint8_t)(0x94))
+#define CH2_BASE_COLOR_BLU      ((uint8_t)(0xC2))
 // DISABLE COLOR
 #define DISABLE_BASE_COLOR      0x96, 0x96, 0x96
-#define DISABLE_BASE_COLOR_RED  0x96
-#define DISABLE_BASE_COLOR_GRN  0x96
-#define DISABLE_BASE_COLOR_BLU  0x96
+#define DISABLE_BASE_COLOR_RED  ((uint8_t)(0x96))
+#define DISABLE_BASE_COLOR_GRN  ((uint8_t)(0x96))
+#define DISABLE_BASE_COLOR_BLU  ((uint8_t)(0x96))
 // ALPHA FADING
-#define ALPAH_FULL_VISIBLE      0xFF
-#define ALPHA_ZERO_VISIBLE      0x00
-// LIMIT SCREEN SPECIFIC
+#define ALPAH_FULL_VISIBLE      ((uint8_t)(0xFF))
+#define ALPHA_ZERO_VISIBLE      ((uint8_t)(0x00))
+#define ALPHA_50_VISIBLE        ((uint8_t)(0x32))
+// LIMIT SCREEN SPECIFIC:
 // LIMIT SCREEN DIGIT 0 BOX SETPOSITION PARAMETERS
 #define INT_0_POSITION_1_DIGIT  112, 97, 31, 39
 #define INT_0_POSITION_2_DIGIT  85, 97, 60, 39
@@ -65,6 +66,14 @@ extern"C" {
 #define INT_0_SETBOX_1_DIGIT    0, 0, 31, 39
 #define INT_0_SETBOX_2_DIGIT    0, 0, 60, 39
 #define INT_0_SETBOX_3_DIGIT    0, 0, 77, 39
+// MAIN SCREEN OUTPUT ON / OFF BOX AND TEXT
+#define OUTPUT_ON_BOX_COLOR     0x5E, 0xEB, 0x13
+#define OUTPUT_ON_TXT_COLOR     0xFF, 0xFF, 0xFF
+#define OUTPUT_OFF_BOX_COLOR    0xA7, 0xC4, 0xB2
+#define OUTPUT_OFF_TXT_COLOR    0x70, 0x70, 0x70
+
+
+
 
 // TYPEDEFS AND ENUMS
 typedef enum
@@ -113,14 +122,14 @@ typedef struct
     double                  MaxCurrent;
     double                  MeanCurrent;
     double                  RMS_Current;
-}Type_Measure;
+}Type_MeasureValue;
 
 typedef struct
 {
     Type_SetLimits          Limit;
     Type_InputImpedance     InputImpedance;
     Type_RelaySwitch        OutputSwitch;
-    Type_Measure            Measure;
+    Type_MeasureValue       Measure;
 }Type_ChannelConfig;
 
 typedef struct
@@ -134,7 +143,7 @@ typedef struct
 
 
 // EXTERNS
-extern Type_ArbPwrBoosterStatus ArbPwrBoosterStatus;
+extern Type_ArbPwrBoosterStatus ArbPwrBooster;
 
 
 // FUNCTION PROTOTYES

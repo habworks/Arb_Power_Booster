@@ -35,11 +35,11 @@ void Screen_SetView::tearDownScreen()
 void Screen_SetView::update_Screen_Set(void)
 {
     // STEP 1: Set the active screen and init conditions
-    ArbPwrBoosterStatus.Screen = SET_SCREEN;
-    ArbPwrBoosterStatus.SetLimitDigit = INTEGER;
+    ArbPwrBooster.Screen = SET_SCREEN;
+    ArbPwrBooster.SetLimitDigit = INTEGER;
 
     // STEP 2: Render screen based on active channel
-    render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
+    render_Screen_Set(ArbPwrBooster.ActiveChannel);
 
 } // END OF update_Screen_Set
 
@@ -80,7 +80,7 @@ void Screen_SetView::render_Screen_Set(Type_Channel Channel)
         Red = CH1_BASE_COLOR_RED;
         Green = CH1_BASE_COLOR_GRN;
         Blue = CH1_BASE_COLOR_BLU;
-        if (ArbPwrBoosterStatus.CH1.Limit.Enable)
+        if (ArbPwrBooster.CH1.Limit.Enable)
         {
             DigitRed = CH1_BASE_COLOR_RED;
             DigitGreen = CH1_BASE_COLOR_GRN;
@@ -94,7 +94,7 @@ void Screen_SetView::render_Screen_Set(Type_Channel Channel)
             DigitBlue = DISABLE_BASE_COLOR_BLU;
             LimitEnable = false;
         }
-        CurrentLimit = ArbPwrBoosterStatus.CH1.Limit.Current;
+        CurrentLimit = ArbPwrBooster.CH1.Limit.Current;
     }
     // Channel 2 Options
     if (Channel == CHANNEL_2)
@@ -103,7 +103,7 @@ void Screen_SetView::render_Screen_Set(Type_Channel Channel)
         Red = CH2_BASE_COLOR_RED;
         Green = CH2_BASE_COLOR_GRN;
         Blue = CH2_BASE_COLOR_BLU;
-        if (ArbPwrBoosterStatus.CH2.Limit.Enable)
+        if (ArbPwrBooster.CH2.Limit.Enable)
         {
             DigitRed = CH2_BASE_COLOR_RED;
             DigitGreen = CH2_BASE_COLOR_GRN;
@@ -117,7 +117,7 @@ void Screen_SetView::render_Screen_Set(Type_Channel Channel)
             DigitBlue = DISABLE_BASE_COLOR_BLU;
             LimitEnable = false;
         }
-        CurrentLimit = ArbPwrBoosterStatus.CH2.Limit.Current;
+        CurrentLimit = ArbPwrBooster.CH2.Limit.Current;
     }
 
     // STEP 2: Update the display text objects
@@ -159,7 +159,7 @@ void Screen_SetView::render_Screen_Set(Type_Channel Channel)
         flexButton_AmpsDigit_1.setAlpha(ALPHA_ZERO_VISIBLE);
         flexButton_AmpsDigit_2.setAlpha(ALPHA_ZERO_VISIBLE);
         flexButton_AmpsDigit_3.setAlpha(ALPHA_ZERO_VISIBLE);
-        switch(ArbPwrBoosterStatus.SetLimitDigit)
+        switch(ArbPwrBooster.SetLimitDigit)
         {
         case INTEGER:
         {
@@ -224,13 +224,13 @@ void Screen_SetView::render_Screen_Set(Type_Channel Channel)
 void Screen_SetView::enableCurrentLimit(void)
 {
     // STEP 1: Set the active channel enable
-    if (ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1)
-        ArbPwrBoosterStatus.CH1.Limit.Enable = true;
+    if (ArbPwrBooster.ActiveChannel == CHANNEL_1)
+        ArbPwrBooster.CH1.Limit.Enable = true;
     else
-        ArbPwrBoosterStatus.CH2.Limit.Enable = true;
+        ArbPwrBooster.CH2.Limit.Enable = true;
 
     // STEP 2: Call screen render the screen to reflect the change
-    render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
+    render_Screen_Set(ArbPwrBooster.ActiveChannel);
 
 } // END OF enableCurrentLimit
 
@@ -249,13 +249,13 @@ void Screen_SetView::enableCurrentLimit(void)
 void Screen_SetView::disableCurrentLimit(void)
 {
     // STEP 1: Clear the active channel enable
-    if (ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1)
-        ArbPwrBoosterStatus.CH1.Limit.Enable = false;
+    if (ArbPwrBooster.ActiveChannel == CHANNEL_1)
+        ArbPwrBooster.CH1.Limit.Enable = false;
     else
-        ArbPwrBoosterStatus.CH2.Limit.Enable = false;
+        ArbPwrBooster.CH2.Limit.Enable = false;
 
     // STEP 2: Call screen render the screen to reflect the change
-    render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
+    render_Screen_Set(ArbPwrBooster.ActiveChannel);
 
 } // END OF disableCurrentLimit
 
@@ -274,14 +274,14 @@ void Screen_SetView::disableCurrentLimit(void)
 void Screen_SetView::setIntegerToUpdate(void)
 {
     // STEP 1: Set active limit digit to integer
-    if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1) && (!ArbPwrBoosterStatus.CH1.Limit.Enable))
+    if ((ArbPwrBooster.ActiveChannel == CHANNEL_1) && (!ArbPwrBooster.CH1.Limit.Enable))
         return;
-    if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_2) && (!ArbPwrBoosterStatus.CH2.Limit.Enable))
+    if ((ArbPwrBooster.ActiveChannel == CHANNEL_2) && (!ArbPwrBooster.CH2.Limit.Enable))
         return;
-    ArbPwrBoosterStatus.SetLimitDigit = INTEGER;
+    ArbPwrBooster.SetLimitDigit = INTEGER;
 
     // STEP 2: Call screen render to reflect the change
-    render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
+    render_Screen_Set(ArbPwrBooster.ActiveChannel);
 
 } // END OF setIntegerToUpdate
 
@@ -298,14 +298,14 @@ void Screen_SetView::setIntegerToUpdate(void)
 void Screen_SetView::setTenthsToUpdate(void)
 {
     // STEP 1: Set active limit digit to tenths
-    if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1) && (!ArbPwrBoosterStatus.CH1.Limit.Enable))
+    if ((ArbPwrBooster.ActiveChannel == CHANNEL_1) && (!ArbPwrBooster.CH1.Limit.Enable))
         return;
-    if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_2) && (!ArbPwrBoosterStatus.CH2.Limit.Enable))
+    if ((ArbPwrBooster.ActiveChannel == CHANNEL_2) && (!ArbPwrBooster.CH2.Limit.Enable))
         return;
-    ArbPwrBoosterStatus.SetLimitDigit = TENTHS;
+    ArbPwrBooster.SetLimitDigit = TENTHS;
 
     // STEP 2: Call screen render to reflect the change
-    render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
+    render_Screen_Set(ArbPwrBooster.ActiveChannel);
 
 } // END OF setTenthsToUpdate
 
@@ -322,14 +322,14 @@ void Screen_SetView::setTenthsToUpdate(void)
 void Screen_SetView::setHundredthsToUpdate(void)
 {
     // STEP 1: Set active limit digit to hundredths
-    if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1) && (!ArbPwrBoosterStatus.CH1.Limit.Enable))
+    if ((ArbPwrBooster.ActiveChannel == CHANNEL_1) && (!ArbPwrBooster.CH1.Limit.Enable))
         return;
-    if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_2) && (!ArbPwrBoosterStatus.CH2.Limit.Enable))
+    if ((ArbPwrBooster.ActiveChannel == CHANNEL_2) && (!ArbPwrBooster.CH2.Limit.Enable))
         return;
-    ArbPwrBoosterStatus.SetLimitDigit = HUNDREDTHS;
+    ArbPwrBooster.SetLimitDigit = HUNDREDTHS;
 
     // STEP 2: Call screen render to reflect the change
-    render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
+    render_Screen_Set(ArbPwrBooster.ActiveChannel);
 
 } // END OF setHundredthsToUpdate
 
@@ -346,14 +346,14 @@ void Screen_SetView::setHundredthsToUpdate(void)
 void Screen_SetView::setThousandthsToUpdate(void)
 {
     // STEP 1: Set active limit digit to thousandths
-    if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1) && (!ArbPwrBoosterStatus.CH1.Limit.Enable))
+    if ((ArbPwrBooster.ActiveChannel == CHANNEL_1) && (!ArbPwrBooster.CH1.Limit.Enable))
         return;
-    if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_2) && (!ArbPwrBoosterStatus.CH2.Limit.Enable))
+    if ((ArbPwrBooster.ActiveChannel == CHANNEL_2) && (!ArbPwrBooster.CH2.Limit.Enable))
         return;
-    ArbPwrBoosterStatus.SetLimitDigit = THOUSANDTHS;
+    ArbPwrBooster.SetLimitDigit = THOUSANDTHS;
 
     // STEP 2: Call screen render to reflect the change
-    render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
+    render_Screen_Set(ArbPwrBooster.ActiveChannel);
 
 } // END OF setThousandthsToUpdate
 
@@ -361,7 +361,8 @@ void Screen_SetView::setThousandthsToUpdate(void)
 
 /********************************************************************************************************
 * @brief Increment the active limit digit by one.  For integers the max it can be incremented to is +10 with
-* no role over.  For all other digits the max is 9 and the role over is to 0.
+* no role over.  For all other digits the max is 9 and the role over is to 0.  Do not increment if the
+* active channel limit is not enabled.
 *
 * @author original: Hab Collector \n
 *
@@ -377,14 +378,22 @@ void Screen_SetView::incrementDigitUp(void)
     double *LimitCurrent;
 
     // STEP 1: Get limit current from the active channel and separate to its digit parts
-    if (ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1)
-        LimitCurrent = &ArbPwrBoosterStatus.CH1.Limit.Current;
+    if (ArbPwrBooster.ActiveChannel == CHANNEL_1)
+    {
+        if (!ArbPwrBooster.CH1.Limit.Enable)
+            return;
+        LimitCurrent = &ArbPwrBooster.CH1.Limit.Current;
+    }
     else
-        LimitCurrent = &ArbPwrBoosterStatus.CH2.Limit.Current;
+    {
+        if (!ArbPwrBooster.CH2.Limit.Enable)
+            return;
+        LimitCurrent = &ArbPwrBooster.CH2.Limit.Current;
+    }
     digitsFromDouble(*LimitCurrent, &Integer, &Tenths, &Hundredths, &Thousandths);
 
     // STEP 2: Increment the correspond digit: Integer stops at +10, all others go 9 and roles over to 0
-    switch(ArbPwrBoosterStatus.SetLimitDigit)
+    switch(ArbPwrBooster.SetLimitDigit)
     {
     case INTEGER:
     {
@@ -422,15 +431,16 @@ void Screen_SetView::incrementDigitUp(void)
     *LimitCurrent = digitsToDouble(&Integer, &Tenths, &Hundredths, &Thousandths);
 
     // STEP 4: Call screen render to reflect the change
-    render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
+    render_Screen_Set(ArbPwrBooster.ActiveChannel);
 
 } // END OF incrementDigitUp
 
 
 
 /********************************************************************************************************
-* @brief Decrement the active limit digit by one.  For integers the max it can be incremented to is -10 with
-* no role over.  For all other digits the min is 0 and the role over is to 9.
+* @brief Decrement the active limit digit by one.  For integers the max it can be decremented to is -10 with
+* no role over.  For all other digits the min is 0 and the role over is to 9.  Do not decrement if limit for
+* active channel is not enabled.
 *
 * @author original: Hab Collector \n
 *
@@ -446,14 +456,22 @@ void Screen_SetView::incrementDigitDown(void)
     double *LimitCurrent;
 
     // STEP 1: Get limit current from the active channel and separate to its digit parts
-    if (ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1)
-        LimitCurrent = &ArbPwrBoosterStatus.CH1.Limit.Current;
+    if (ArbPwrBooster.ActiveChannel == CHANNEL_1)
+    {
+        if (!ArbPwrBooster.CH1.Limit.Enable)
+            return;
+        LimitCurrent = &ArbPwrBooster.CH1.Limit.Current;
+    }
     else
-        LimitCurrent = &ArbPwrBoosterStatus.CH2.Limit.Current;
+    {
+        if (!ArbPwrBooster.CH2.Limit.Enable)
+            return;
+        LimitCurrent = &ArbPwrBooster.CH2.Limit.Current;
+    }
     digitsFromDouble(*LimitCurrent, &Integer, &Tenths, &Hundredths, &Thousandths);
 
     // STEP 2: Decrement the correspond digit: Integer stops at -10, all others go 0 and roles over to 9
-    switch(ArbPwrBoosterStatus.SetLimitDigit)
+    switch(ArbPwrBooster.SetLimitDigit)
     {
     case INTEGER:
     {
@@ -500,23 +518,32 @@ void Screen_SetView::incrementDigitDown(void)
     *LimitCurrent = digitsToDouble(&Integer, &Tenths, &Hundredths, &Thousandths);
 
     // STEP 4: Call screen render to reflect the change
-    render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
+    render_Screen_Set(ArbPwrBooster.ActiveChannel);
 
 } // END OF incrementDigitDown
 
 
 
+/********************************************************************************************************
+* @brief Reset min and max for the active channel.
+*
+* @author original: Hab Collector \n
+*
+* @note: Values are reset to 0 - the updating function knows 0 is neither the min or max but
+*
+* STEP 1: Reset the active channel min max limit
+********************************************************************************************************/
 void Screen_SetView::resetMinMaxCurrentLimits(void)
 {
     // STEP 1: Reset the active channel min max limit
-    if (ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1)
+    if (ArbPwrBooster.ActiveChannel == CHANNEL_1)
     {
-        ArbPwrBoosterStatus.CH1.Measure.MinCurrent = 0;
-        ArbPwrBoosterStatus.CH1.Measure.MaxCurrent = 0;
+        ArbPwrBooster.CH1.Measure.MinCurrent = 0;
+        ArbPwrBooster.CH1.Measure.MaxCurrent = 0;
     }
     else
     {
-        ArbPwrBoosterStatus.CH2.Measure.MinCurrent = 0;
-        ArbPwrBoosterStatus.CH2.Measure.MaxCurrent = 0;
+        ArbPwrBooster.CH2.Measure.MinCurrent = 0;
+        ArbPwrBooster.CH2.Measure.MaxCurrent = 0;
     }
 }
