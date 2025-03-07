@@ -62,6 +62,10 @@ public:
     {
         // Override and implement this function in Screen_Set
     }
+    virtual void resetMinMaxCurrentLimits()
+    {
+        // Override and implement this function in Screen_Set
+    }
 
 protected:
     FrontendApplication& application() {

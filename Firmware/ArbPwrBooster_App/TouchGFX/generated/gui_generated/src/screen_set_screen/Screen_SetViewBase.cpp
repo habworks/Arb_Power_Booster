@@ -30,6 +30,7 @@ Screen_SetViewBase::Screen_SetViewBase() :
     flexButton_ResetMinMax.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
     flexButton_ResetMinMax.setIconBitmaps(Bitmap(BITMAP_ICON_THEME_IMAGES_NAVIGATION_REFRESH_50_50_E8F6FB_SVG_ID), Bitmap(BITMAP_ICON_THEME_IMAGES_ACTION_DONE_50_50_E8F6FB_SVG_ID));
     flexButton_ResetMinMax.setIconXY(6, 5);
+    flexButton_ResetMinMax.setAction(flexButtonCallback);
     flexButton_ResetMinMax.setPosition(13, 202, 60, 60);
     add(flexButton_ResetMinMax);
 
@@ -121,11 +122,11 @@ Screen_SetViewBase::Screen_SetViewBase() :
     textArea_AmpsDigit_1.setTypedText(touchgfx::TypedText(T___SINGLEUSE_ZV9R));
     add(textArea_AmpsDigit_1);
 
-    flexButton_AmpsDigit_0.setBoxWithBorderPosition(0, 0, 31, 39);
+    flexButton_AmpsDigit_0.setBoxWithBorderPosition(0, 0, 77, 39);
     flexButton_AmpsDigit_0.setBorderSize(0);
     flexButton_AmpsDigit_0.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
     flexButton_AmpsDigit_0.setAction(flexButtonCallback);
-    flexButton_AmpsDigit_0.setPosition(112, 97, 31, 39);
+    flexButton_AmpsDigit_0.setPosition(66, 97, 77, 39);
     add(flexButton_AmpsDigit_0);
 
     textArea_AmpsDigit_0.setXY(65, 70);
@@ -228,6 +229,13 @@ void Screen_SetViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButto
         //When flexButton_DigitDown clicked call virtual function
         //Call incrementDigitDown
         incrementDigitDown();
+    }
+    if (&src == &flexButton_ResetMinMax)
+    {
+        //Interaction1
+        //When flexButton_ResetMinMax clicked call virtual function
+        //Call resetMinMaxCurrentLimits
+        resetMinMaxCurrentLimits();
     }
 }
 

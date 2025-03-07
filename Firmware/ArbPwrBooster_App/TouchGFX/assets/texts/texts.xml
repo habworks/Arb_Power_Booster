@@ -29,7 +29,7 @@
         <Translation Language="GB">0</Translation>
       </Text>
       <Text Id="__SingleUse_FV3Z" Alignment="Left" TypographyId="Iceland_Title">
-        <Translation Language="GB">-00</Translation>
+        <Translation Language="GB">-10</Translation>
       </Text>
       <Text Id="__SingleUse_IVPW" Alignment="Left" TypographyId="Default">
         <Translation Language="GB">1</Translation>
@@ -44,10 +44,10 @@
         <Translation Language="GB">20.2</Translation>
       </Text>
       <Text Id="__SingleUse_UN4D" Alignment="Left" TypographyId="Default">
-        <Translation Language="GB">00.000</Translation>
+        <Translation Language="GB">-00.000</Translation>
       </Text>
       <Text Id="__SingleUse_NVNE" Alignment="Left" TypographyId="Default">
-        <Translation Language="GB">00.000</Translation>
+        <Translation Language="GB">-00.000</Translation>
       </Text>
       <Text Id="__SingleUse_BOXU" Alignment="Left" TypographyId="Default">
         <Translation Language="GB">0.000</Translation>

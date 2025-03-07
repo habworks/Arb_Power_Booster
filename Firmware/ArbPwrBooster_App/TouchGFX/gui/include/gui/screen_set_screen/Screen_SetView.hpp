@@ -23,6 +23,7 @@ public:
     virtual void setThousandthsToUpdate(void);
     virtual void incrementDigitUp(void);
     virtual void incrementDigitDown(void);
+    virtual void resetMinMaxCurrentLimits(void);
     // ADDED FUNCTIONS NOT CALLED BY TOUCHGFX
     virtual void render_Screen_Set(Type_Channel Channel);
 protected:

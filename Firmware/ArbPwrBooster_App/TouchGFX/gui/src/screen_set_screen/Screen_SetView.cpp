@@ -46,14 +46,21 @@ void Screen_SetView::update_Screen_Set(void)
 
 
 /********************************************************************************************************
-* @brief Render the Set Screen in accordance with the active channel
+* @brief Render the Set Screen in accordance with the active channel.  Screen shows limit value in base
+* channel color if limit is enable.  It also shows active edit digit color: Integer, Tenths, Hundredths, or
+* Thousandths.  If limit not enable, disable color is used and no active digit is transparent.  The enable
+* box is also set or cleared accordingly.
 *
 * @author original: Hab Collector \n
 *
 * @note: Make updates for current limit, enable, and the correct channel color
+* @note: Can support integer values from 99 to -99
+*
+* @param Channel: The active channel
 *
 * STEP 1: Set view parameters based on active channel
 * STEP 2: Update the display text objects
+* STEP 3: Update the digit display selection
 ********************************************************************************************************/
 void Screen_SetView::render_Screen_Set(Type_Channel Channel)
 {
@@ -144,7 +151,7 @@ void Screen_SetView::render_Screen_Set(Type_Channel Channel)
     // Select Button
     radioButton_EnableLimit.setSelected(LimitEnable);
 
-    // STEP 3: Update the digit display
+    // STEP 3: Update the digit display selection
     if (LimitEnable)
     {
         // Disable and make invisible all then enable and make visible the desired
@@ -157,6 +164,24 @@ void Screen_SetView::render_Screen_Set(Type_Channel Channel)
         case INTEGER:
         {
             flexButton_AmpsDigit_0.setAlpha(ALPAH_FULL_VISIBLE);
+            // Adjust button size for 1 place integer: Will be positive value 0-9
+            if ((Integer < 10) && (Integer >= 0))
+            {
+                flexButton_AmpsDigit_0.setPosition(INT_0_POSITION_1_DIGIT);
+                flexButton_AmpsDigit_0.setBoxWithBorderPosition(INT_0_SETBOX_1_DIGIT);
+            }
+            // Adjust button size for 2 place integer: Will be positive value > 9 and negative value > -10
+            else if ( (Integer >= 10) || ((Integer < 0) && (Integer > -10)))
+            {
+                flexButton_AmpsDigit_0.setPosition(INT_0_POSITION_2_DIGIT);
+                flexButton_AmpsDigit_0.setBoxWithBorderPosition(INT_0_SETBOX_2_DIGIT);
+            }
+            // Adjust button size for 3 place: Will be value <= -10
+            else if (Integer <= -10)
+            {
+                flexButton_AmpsDigit_0.setPosition(INT_0_POSITION_3_DIGIT);
+                flexButton_AmpsDigit_0.setBoxWithBorderPosition(INT_0_SETBOX_3_DIGIT);
+            }
         }
         break;
         case TENTHS:
@@ -185,78 +210,313 @@ void Screen_SetView::render_Screen_Set(Type_Channel Channel)
 } // END OF render_Screen_Set
 
 
+
+/********************************************************************************************************
+* @brief Enable current member for the active channel and updates the screen accordingly.
+*
+* @author original: Hab Collector \n
+*
+* @note: Make updates for current limit, enable, and the correct channel color
+*
+* STEP 1: Set the active channel enable
+* STEP 2: Call screen render the screen to reflect the change
+********************************************************************************************************/
 void Screen_SetView::enableCurrentLimit(void)
 {
+    // STEP 1: Set the active channel enable
     if (ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1)
         ArbPwrBoosterStatus.CH1.Limit.Enable = true;
     else
         ArbPwrBoosterStatus.CH2.Limit.Enable = true;
 
+    // STEP 2: Call screen render the screen to reflect the change
     render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
-}
+
+} // END OF enableCurrentLimit
 
 
+
+/********************************************************************************************************
+* @brief Disable current member for the active channel and updates the screen accordingly.
+*
+* @author original: Hab Collector \n
+*
+* @note: Make updates for current limit, enable, and the correct channel color
+*
+* STEP 1: Clear the active channel enable
+* STEP 2: Call screen render the screen to reflect the change
+********************************************************************************************************/
 void Screen_SetView::disableCurrentLimit(void)
 {
+    // STEP 1: Clear the active channel enable
     if (ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1)
         ArbPwrBoosterStatus.CH1.Limit.Enable = false;
     else
         ArbPwrBoosterStatus.CH2.Limit.Enable = false;
 
+    // STEP 2: Call screen render the screen to reflect the change
     render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
-}
+
+} // END OF disableCurrentLimit
 
 
+/********************************************************************************************************
+* @brief Make Integer the set limit digit to be modified for the active channel
+*
+* @author original: Hab Collector \n
+*
+* @note: Integer range is intended to be -10 to 10 for this revision of code
+* @note: Display wise integer can be -99 to 99
+*
+* STEP 1: Set active limit digit to integer
+* STEP 2: Call screen render to reflect the change
+********************************************************************************************************/
 void Screen_SetView::setIntegerToUpdate(void)
 {
+    // STEP 1: Set active limit digit to integer
     if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1) && (!ArbPwrBoosterStatus.CH1.Limit.Enable))
         return;
     if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_2) && (!ArbPwrBoosterStatus.CH2.Limit.Enable))
         return;
     ArbPwrBoosterStatus.SetLimitDigit = INTEGER;
+
+    // STEP 2: Call screen render to reflect the change
     render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
-}
+
+} // END OF setIntegerToUpdate
 
 
+
+/********************************************************************************************************
+* @brief Make Tenths the set limit digit to be modified for the active channel
+*
+* @author original: Hab Collector \n
+*
+* STEP 1: Set active limit digit to tenths
+* STEP 2: Call screen render to reflect the change
+********************************************************************************************************/
 void Screen_SetView::setTenthsToUpdate(void)
 {
+    // STEP 1: Set active limit digit to tenths
     if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1) && (!ArbPwrBoosterStatus.CH1.Limit.Enable))
         return;
     if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_2) && (!ArbPwrBoosterStatus.CH2.Limit.Enable))
         return;
     ArbPwrBoosterStatus.SetLimitDigit = TENTHS;
+
+    // STEP 2: Call screen render to reflect the change
     render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
-}
+
+} // END OF setTenthsToUpdate
 
 
+
+/********************************************************************************************************
+* @brief Make Hundredths the set limit digit to be modified for the active channel
+*
+* @author original: Hab Collector \n
+*
+* STEP 1: Set active limit digit to hundredths
+* STEP 2: Call screen render to reflect the change
+********************************************************************************************************/
 void Screen_SetView::setHundredthsToUpdate(void)
 {
+    // STEP 1: Set active limit digit to hundredths
     if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1) && (!ArbPwrBoosterStatus.CH1.Limit.Enable))
         return;
     if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_2) && (!ArbPwrBoosterStatus.CH2.Limit.Enable))
         return;
     ArbPwrBoosterStatus.SetLimitDigit = HUNDREDTHS;
+
+    // STEP 2: Call screen render to reflect the change
     render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
-}
+
+} // END OF setHundredthsToUpdate
 
 
+
+/********************************************************************************************************
+* @brief Make Thousandths the set limit digit to be modified for the active channel
+*
+* @author original: Hab Collector \n
+*
+* STEP 1: Set active limit digit to thousandths
+* STEP 2: Call screen render to reflect the change
+********************************************************************************************************/
 void Screen_SetView::setThousandthsToUpdate(void)
 {
+    // STEP 1: Set active limit digit to thousandths
     if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1) && (!ArbPwrBoosterStatus.CH1.Limit.Enable))
         return;
     if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_2) && (!ArbPwrBoosterStatus.CH2.Limit.Enable))
         return;
     ArbPwrBoosterStatus.SetLimitDigit = THOUSANDTHS;
+
+    // STEP 2: Call screen render to reflect the change
     render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
-}
+
+} // END OF setThousandthsToUpdate
 
 
+
+/********************************************************************************************************
+* @brief Increment the active limit digit by one.  For integers the max it can be incremented to is +10 with
+* no role over.  For all other digits the max is 9 and the role over is to 0.
+*
+* @author original: Hab Collector \n
+*
+* STEP 1: Get limit current from the active channel and separate to its digit parts
+* STEP 2: Increment the correspond digit: Integer stops at +10, all others go 9 and roles over to 0
+* STEP 3: Update to new limit
+* STEP 4: Call screen render to reflect the change
+********************************************************************************************************/
 void Screen_SetView::incrementDigitUp(void)
 {
+    int8_t Integer;
+    uint8_t Tenths, Hundredths, Thousandths;
+    double *LimitCurrent;
 
-}
+    // STEP 1: Get limit current from the active channel and separate to its digit parts
+    if (ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1)
+        LimitCurrent = &ArbPwrBoosterStatus.CH1.Limit.Current;
+    else
+        LimitCurrent = &ArbPwrBoosterStatus.CH2.Limit.Current;
+    digitsFromDouble(*LimitCurrent, &Integer, &Tenths, &Hundredths, &Thousandths);
 
+    // STEP 2: Increment the correspond digit: Integer stops at +10, all others go 9 and roles over to 0
+    switch(ArbPwrBoosterStatus.SetLimitDigit)
+    {
+    case INTEGER:
+    {
+        Integer++;
+        if (Integer > 10)
+            Integer = 10;
+    }
+    break;
+    case TENTHS:
+    {
+        Tenths++;
+        if (Tenths > 9)
+            Tenths = 0;
+    }
+    break;
+    case HUNDREDTHS:
+    {
+        Hundredths++;
+        if (Hundredths > 9)
+            Hundredths = 0;
+    }
+    break;
+    case THOUSANDTHS:
+    {
+        Thousandths++;
+        if (Thousandths > 9)
+            Thousandths = 0;
+    }
+    break;
+    default:
+        break;
+    } // END OF SWITCH
+
+    // STEP 3: Update to new limit
+    *LimitCurrent = digitsToDouble(&Integer, &Tenths, &Hundredths, &Thousandths);
+
+    // STEP 4: Call screen render to reflect the change
+    render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
+
+} // END OF incrementDigitUp
+
+
+
+/********************************************************************************************************
+* @brief Decrement the active limit digit by one.  For integers the max it can be incremented to is -10 with
+* no role over.  For all other digits the min is 0 and the role over is to 9.
+*
+* @author original: Hab Collector \n
+*
+* STEP 1: Get limit current from the active channel and separate to its digit parts
+* STEP 2: Decrement the correspond digit: Integer stops at -10, all others go 0 and roles over to 9
+* STEP 3: Update to new limit
+* STEP 4: Call screen render to reflect the change
+********************************************************************************************************/
 void Screen_SetView::incrementDigitDown(void)
 {
+    int8_t Integer;
+    uint8_t Tenths, Hundredths, Thousandths;
+    double *LimitCurrent;
 
+    // STEP 1: Get limit current from the active channel and separate to its digit parts
+    if (ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1)
+        LimitCurrent = &ArbPwrBoosterStatus.CH1.Limit.Current;
+    else
+        LimitCurrent = &ArbPwrBoosterStatus.CH2.Limit.Current;
+    digitsFromDouble(*LimitCurrent, &Integer, &Tenths, &Hundredths, &Thousandths);
+
+    // STEP 2: Decrement the correspond digit: Integer stops at -10, all others go 0 and roles over to 9
+    switch(ArbPwrBoosterStatus.SetLimitDigit)
+    {
+    case INTEGER:
+    {
+        Integer--;
+        if (Integer < -10)
+            Integer = -10;
+    }
+    break;
+    case TENTHS:
+    {
+        int8_t TempTenths = Tenths;
+        TempTenths--;
+        if (TempTenths < 0)
+            Tenths = 9;
+        else
+            Tenths = TempTenths;
+    }
+    break;
+    case HUNDREDTHS:
+    {
+        int8_t TempHundreths = Hundredths;
+        TempHundreths--;
+        if (TempHundreths < 0)
+            Hundredths = 9;
+        else
+            Hundredths = TempHundreths;
+    }
+    break;
+    case THOUSANDTHS:
+    {
+        int8_t TempThousandths = Thousandths;
+        TempThousandths--;
+        if (TempThousandths < 0)
+            Thousandths = 9;
+        else
+            Thousandths = TempThousandths;
+    }
+    break;
+    default:
+        break;
+    } // END OF SWITCH
+
+    // STEP 3: Create new limit
+    *LimitCurrent = digitsToDouble(&Integer, &Tenths, &Hundredths, &Thousandths);
+
+    // STEP 4: Call screen render to reflect the change
+    render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
+
+} // END OF incrementDigitDown
+
+
+
+void Screen_SetView::resetMinMaxCurrentLimits(void)
+{
+    // STEP 1: Reset the active channel min max limit
+    if (ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1)
+    {
+        ArbPwrBoosterStatus.CH1.Measure.MinCurrent = 0;
+        ArbPwrBoosterStatus.CH1.Measure.MaxCurrent = 0;
+    }
+    else
+    {
+        ArbPwrBoosterStatus.CH2.Measure.MinCurrent = 0;
+        ArbPwrBoosterStatus.CH2.Measure.MaxCurrent = 0;
+    }
 }

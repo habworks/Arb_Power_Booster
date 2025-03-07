@@ -193,7 +193,7 @@
             "Name": "textArea_CH2_CurrentSet",
             "X": 262,
             "Y": 165,
-            "Width": 121,
+            "Width": 128,
             "Height": 24,
             "TextId": "__SingleUse_6SWA",
             "TextRotation": "0",
@@ -482,7 +482,7 @@
             "Name": "textArea_CH1_CurrentSet",
             "X": 22,
             "Y": 165,
-            "Width": 121,
+            "Width": 128,
             "Height": 24,
             "TextId": "__SingleUse_FFBY",
             "TextRotation": "0",
@@ -1582,9 +1582,9 @@
           {
             "Type": "FlexButton",
             "Name": "flexButton_AmpsDigit_0",
-            "X": 112,
+            "X": 66,
             "Y": 97,
-            "Width": 31,
+            "Width": 77,
             "Height": 39,
             "ButtonTrigger": {
               "Type": "ClickButtonTrigger"
@@ -1592,7 +1592,7 @@
             "ButtonStyles": [
               {
                 "Type": "BoxWithBorderButtonStyle",
-                "Width": 31,
+                "Width": 77,
                 "Height": 39,
                 "LockToFlexButtonSize": true,
                 "ColorReleased": {
@@ -1867,6 +1867,17 @@
             "Action": {
               "Type": "ActionCustom",
               "FunctionName": "incrementDigitDown"
+            }
+          },
+          {
+            "InteractionName": "Interaction1",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "flexButton_ResetMinMax"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "resetMinMaxCurrentLimits"
             }
           }
         ]

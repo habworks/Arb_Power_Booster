@@ -56,7 +56,15 @@ extern"C" {
 // ALPHA FADING
 #define ALPAH_FULL_VISIBLE      0xFF
 #define ALPHA_ZERO_VISIBLE      0x00
-
+// LIMIT SCREEN SPECIFIC
+// LIMIT SCREEN DIGIT 0 BOX SETPOSITION PARAMETERS
+#define INT_0_POSITION_1_DIGIT  112, 97, 31, 39
+#define INT_0_POSITION_2_DIGIT  85, 97, 60, 39
+#define INT_0_POSITION_3_DIGIT  66, 97, 77, 39
+// LIMIT SCREEN DIGIT 0 BOX SETBOXWITHBORDERPOSITION PARAMETERS
+#define INT_0_SETBOX_1_DIGIT    0, 0, 31, 39
+#define INT_0_SETBOX_2_DIGIT    0, 0, 60, 39
+#define INT_0_SETBOX_3_DIGIT    0, 0, 77, 39
 
 // TYPEDEFS AND ENUMS
 typedef enum
@@ -101,9 +109,18 @@ typedef struct
 
 typedef struct
 {
+    double                  MinCurrent;
+    double                  MaxCurrent;
+    double                  MeanCurrent;
+    double                  RMS_Current;
+}Type_Measure;
+
+typedef struct
+{
     Type_SetLimits          Limit;
     Type_InputImpedance     InputImpedance;
     Type_RelaySwitch        OutputSwitch;
+    Type_Measure            Measure;
 }Type_ChannelConfig;
 
 typedef struct
