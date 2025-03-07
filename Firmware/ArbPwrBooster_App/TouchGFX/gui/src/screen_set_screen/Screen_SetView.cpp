@@ -61,7 +61,8 @@ void Screen_SetView::render_Screen_Set(Type_Channel Channel)
     uint8_t Red = 0, Green = 0, Blue = 0;
     uint8_t DigitRed = 0, DigitGreen = 0, DigitBlue = 0;
     uint8_t EnumTextValue = 0;
-    uint8_t Integer, Tenths, Hundredths, Thousandths;
+    int8_t Integer = 0;
+    uint8_t Tenths, Hundredths, Thousandths;
     double CurrentLimit = 0;
 
     // STEP 1: Set view parameters based on active channel
@@ -208,6 +209,10 @@ void Screen_SetView::disableCurrentLimit(void)
 
 void Screen_SetView::setIntegerToUpdate(void)
 {
+    if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1) && (!ArbPwrBoosterStatus.CH1.Limit.Enable))
+        return;
+    if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_2) && (!ArbPwrBoosterStatus.CH2.Limit.Enable))
+        return;
     ArbPwrBoosterStatus.SetLimitDigit = INTEGER;
     render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
 }
@@ -215,6 +220,10 @@ void Screen_SetView::setIntegerToUpdate(void)
 
 void Screen_SetView::setTenthsToUpdate(void)
 {
+    if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1) && (!ArbPwrBoosterStatus.CH1.Limit.Enable))
+        return;
+    if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_2) && (!ArbPwrBoosterStatus.CH2.Limit.Enable))
+        return;
     ArbPwrBoosterStatus.SetLimitDigit = TENTHS;
     render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
 }
@@ -222,6 +231,10 @@ void Screen_SetView::setTenthsToUpdate(void)
 
 void Screen_SetView::setHundredthsToUpdate(void)
 {
+    if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1) && (!ArbPwrBoosterStatus.CH1.Limit.Enable))
+        return;
+    if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_2) && (!ArbPwrBoosterStatus.CH2.Limit.Enable))
+        return;
     ArbPwrBoosterStatus.SetLimitDigit = HUNDREDTHS;
     render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
 }
@@ -229,6 +242,10 @@ void Screen_SetView::setHundredthsToUpdate(void)
 
 void Screen_SetView::setThousandthsToUpdate(void)
 {
+    if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_1) && (!ArbPwrBoosterStatus.CH1.Limit.Enable))
+        return;
+    if ((ArbPwrBoosterStatus.ActiveChannel == CHANNEL_2) && (!ArbPwrBoosterStatus.CH2.Limit.Enable))
+        return;
     ArbPwrBoosterStatus.SetLimitDigit = THOUSANDTHS;
     render_Screen_Set(ArbPwrBoosterStatus.ActiveChannel);
 }

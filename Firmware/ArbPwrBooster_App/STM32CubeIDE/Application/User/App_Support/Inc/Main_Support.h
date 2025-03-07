@@ -123,8 +123,8 @@ extern Type_ArbPwrBoosterStatus ArbPwrBoosterStatus;
 // FUNCTION PROTOTYES
 void Init_ArbPwrBoosterClass(void);
 void Init_ArbPwrBoosterHardware(void);
-void digitsFromDouble(double RationalNumber, uint8_t *Integer, uint8_t *Tenths, uint8_t *Hundredths, uint8_t *Thousandths);
-double digitsToDouble(uint8_t *Integer, uint8_t *Tenths, uint8_t *Hundredths, uint8_t *Thousandths);
+void digitsFromDouble(double RationalNumber, int8_t *Integer, uint8_t *Tenths, uint8_t *Hundredths, uint8_t *Thousandths);
+double digitsToDouble(int8_t *Integer, uint8_t *Tenths, uint8_t *Hundredths, uint8_t *Thousandths);
 
 #ifdef __cplusplus
 }

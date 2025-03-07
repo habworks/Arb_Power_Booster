@@ -103,7 +103,7 @@ protected:
     touchgfx::Unicode::UnicodeChar textArea_AmpsDigit_2Buffer[TEXTAREA_AMPSDIGIT_2_SIZE];
     static const uint16_t TEXTAREA_AMPSDIGIT_1_SIZE = 2;
     touchgfx::Unicode::UnicodeChar textArea_AmpsDigit_1Buffer[TEXTAREA_AMPSDIGIT_1_SIZE];
-    static const uint16_t TEXTAREA_AMPSDIGIT_0_SIZE = 3;
+    static const uint16_t TEXTAREA_AMPSDIGIT_0_SIZE = 5;
     touchgfx::Unicode::UnicodeChar textArea_AmpsDigit_0Buffer[TEXTAREA_AMPSDIGIT_0_SIZE];
 
 private:

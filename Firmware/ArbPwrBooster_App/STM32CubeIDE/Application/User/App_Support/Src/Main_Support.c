@@ -49,7 +49,7 @@ void Init_ArbPwrBoosterClass(void)
     // Channel 1 Init
     ArbPwrBoosterStatus.CH1.InputImpedance = ONE_MEG_OHM;
     ArbPwrBoosterStatus.CH1.Limit.Enable = false;
-    ArbPwrBoosterStatus.CH1.Limit.Current = 3.25432;
+    ArbPwrBoosterStatus.CH1.Limit.Current = -10.25432;
     ArbPwrBoosterStatus.CH1.OutputSwitch = OFF;
     // Channel 2 Init
     ArbPwrBoosterStatus.CH2.InputImpedance = FIFTY_OHM;
@@ -59,7 +59,7 @@ void Init_ArbPwrBoosterClass(void)
 }
 
 
-void digitsFromDouble(double RationalNumber, uint8_t *Integer, uint8_t *Tenths, uint8_t *Hundredths, uint8_t *Thousandths)
+void digitsFromDouble(double RationalNumber, int8_t *Integer, uint8_t *Tenths, uint8_t *Hundredths, uint8_t *Thousandths)
 {
     char ValueString[10] = {0};
     char ExtractedString[3] = {0};
@@ -96,12 +96,14 @@ void digitsFromDouble(double RationalNumber, uint8_t *Integer, uint8_t *Tenths, 
 }
 
 
-double digitsToDouble(uint8_t *Integer, uint8_t *Tenths, uint8_t *Hundredths, uint8_t *Thousandths)
+double digitsToDouble(int8_t *Integer, uint8_t *Tenths, uint8_t *Hundredths, uint8_t *Thousandths)
 {
-    double Value = (double)*Integer;
+    double Value = (double)abs(*Integer);
     Value += *Tenths * 0.100;
     Value += *Hundredths * 0.010;
     Value += *Thousandths * 0.001;
+    if (*Integer < 0)
+        Value *= -1.0;
 
     return(Value);
 }

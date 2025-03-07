@@ -1618,9 +1618,9 @@
           {
             "Type": "TextArea",
             "Name": "textArea_AmpsDigit_0",
-            "X": 112,
+            "X": 65,
             "Y": 70,
-            "Width": 31,
+            "Width": 79,
             "Height": 73,
             "TextId": "__SingleUse_48L8",
             "TextRotation": "0",
@@ -1633,7 +1633,7 @@
             "Wildcard1": {
               "TextId": "__SingleUse_FV3Z",
               "UseBuffer": true,
-              "BufferSize": 3
+              "BufferSize": 5
             }
           },
           {
