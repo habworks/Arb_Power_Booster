@@ -122,20 +122,29 @@ typedef struct
     double                  MaxCurrent;
     double                  MeanCurrent;
     double                  RMS_Current;
-}Type_MeasureValue;
+}Type_ChannelMeasure;
+
+typedef struct
+{
+    double                  Positive_20V;
+    double                  Negative_20V;
+    double                  VDD_VDREF;
+    float                   TempDegreeC;
+}Type_SystemMeasure;
 
 typedef struct
 {
     Type_SetLimits          Limit;
     Type_InputImpedance     InputImpedance;
     Type_RelaySwitch        OutputSwitch;
-    Type_MeasureValue       Measure;
+    Type_ChannelMeasure     Measure;
 }Type_ChannelConfig;
 
 typedef struct
 {
     Type_ScreenType     Screen;
     Type_SetLimitDigit  SetLimitDigit;
+    Type_SystemMeasure  SystemMeasure;
     Type_Channel        ActiveChannel;
     Type_ChannelConfig  CH1;
     Type_ChannelConfig  CH2;

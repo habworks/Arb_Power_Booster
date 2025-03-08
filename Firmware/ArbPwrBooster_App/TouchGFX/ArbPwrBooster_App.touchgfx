@@ -1618,7 +1618,7 @@
           {
             "Type": "TextArea",
             "Name": "textArea_AmpsDigit_0",
-            "X": 65,
+            "X": 63,
             "Y": 70,
             "Width": 79,
             "Height": 73,

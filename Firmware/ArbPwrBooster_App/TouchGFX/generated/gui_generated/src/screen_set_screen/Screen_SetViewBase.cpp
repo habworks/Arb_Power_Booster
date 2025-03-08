@@ -129,7 +129,7 @@ Screen_SetViewBase::Screen_SetViewBase() :
     flexButton_AmpsDigit_0.setPosition(66, 97, 77, 39);
     add(flexButton_AmpsDigit_0);
 
-    textArea_AmpsDigit_0.setXY(65, 70);
+    textArea_AmpsDigit_0.setXY(63, 70);
     textArea_AmpsDigit_0.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
     textArea_AmpsDigit_0.setLinespacing(0);
     Unicode::snprintf(textArea_AmpsDigit_0Buffer, TEXTAREA_AMPSDIGIT_0_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_FV3Z).getText());
