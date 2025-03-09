@@ -39,10 +39,11 @@ extern"C" {
 #define ADC3_NUMBER_OF_CHANNELS 3U
 // ADC CONVERSION RELATED
 #define ADC_12BIT_FULL_COUNT    4096
-#define LSB_12BIT_VALUE         244.1E-6
+#define LSB_12BIT_VALUE         244.14E-6
 #define ADC_REFERENCE_VOLTAGE   3.300
-#define POS_20V_DIVIDER         1.0   //0.110
-#define NEG_20V_DIVIDER         1.0   //0.110
+#define DIVIDER_20V_CONVERSION  9.091   // External divider ratio = 0.110 with an equivalence of 3.3V to 30V
+#define AMP_MONITOR_GAIN        1.0 //50.0    // Value in V/V this is the Gain of the current sense Amplifier
+#define AMP_SENSE_RESISTOR      1.0 //0.0033  // Value in ohms
 // VREFINT RELATED (SYSTEM 3.3V)
 #define VREFINT_CAL_ADDR        ((uint16_t*) ((uint32_t) 0x1FF0F44A)) //0x1FFF75AA)
 // TEMP SENSOR RELATED
@@ -52,12 +53,13 @@ extern"C" {
 // FIFO BUFFERS
 #define SYSTEM_3V3_BUFFER_SIZE  16U     // Expected to be DC value
 #define SYSTEM_TEMP_BUFFER_SIZE 16U     // Expected to be slow moving temperature value
-#define CH1_AMP_MON_BUFFER_SIZE 4U      // Should account for a frequency of 10KHz 2x Nyquist
-#define CH2_AMP_MON_BUFFER_SIZE 4U      // Should account for a frequency of 10KHz 2x Nyquist
+#define CH1_AMP_MON_BUFFER_SIZE 2U      // Should account for a frequency of 10KHz 2x Nyquist
+#define CH2_AMP_MON_BUFFER_SIZE 2U      // Should account for a frequency of 10KHz 2x Nyquist
 #if (CH1_AMP_MON_BUFFER_SIZE != CH2_AMP_MON_BUFFER_SIZE)
 #warning Hab the buffersize of the the current monitor channels should be the same
 #endif
-
+#define SYSTEM_P20V_BUFFER_SIZE 16U     // Expected DC Value
+#define SYSTEM_N20V_BUFFER_SIZE 16U     // Expected DC Value
 // FACTORY CALIBRATION VALUES AT SPECIFIC ADDRESS
 //#define TS_CAL1_ADDR            ((uint16_t*)0x1FFF75A8)     // Factory V_25 (25°C)
 //#define TS_CAL2_ADDR            ((uint16_t*)0x1FFF75CA)     // Factory V_110 (110°C)

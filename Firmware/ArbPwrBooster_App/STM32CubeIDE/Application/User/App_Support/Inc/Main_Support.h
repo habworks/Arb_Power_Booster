@@ -37,7 +37,7 @@ extern"C" {
 #define FW_MAJOR_REV            0U
 #define FW_MINOR_REV            0U
 #define FW_TEST_REV             1U
-#define HW_REVISION             2U
+#define HW_REVISION             1U
 // BASE COLOR CH1
 #define CH1_BASE_COLOR          0xD4, 0xC7, 0x19
 #define CH1_BASE_COLOR_RED      ((uint8_t)(0xD4))
@@ -118,9 +118,16 @@ typedef struct
 
 typedef struct
 {
+    double                  Sum;
+    double                  Mean;
+    uint8_t                 Count;
+}Type_Mean;
+
+typedef struct
+{
     double                  MinCurrent;
     double                  MaxCurrent;
-    double                  MeanCurrent;
+    Type_Mean               MeanCurrent;
     double                  RMS_Current;
 }Type_ChannelMeasure;
 
@@ -129,7 +136,7 @@ typedef struct
     double                  Positive_20V;
     double                  Negative_20V;
     double                  VDD_VDREF;
-    float                   TempDegreeC;
+    double                  TempDegreeC;
 }Type_SystemMeasure;
 
 typedef struct
