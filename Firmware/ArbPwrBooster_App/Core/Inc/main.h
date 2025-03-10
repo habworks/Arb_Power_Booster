@@ -86,8 +86,6 @@ void Error_Handler(void);
 #define POS_20V_MON_GPIO_Port GPIOF
 #define NEG_20V_MON_Pin GPIO_PIN_8
 #define NEG_20V_MON_GPIO_Port GPIOF
-#define IO_MON_1_Pin GPIO_PIN_0
-#define IO_MON_1_GPIO_Port GPIOA
 #define EN_50_Z_1_Pin GPIO_PIN_15
 #define EN_50_Z_1_GPIO_Port GPIOB
 

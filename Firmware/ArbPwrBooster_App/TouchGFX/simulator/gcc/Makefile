@@ -20,11 +20,16 @@ all clean assets:
 $(error Spaces not allowed in path)
 else
 
-ADDITIONAL_SOURCES := ../../STM32CubeIDE/Application/User/App_Support/Src
+ADDITIONAL_SOURCES_A := ../../STM32CubeIDE/Application/User/App_Support/Src/IO_Support.c
+ADDITIONAL_SOURCES_B := ../../STM32CubeIDE/Application/User/App_Support/Src/ADC_Support.c
+ADDITIONAL_SOURCES := ../../STM32CubeIDE/Application/User/App_Support/Src/Main_Support.c
 ADDITIONAL_INCLUDE_PATHS := ../../STM32CubeIDE/Application/User/App_Support/Inc
 ADDITIONAL_LIBRARY_PATHS := 
 ADDITIONAL_LIBRARIES :=
-export ADDITIONAL_SOURCES ADDITIONAL_INCLUDE_PATHS ADDITIONAL_LIBRARY_PATHS ADDITIONAL_LIBRARIES
+export ADDITIONAL_SOURCES ADDITIONAL_INCLUDE_PATHS ADDITIONAL_LIBRARY_PATHS ADDITIONAL_LIBRARIES ADDITIONAL_SOURCES_A ADDITIONAL_SOURCES_B
+
+# Add the additional include paths to the CFLAGS
+CFLAGS += -I$(ADDITIONAL_INCLUDE_PATHS)
 
 all: $(filter assets,$(MAKECMDGOALS))
 all assets: $(filter clean,$(MAKECMDGOALS))

@@ -131,15 +131,11 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
     // STEP 1: ADC1 Conversions: CH1 Amp Monitor, Micro Temp Sensor, System 3.3V
     if (hadc == &hadc1)
     {
-        // Current Monitor CH1
-        writeTo_FIFO_Buffer(FIFO_CH1_AmpMon, ADC1_CountValue[RANK_1]);
-        calculateChannelCurrent(FIFO_CH1_AmpMon, &ArbPwrBooster.CH1.Measure);
-        ADC_RawConvertedResult[CH1_AMP_MON] = ADC1_CountValue[RANK_1] * LSB_12BIT_VALUE * ADC_REFERENCE_VOLTAGE;
         // System Temperature: See section 15.10 of STM32F746 Reference Manual (RM0385)
-        writeTo_FIFO_Buffer(FIFO_SystemTemp, ADC1_CountValue[RANK_2]);
+        writeTo_FIFO_Buffer(FIFO_SystemTemp, ADC1_CountValue[RANK_1]);
         ArbPwrBooster.SystemMeasure.TempDegreeC = calculateSystemTemp();
         // System 3.3V
-        writeTo_FIFO_Buffer(FIFO_System_3V3, ADC1_CountValue[RANK_3]);
+        writeTo_FIFO_Buffer(FIFO_System_3V3, ADC1_CountValue[RANK_2]);
         System_ADC_Reference = calculateSystem_3V3();
         ArbPwrBooster.SystemMeasure.VDD_VDREF = System_ADC_Reference;
         // Toggle at the end of conversion - for testing: ADC1 actual conversion rate VS calculated
@@ -149,18 +145,22 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
     // STEP 2: ADC3 Conversions: +20V Monitor, -20V Monitor, CH2 Amp Monitor
     if (hadc == &hadc3)
     {
-        // Current Monitor CH2
+        // -20V Supply Rail
         writeTo_FIFO_Buffer(FIFO_N20V_Supply, ADC3_CountValue[RANK_1]);
         ArbPwrBooster.SystemMeasure.Negative_20V = calculateSystemSupply(FIFO_N20V_Supply) * -1.0;
         ADC_RawConvertedResult[NEG_20V_MON] = ADC3_CountValue[RANK_1] * LSB_12BIT_VALUE * ADC_REFERENCE_VOLTAGE;
-
+        // +20V Supply Rail
         writeTo_FIFO_Buffer(FIFO_P20V_Supply, ADC3_CountValue[RANK_2]);
         ArbPwrBooster.SystemMeasure.Positive_20V = calculateSystemSupply(FIFO_P20V_Supply);
         ADC_RawConvertedResult[POS_20V_MON] = ADC3_CountValue[RANK_2] * LSB_12BIT_VALUE * ADC_REFERENCE_VOLTAGE;
-
-        writeTo_FIFO_Buffer(FIFO_CH2_AmpMon, ADC3_CountValue[RANK_3]);
+        // Current Monitor CH1
+        writeTo_FIFO_Buffer(FIFO_CH1_AmpMon, ADC3_CountValue[RANK_3]);
+        calculateChannelCurrent(FIFO_CH1_AmpMon, &ArbPwrBooster.CH1.Measure);
+        ADC_RawConvertedResult[CH1_AMP_MON] = ADC3_CountValue[RANK_3] * LSB_12BIT_VALUE * ADC_REFERENCE_VOLTAGE;
+        // Current Monitor CH2
+        writeTo_FIFO_Buffer(FIFO_CH2_AmpMon, ADC3_CountValue[RANK_4]);
         calculateChannelCurrent(FIFO_CH2_AmpMon, &ArbPwrBooster.CH2.Measure);
-        ADC_RawConvertedResult[CH2_AMP_MON] = ADC3_CountValue[RANK_3] * LSB_12BIT_VALUE * ADC_REFERENCE_VOLTAGE;
+        ADC_RawConvertedResult[CH2_AMP_MON] = ADC3_CountValue[RANK_4] * LSB_12BIT_VALUE * ADC_REFERENCE_VOLTAGE;
 
         // Toggle at the end of conversion - for testing: ADC3 actual conversion rate VS calculated
         ADC3_C_RATE_TOGGLE();
@@ -193,8 +193,8 @@ static Type_16b_FIFO *Init_FIFO_Buffer(uint16_t *Buffer, uint8_t BufferLength)
     Type_16b_FIFO *FIFO_Buffer = (Type_16b_FIFO *)malloc(sizeof(Type_16b_FIFO));
 
     // STEP 2: Assign buffer pointer, length and set write location to buffer index
-    FIFO_Buffer->FIFO_Buffer = Buffer;
-    FIFO_Buffer->FIFO_Depth = BufferLength;
+    FIFO_Buffer->Buffer = Buffer;
+    FIFO_Buffer->Depth = BufferLength;
     FIFO_Buffer->WritePointer = &Buffer[0];
 
     return(FIFO_Buffer);
@@ -224,8 +224,8 @@ static void writeTo_FIFO_Buffer(Type_16b_FIFO *FIFO_Buffer, uint16_t Value)
 
     // STEP 2: Advance write pointer to next address - loop back when end of write locations reached
     uint16_t *NewWritePointer = FIFO_Buffer->WritePointer + 1;
-    if (NewWritePointer >= (FIFO_Buffer->FIFO_Buffer + FIFO_Buffer->FIFO_Depth))
-        FIFO_Buffer->WritePointer = FIFO_Buffer->FIFO_Buffer;
+    if (NewWritePointer >= (FIFO_Buffer->Buffer + FIFO_Buffer->Depth))
+        FIFO_Buffer->WritePointer = FIFO_Buffer->Buffer;
     else
         FIFO_Buffer->WritePointer = NewWritePointer;
 
@@ -252,11 +252,11 @@ static double calculateSystem_3V3(void)
 {
     // STEP 1: Calculate the mean of the ADC 3V3 counts
     double Mean_3V3_Count = 0.0;
-    for (uint8_t Index = 0; Index < FIFO_System_3V3->FIFO_Depth; Index++)
+    for (uint8_t Index = 0; Index < FIFO_System_3V3->Depth; Index++)
     {
-        Mean_3V3_Count += FIFO_System_3V3->FIFO_Buffer[Index];
+        Mean_3V3_Count += FIFO_System_3V3->Buffer[Index];
     }
-    Mean_3V3_Count /= FIFO_System_3V3->FIFO_Depth;
+    Mean_3V3_Count /= FIFO_System_3V3->Depth;
 
     // STEP 2: Using the mean value calculate the System 3V3
     uint16_t VRefInternalCal = *VREFINT_CAL_ADDR;
@@ -287,11 +287,11 @@ static double calculateSystemTemp(void)
 {
     // STEP 1: Calculate the mean of the ADC Temperature counts
     double MeanTempCount = 0.0;
-    for (uint8_t Index = 0; Index < FIFO_SystemTemp->FIFO_Depth; Index++)
+    for (uint8_t Index = 0; Index < FIFO_SystemTemp->Depth; Index++)
     {
-        MeanTempCount += FIFO_SystemTemp->FIFO_Buffer[Index];
+        MeanTempCount += FIFO_SystemTemp->Buffer[Index];
     }
-    MeanTempCount /= FIFO_SystemTemp->FIFO_Depth;
+    MeanTempCount /= FIFO_SystemTemp->Depth;
 
     // STEP 2: Using the mean value calculate the System Temperature in °C
     double VoltageTempSensor = (MeanTempCount * System_ADC_Reference) / ADC_12BIT_FULL_COUNT;
@@ -323,11 +323,11 @@ static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail)
 {
     // STEP 1: Calculate the mean of the ADC Supply rail counts
     double MeanSupplyRailCount = 0.0;
-    for (uint8_t Index = 0; Index < FIFO_SupplyRail->FIFO_Depth; Index++)
+    for (uint8_t Index = 0; Index < FIFO_SupplyRail->Depth; Index++)
     {
-        MeanSupplyRailCount += FIFO_SupplyRail->FIFO_Buffer[Index];
+        MeanSupplyRailCount += FIFO_SupplyRail->Buffer[Index];
     }
-    MeanSupplyRailCount /= FIFO_SupplyRail->FIFO_Depth;
+    MeanSupplyRailCount /= FIFO_SupplyRail->Depth;
 
     // STEP 2: Using the mean value calculate supply rail according to input divider ratio
     double SupplyRailVoltage = MeanSupplyRailCount * LSB_12BIT_VALUE * System_ADC_Reference * DIVIDER_20V_CONVERSION;
@@ -355,11 +355,11 @@ static void calculateChannelCurrent(Type_16b_FIFO *FIFO_AmpMon, Type_ChannelMeas
 {
     // STEP 1: Calculate the mean of the Current Monitor
     double MeanCurrentCount = 0.0;
-    for (uint8_t Index = 0; Index < FIFO_AmpMon->FIFO_Depth; Index++)
+    for (uint8_t Index = 0; Index < FIFO_AmpMon->Depth; Index++)
     {
-        MeanCurrentCount += FIFO_AmpMon->FIFO_Buffer[Index];
+        MeanCurrentCount += FIFO_AmpMon->Buffer[Index];
     }
-    MeanCurrentCount /= FIFO_AmpMon->FIFO_Depth;
+    MeanCurrentCount /= FIFO_AmpMon->Depth;
 
     // STEP 2: Calculate the current
     double PresentCurrentValue = ((MeanCurrentCount * LSB_12BIT_VALUE * System_ADC_Reference) / AMP_MONITOR_GAIN) / AMP_SENSE_RESISTOR;

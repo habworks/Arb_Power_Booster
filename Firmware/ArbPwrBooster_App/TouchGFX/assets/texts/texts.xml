@@ -89,10 +89,10 @@
         <Translation Language="GB">&lt;value&gt;V</Translation>
       </Text>
       <Text Id="__SingleUse_GKDW" Alignment="Left" TypographyId="CenturyGothic_Units">
-        <Translation Language="GB">Positive Supply: </Translation>
+        <Translation Language="GB">+20V Supply Rail: </Translation>
       </Text>
       <Text Id="__SingleUse_62QI" Alignment="Left" TypographyId="CenturyGothic_Units">
-        <Translation Language="GB">Negative Supply: </Translation>
+        <Translation Language="GB">--20V Supply Rail: </Translation>
       </Text>
       <Text Id="__SingleUse_C9E9" Alignment="Left" TypographyId="CenturyGothic_Units">
         <Translation Language="GB">Enable Limit</Translation>

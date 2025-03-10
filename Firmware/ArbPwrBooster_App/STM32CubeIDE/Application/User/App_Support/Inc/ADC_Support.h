@@ -35,8 +35,8 @@ extern"C" {
 
 // DEFINES
 // ADC CHANNEL
-#define ADC1_NUMBER_OF_CHANNELS 3U
-#define ADC3_NUMBER_OF_CHANNELS 3U
+#define ADC1_NUMBER_OF_CHANNELS 2U
+#define ADC3_NUMBER_OF_CHANNELS 4U
 // ADC CONVERSION RELATED
 #define ADC_12BIT_FULL_COUNT    4096
 #define LSB_12BIT_VALUE         244.14E-6
@@ -89,14 +89,15 @@ typedef enum
 {
     RANK_1 = 0,
     RANK_2,
-    RANK_3
+    RANK_3,
+    RANK_4
 }Type_ADC_ChannelRank;
 
 typedef struct
 {
-    uint16_t *      FIFO_Buffer;
+    uint16_t *      Buffer;
     uint16_t *      WritePointer;
-    uint8_t         FIFO_Depth;
+    uint8_t         Depth;
 }Type_16b_FIFO;
 
 
