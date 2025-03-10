@@ -53,8 +53,8 @@ extern"C" {
 // FIFO BUFFERS
 #define SYSTEM_3V3_BUFFER_SIZE  16U     // Expected to be DC value
 #define SYSTEM_TEMP_BUFFER_SIZE 16U     // Expected to be slow moving temperature value
-#define CH1_AMP_MON_BUFFER_SIZE 2U      // Should account for a frequency of 10KHz 2x Nyquist
-#define CH2_AMP_MON_BUFFER_SIZE 2U      // Should account for a frequency of 10KHz 2x Nyquist
+#define CH1_AMP_MON_BUFFER_SIZE 16U      // Should account for a frequency of 10KHz 2x Nyquist
+#define CH2_AMP_MON_BUFFER_SIZE 16U      // Should account for a frequency of 10KHz 2x Nyquist
 #if (CH1_AMP_MON_BUFFER_SIZE != CH2_AMP_MON_BUFFER_SIZE)
 #warning Hab the buffersize of the the current monitor channels should be the same
 #endif
@@ -95,14 +95,18 @@ typedef enum
 
 typedef struct
 {
+    bool            FirstOverFlow;
+    uint32_t        Sum;
     uint16_t *      Buffer;
     uint16_t *      WritePointer;
+    uint16_t *      PreviousWritePointer;
     uint8_t         Depth;
 }Type_16b_FIFO;
 
 
 // FUNCTION PROTOTYPES
 void Init_ADC_Hardware(void);
+void ADC1_StartConversion(void);
 
 #ifdef __cplusplus
 }

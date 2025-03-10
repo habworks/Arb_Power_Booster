@@ -48,14 +48,19 @@ void Init_ArbPwrBoosterClass(void)
     ArbPwrBooster.Screen = SPLASH_SCREEN;
     // Channel 1 Init
     ArbPwrBooster.CH1.InputImpedance = ONE_MEG_OHM;
+    ArbPwrBooster.CH1.OutputSwitch = OFF;
     ArbPwrBooster.CH1.Limit.Enable = false;
     ArbPwrBooster.CH1.Limit.Current = -10.25432;
-    ArbPwrBooster.CH1.OutputSwitch = OFF;
+    ArbPwrBooster.CH1.Measure.MaxCurrent = 0;
+    ArbPwrBooster.CH1.Measure.MinCurrent = 0;
     // Channel 2 Init
-    ArbPwrBooster.CH2.InputImpedance = FIFTY_OHM;
+    ArbPwrBooster.CH2.InputImpedance = ONE_MEG_OHM;
+    ArbPwrBooster.CH2.OutputSwitch = OFF;
     ArbPwrBooster.CH2.Limit.Enable = true;
     ArbPwrBooster.CH2.Limit.Current = 5.125;
-    ArbPwrBooster.CH2.OutputSwitch = OFF;
+    ArbPwrBooster.CH2.Measure.MaxCurrent = 0;
+    ArbPwrBooster.CH2.Measure.MinCurrent = 0;
+
 }
 
 
