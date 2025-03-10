@@ -1,19 +1,10 @@
-DESCRIPTION:
-A device that takes input from an arbitrary waveform generator and outputs that same waveform, but current boosted.  The purpose of this application is to simulate “bad”, external power rail conditions to the EUT (Equipment Under Test).  Often in the development of embedded electronics, the embedded device is just a sub-system of a larger system.  In many such cases the larger system provides power to that sub-system.  In many such cases the power provided to the sub-system is influenced negatively by the other components of that system.  Such influences include, but are not limited to:
-•	Brown outs
-•	Black outs
-•	Power line ripple
-•	Regenerative effects 
-•	Weird harmonics created by heavy loading devices
-Using an arbitrary waveform generator to recreate the negative effects of the supply rail this device can be used to power your EUT while it is on your desk and not installed within the unit itself.  The primary benefit of this device is singular in purpose.  As system development is often done as many sub-systems coming together, your sub-system can be tested independently of the system’s supply rail.  This allows the engineer to perform mitigation against the offending supply rial, or to study its impact on the EUT without actually having to be installed within the system.  A break through in the work flow of embedded system development.
+PROJECT BACKGROUND:
+An embedded device is usually part of a bigger system.  That said, the provided supply rail to that device can contain noise content from every other device, motor, generator, etc. within that system.  But spectral noise is common to any supply rail and any combination of ceramic capacitors, ferrites and sometimes clamps can be sprinkled to achieve the desired result.  What I am more concerned with are systems where the supply rail is impacted by heavy abrupt loading that may include a regenerative factor.  Imagine a 12V supply rail with 2Vpkpk low frequency harmonic riding on it, or weird looking power surges, or weird looking brown outs, or some weird high energy circuit that disrupts that supply rail in a very noticeable way (not millivolts but volts).  Not so much high frequency, low amplitude, spectral noise, but lower frequency and abrupt, large disruptions in power.  Condition 1, nasty supply rail.  Condition 2, your embedded device may drive a heavy load, as such, it has a fair amount of bulk capacitance attached to the supply rail, so condition 2 covers an embedded device with a relatively large capacitive load.  
 
-This project is composed of a hardware and firmware component.  There are also supporting specification, design and other related documents 
+THE PROBLEM:
+So at your desk you can conjure up some fix on your board to adjust for this “heavy noise” on your supply rail, but, at your desk, how do you test it.  At your desk is your 12V lab grade power supply.  From your desk you cannot test your embedded device against its real world, super nasty, supply rail.  Your embedded device can only truly be tested within the system wherein lives said nasty supply rail.  Now imagine that “system” neither fits on your desk nor is in your state – maybe it’s at the customer site in TX.  So what do you do?  Or how about how your product responds to battery charging and discharging – you could wait days to simulate a discharge cycle and hours to charge to get one test result or you can recreate the charge, discharge cycle with your arb and test dozens of cycles in a few hours or minutes.  
 
-BASIC SPECIFICATION:
-PARAMETER	LIMIT	NOTES
-Max capacitive loading	300uF	At the bandwidth limit
-Max Output Swing	±15V	
-Max Phase Lag	-5°	10KHz loaded to 300uF
-Max Power 	TBD	
-		
+THE SOLUTION:
+As a home project I am designing the Arbitrary Power Booster some electronics that will mimic this supply rail / battery.  The basic premise is to use an arbitrary function generator to recreate what the corrupted supply rail (or battery charge / discharge) looks like.  The output of the arb is fed into a current boost amplifier of sorts, and the output of said device drives the input to DUT supply rail.  Some additional features include: a current limit, output connect / disconnect, 50Ω input, touch screen UI GUI, 2 channel, over current (constant current mode), etc.  The present design is targeted to support ±15V at ±10A at 10KHz.  NOTE: PDFs are 3D so be sure to enable 3D mode in your pdf browser.
 
+The hardware design (see attached Arb_Power_Booster.pdf) on this project is mostly analog and firmware.  To expedite the design the touchscreen is an off the self-development board to which I add my code (you can review the code base in github).  The GUI looks like ArbPwrBoosterScreenView.docx.
