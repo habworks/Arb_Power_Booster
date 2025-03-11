@@ -35,16 +35,37 @@
 Type_ArbPwrBoosterStatus ArbPwrBooster;
 
 
-//HAB TODO: A lot of work to do here - may want to return a pointer I think would be best
+
+/********************************************************************************************************
+* @brief Init of the Arbitrary Power Booster hardware peripherals and drivers for use in POR state
+*
+* @author original: Hab Collector \n
+*
+* STEP 1: Init hardware peripherals
+* STEP 2: Init drivers
+********************************************************************************************************/
 void Init_ArbPwrBoosterHardware(void)
 {
+    // STEP 1: Init hardware peripherals
     Init_GPIO_Hardware();
     Init_ADC_Hardware();
-}
+
+    // STEP 2: Init drivers
+
+} // END OF Init_ArbPwrBoosterHardware
 
 
+
+/********************************************************************************************************
+* @brief Init of the Arbitrary Power Booster class - set member values to defaults for POR operation
+*
+* @author original: Hab Collector \n
+*
+* STEP 1: Set members to default POR value
+********************************************************************************************************/
 void Init_ArbPwrBoosterClass(void)
 {
+    // STEP 1: Set members to default POR value
     ArbPwrBooster.Screen = SPLASH_SCREEN;
     // Channel 1 Init
     ArbPwrBooster.CH1.InputImpedance = ONE_MEG_OHM;
@@ -61,19 +82,46 @@ void Init_ArbPwrBoosterClass(void)
     ArbPwrBooster.CH2.Measure.MaxCurrent = 0;
     ArbPwrBooster.CH2.Measure.MinCurrent = 0;
 
-}
+} // END OF Init_ArbPwrBoosterClass
 
 
+
+/********************************************************************************************************
+* @brief Convert the a rational number in the form of A.xyz into its unique components of A, x, y, z
+*   A = Integer
+*   x = Tenths
+*   y = Hundredths
+*   z = Thousandths
+* Example Rational number 3.1429 becomes A = 3, x = 1, y = 4, z = 3
+*
+* @author original: Hab Collector \n
+*
+* @note: Values are rounded up to the nearest thousandths
+* @note: Integer, Tenths, Hundredths, Thousandths are returned by reference
+*
+* @param RationalNumber: Value to be converted
+* @param Integer: Said place holder within a rational number
+* @param Tenths: Said place holder within a rational number
+* @param Hundredths: Said place holder within a rational number
+* @param Thousandths: Said place holder within a rational number
+*
+* STEP 1: Locate the decimal by pointer
+* STEP 2: Extract Integer Part
+* STEP 3: Extract Tenths
+* STEP 4: Extract Hundredths
+* STEP 5: Extract Thousandths
+********************************************************************************************************/
 void digitsFromDouble(double RationalNumber, int8_t *Integer, uint8_t *Tenths, uint8_t *Hundredths, uint8_t *Thousandths)
 {
     char ValueString[10] = {0};
     char ExtractedString[3] = {0};
     char *DecimalLocation;
 
+    // STEP 1: Locate the decimal by pointer
     sprintf(ValueString, "%2.3f", RationalNumber);
     DecimalLocation = strstr(ValueString, ".");
 
-    // Extract Integer Part
+    // STEP 2: Extract Integer Part
     uint8_t StringLength = strlen(ValueString);
     for (uint8_t Index = 0; Index < StringLength; Index++)
     {
@@ -83,26 +131,47 @@ void digitsFromDouble(double RationalNumber, int8_t *Integer, uint8_t *Tenths, u
     }
     *Integer = atoi(ExtractedString);
 
-    // Extract Tenths
+    // STEP 3: Extract Tenths
     memset(ExtractedString, 0x00, sizeof(ExtractedString));
     char *ValueLocationTenths = DecimalLocation + 1;
     ExtractedString[0] = *ValueLocationTenths;
     *Tenths = atoi(ExtractedString);
 
-    // Extract Hundredths
+    // STEP 4: Extract Hundredths
     char *ValueLocationHundredths = DecimalLocation + 2;
     ExtractedString[0] = *ValueLocationHundredths;
     *Hundredths = atoi(ExtractedString);
 
-    // Extract Thousandths
+    // STEP 5: Extract Thousandths
     char *ValueLocationThousandths = DecimalLocation + 3;
     ExtractedString[0] = *ValueLocationThousandths;
     *Thousandths = atoi(ExtractedString);
-}
+
+} // END OF digitsFromDouble
 
 
+
+/********************************************************************************************************
+* @brief Convert the integer values of A, x, y, z to a rational number of value A.xyz where
+*   A = Integer
+*   x = Tenths
+*   y = Hundredths
+*   z = Thousandths
+* Example digits A = 3, x = 1, y = 4, z = 3 becomes rational number 3.1429
+* @author original: Hab Collector \n
+*
+* @param Integer: Said place holder within a rational number
+* @param Tenths: Said place holder within a rational number
+* @param Hundredths: Said place holder within a rational number
+* @param Thousandths: Said place holder within a rational number
+*
+* @return Rational Number
+*
+* STEP 1: Concatenate values into a rational number
+********************************************************************************************************/
 double digitsToDouble(int8_t *Integer, uint8_t *Tenths, uint8_t *Hundredths, uint8_t *Thousandths)
 {
+    // STEP 1: Concatenate values into a rational number
     double Value = (double)abs(*Integer);
     Value += *Tenths * 0.100;
     Value += *Hundredths * 0.010;
@@ -111,5 +180,38 @@ double digitsToDouble(int8_t *Integer, uint8_t *Tenths, uint8_t *Hundredths, uin
         Value *= -1.0;
 
     return(Value);
-}
+
+} // END OF digitsToDouble
+
+
+
+/********************************************************************************************************
+* @brief Error handler for critical errors ONLY.  A critical error has no recovery.  The error handler is
+* used to trap the system so the call stack and offending condition can be evaluated.
+*
+* @author original: Hab Collector \n
+*
+* @param FileName: Filename where error occur - calling function must use __FILE__
+* @param FileLineNumber: Line number within in the file were the error occurred - call function must use __LINE__
+* @param ErrorNumber: An number value representing some condition about the error
+* @param Description: A brief description of the error - do not include \r\n
+*
+* STEP 1: Print out error information
+* STEP 2: Trap here forever
+********************************************************************************************************/
+void systemErrorHandler(char *FileName, int FileLineNumber, uint32_t ErrorNumber, char *Description)
+{
+    bool WaitHere = true;
+
+    // STEP 1: Print out error information
+//    printf("CRITICAL ERROR:");
+//    printf("\tError Number:     %d\r\n", ErrorNumber);
+//    printf("\tDescription:      %s\r\n", Description);
+//    printf("\tFile Name:        %s\r\n". FileName);
+//    printf("\tFile Line Number: %d", FileLineNumber);
+
+    // STEP 2: Trap here forever
+    while(WaitHere);
+
+} // END OF systemErrorHandler
 

@@ -958,7 +958,7 @@ void StartDefaultTask(void *argument)
   for(;;)
   {
       ADC1_StartConversion();
-    osDelay(100);
+    osDelay(200);
   }
   /* USER CODE END 5 */
 }

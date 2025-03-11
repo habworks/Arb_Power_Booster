@@ -99,7 +99,6 @@ typedef struct
     uint32_t        Sum;
     uint16_t *      Buffer;
     uint16_t *      WritePointer;
-    uint16_t *      PreviousWritePointer;
     uint8_t         Depth;
 }Type_16b_FIFO;
 
