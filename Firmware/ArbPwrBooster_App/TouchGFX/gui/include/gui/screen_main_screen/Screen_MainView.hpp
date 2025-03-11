@@ -19,6 +19,8 @@ public:
     virtual void switchOutput_CH2(void);
     virtual void InputImpedanceSet_CH2(void);
     virtual void setActiveLimit_CH2(void);
+    // ADDED FUNCTIONS CALLED BY PRESENTER
+    virtual void updateMainScreen_View(void);
 protected:
 };
 

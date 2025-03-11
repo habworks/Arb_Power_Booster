@@ -27,6 +27,9 @@ public:
 
     virtual ~Screen_MainPresenter() {}
 
+    // HAB ADDED
+    virtual void updateMainScreen_Presenter(void);
+
 private:
     Screen_MainPresenter();
 

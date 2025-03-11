@@ -96,7 +96,7 @@
             "Y": 192,
             "Width": 84,
             "Height": 80,
-            "Filename": "__generated\\icon_theme_images_action_settings_50_50_FF0000.svg.png",
+            "Filename": "__generated\\icon_theme_images_action_settings_50_50_5EEB13.svg.png",
             "ScalingAlgorithm": "Nearest-neighbor"
           },
           {
@@ -388,7 +388,7 @@
           },
           {
             "Type": "TextArea",
-            "Name": "textArea2_CH2_Amax",
+            "Name": "textArea_CH2_Amax",
             "X": 262,
             "Y": 76,
             "Width": 94,
@@ -728,7 +728,7 @@
           },
           {
             "Type": "TextArea",
-            "Name": "textArea2_CH1_Amax",
+            "Name": "textArea_CH1_Amax",
             "X": 22,
             "Y": 76,
             "Width": 94,
@@ -932,6 +932,64 @@
             "RelativeFilename": "__generated\\dark_theme_images_backgrounds_480x272_wavy_lines.png"
           },
           {
+            "Type": "TextArea",
+            "Name": "textArea_SystemTempMonitor",
+            "X": 190,
+            "Y": 156,
+            "Width": 46,
+            "Height": 24,
+            "TextId": "__SingleUse_ABZP",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_788H",
+              "UseBuffer": true,
+              "BufferSize": 10
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_System3V3Monitor",
+            "X": 190,
+            "Y": 132,
+            "Width": 64,
+            "Height": 24,
+            "TextId": "__SingleUse_D01D",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_Z6IF",
+              "UseBuffer": true,
+              "BufferSize": 10
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_SystemTemp",
+            "X": 15,
+            "Y": 156,
+            "Width": 141,
+            "Height": 24,
+            "TextId": "__SingleUse_OS39",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
             "Type": "FlexButton",
             "Name": "flexButton_SystemReset",
             "X": 320,
@@ -1040,10 +1098,10 @@
           },
           {
             "Type": "TextArea",
-            "Name": "textArea_StatusText",
+            "Name": "textArea_SystemStatusMsg",
             "X": 190,
-            "Y": 155,
-            "Width": 29,
+            "Y": 180,
+            "Width": 269,
             "Height": 24,
             "TextId": "__SingleUse_Y3W6",
             "TextRotation": "0",
@@ -1052,14 +1110,19 @@
               "Green": 255,
               "Blue": 255
             },
-            "AutoSize": true
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_ZG8T",
+              "UseBuffer": true,
+              "BufferSize": 25
+            }
           },
           {
             "Type": "TextArea",
-            "Name": "textArea_Status",
+            "Name": "textArea_SystemStatus",
             "X": 15,
-            "Y": 155,
-            "Width": 139,
+            "Y": 180,
+            "Width": 138,
             "Height": 24,
             "TextId": "__SingleUse_OQH2",
             "TextRotation": "0",
@@ -1096,9 +1159,25 @@
             "Name": "textArea_NegSupply",
             "X": 15,
             "Y": 108,
-            "Width": 173,
+            "Width": 169,
             "Height": 24,
             "TextId": "__SingleUse_62QI",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_System3V3",
+            "X": 15,
+            "Y": 132,
+            "Width": 128,
+            "Height": 24,
+            "TextId": "__SingleUse_4N6Q",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -1112,7 +1191,7 @@
             "Name": "textArea_PosSupplyMonitor",
             "X": 190,
             "Y": 84,
-            "Width": 53,
+            "Width": 65,
             "Height": 24,
             "TextId": "__SingleUse_7GWE",
             "TextRotation": "0",
@@ -1133,7 +1212,7 @@
             "Name": "textArea_PosSupply",
             "X": 15,
             "Y": 84,
-            "Width": 171,
+            "Width": 167,
             "Height": 24,
             "TextId": "__SingleUse_GKDW",
             "TextRotation": "0",

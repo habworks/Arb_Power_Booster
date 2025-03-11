@@ -10,6 +10,11 @@ public:
     
     virtual ~ModelListener() {}
 
+    // START HAB ADDED
+    virtual void updateMainScreen_Presenter(void){}
+    virtual void updateConfigScreen_Presenter(void){}
+    // END HAD ADDED
+
     void bind(Model* m)
     {
         model = m;

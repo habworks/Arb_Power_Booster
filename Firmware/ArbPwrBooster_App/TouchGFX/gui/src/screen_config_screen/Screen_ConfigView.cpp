@@ -1,6 +1,8 @@
 #include <gui/screen_config_screen/Screen_ConfigView.hpp>
 
 // ADDED INCLUDES
+#include "touchgfx/Color.hpp"
+#include "../../../../../../touchgfx/generated/texts/include/texts/TextKeysAndLanguages.hpp"
 #include "Main_Support.h"
 #include "IO_Support.h"
 
@@ -53,3 +55,28 @@ void Screen_ConfigView::update_Screen_Config(void)
     // HAB TODO
 
 } // END OF update_Screen_Config
+
+
+
+void Screen_ConfigView::updateConfigScreen_View(void)
+{
+    // Power +20V
+    Unicode::snprintfFloat(textArea_PosSupplyMonitorBuffer, TEXTAREA_POSSUPPLYMONITOR_SIZE, "%3.1f", ArbPwrBooster.SystemMeasure.Positive_20V);
+    textArea_PosSupplyMonitor.setWildcard(textArea_PosSupplyMonitorBuffer);
+    // Power -20V
+    Unicode::snprintfFloat(textArea_NegSupplyMonitorBuffer, TEXTAREA_NEGSUPPLYMONITOR_SIZE, "%3.1f", ArbPwrBooster.SystemMeasure.Negative_20V);
+    textArea_NegSupplyMonitor.setWildcard(textArea_NegSupplyMonitorBuffer);
+    // System 3V3
+    Unicode::snprintfFloat(textArea_System3V3MonitorBuffer, TEXTAREA_SYSTEM3V3MONITOR_SIZE, "%4.3f", ArbPwrBooster.SystemMeasure.VDD_VDREF);
+    textArea_System3V3Monitor.setWildcard(textArea_System3V3MonitorBuffer);
+    // System 3V3
+    Unicode::snprintfFloat(textArea_SystemTempMonitorBuffer, TEXTAREA_SYSTEMTEMPMONITOR_SIZE, "%3.1f", ArbPwrBooster.SystemMeasure.TempDegreeC);
+    textArea_SystemTempMonitor.setWildcard(textArea_SystemTempMonitorBuffer);
+    // System Status
+    Unicode::strncpy(textArea_SystemStatusMsgBuffer, "Im good", TEXTAREA_SYSTEMSTATUSMSG_SIZE);
+//    Unicode::snprintf(textArea_SystemStatusMsgBuffer, TEXTAREA_SYSTEMSTATUSMSG_SIZE, "%s", "I'm good");
+    textArea_SystemStatusMsg.setWildcard(textArea_SystemStatusMsgBuffer);
+
+    this->invalidate();
+
+}

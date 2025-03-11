@@ -104,6 +104,18 @@ const osThreadAttr_t videoTask_attributes = {
   .stack_size = 1000 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for TaskMainUpdate */
+osThreadId_t TaskMainUpdateHandle;
+const osThreadAttr_t TaskMainUpdate_attributes = {
+  .name = "TaskMainUpdate",
+  .stack_size = 512 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for DisplayUpdateSemaphore */
+osSemaphoreId_t DisplayUpdateSemaphoreHandle;
+const osSemaphoreAttr_t DisplayUpdateSemaphore_attributes = {
+  .name = "DisplayUpdateSemaphore"
+};
 /* USER CODE BEGIN PV */
 static FMC_SDRAM_CommandTypeDef Command;
 /* USER CODE END PV */
@@ -124,6 +136,7 @@ static void MX_ADC3_Init(void);
 void StartDefaultTask(void *argument);
 extern void TouchGFX_Task(void *argument);
 extern void videoTaskFunc(void *argument);
+void mainUpdateTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 void GetManufacturerId (uint8_t *manufacturer_id);
@@ -200,6 +213,10 @@ int main(void)
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
 
+  /* Create the semaphores(s) */
+  /* creation of DisplayUpdateSemaphore */
+  DisplayUpdateSemaphoreHandle = osSemaphoreNew(1, 1, &DisplayUpdateSemaphore_attributes);
+
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
@@ -221,6 +238,9 @@ int main(void)
 
   /* creation of videoTask */
   videoTaskHandle = osThreadNew(videoTaskFunc, NULL, &videoTask_attributes);
+
+  /* creation of TaskMainUpdate */
+  TaskMainUpdateHandle = osThreadNew(mainUpdateTask, NULL, &TaskMainUpdate_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -957,10 +977,33 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-      ADC1_StartConversion();
-    osDelay(200);
+
+    osDelay(5000);
   }
   /* USER CODE END 5 */
+}
+
+/* USER CODE BEGIN Header_mainUpdateTask */
+/**
+* @brief Function implementing the TaskMainUpdate thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_mainUpdateTask */
+void mainUpdateTask(void *argument)
+{
+  /* USER CODE BEGIN mainUpdateTask */
+  /* Infinite loop */
+  for(;;)
+  {
+      // Restart ADC1 DMA conversion
+      ADC1_StartConversion();
+      // Set semaphore to update the active display
+      if ((ArbPwrBooster.Screen == MAIN_SCREEN) || (ArbPwrBooster.Screen == CONFIG_SCREEN))
+          osSemaphoreRelease(DisplayUpdateSemaphoreHandle);
+      osDelay(200);
+  }
+  /* USER CODE END mainUpdateTask */
 }
 
  /* MPU Configuration */

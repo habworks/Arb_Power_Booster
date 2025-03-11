@@ -14,6 +14,8 @@ public:
     }
 
     void tick();
+    // HAB ADDED
+    void activeDisplayUpdate(void);
 protected:
     ModelListener* modelListener;
 };

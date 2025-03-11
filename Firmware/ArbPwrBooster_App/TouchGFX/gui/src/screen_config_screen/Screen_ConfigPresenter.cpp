@@ -16,3 +16,10 @@ void Screen_ConfigPresenter::deactivate()
 {
 
 }
+
+
+// HAB ADDED
+void Screen_ConfigPresenter::updateConfigScreen_Presenter(void)
+{
+    view.updateConfigScreen_View();
+}

@@ -17,6 +17,30 @@ Screen_ConfigViewBase::Screen_ConfigViewBase() :
     image1.setBitmap(touchgfx::Bitmap(BITMAP_DARK_THEME_IMAGES_BACKGROUNDS_480X272_WAVY_LINES_ID));
     add(image1);
 
+    textArea_SystemTempMonitor.setXY(190, 156);
+    textArea_SystemTempMonitor.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    textArea_SystemTempMonitor.setLinespacing(0);
+    Unicode::snprintf(textArea_SystemTempMonitorBuffer, TEXTAREA_SYSTEMTEMPMONITOR_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_788H).getText());
+    textArea_SystemTempMonitor.setWildcard(textArea_SystemTempMonitorBuffer);
+    textArea_SystemTempMonitor.resizeToCurrentText();
+    textArea_SystemTempMonitor.setTypedText(touchgfx::TypedText(T___SINGLEUSE_ABZP));
+    add(textArea_SystemTempMonitor);
+
+    textArea_System3V3Monitor.setXY(190, 132);
+    textArea_System3V3Monitor.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    textArea_System3V3Monitor.setLinespacing(0);
+    Unicode::snprintf(textArea_System3V3MonitorBuffer, TEXTAREA_SYSTEM3V3MONITOR_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_Z6IF).getText());
+    textArea_System3V3Monitor.setWildcard(textArea_System3V3MonitorBuffer);
+    textArea_System3V3Monitor.resizeToCurrentText();
+    textArea_System3V3Monitor.setTypedText(touchgfx::TypedText(T___SINGLEUSE_D01D));
+    add(textArea_System3V3Monitor);
+
+    textArea_SystemTemp.setXY(15, 156);
+    textArea_SystemTemp.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    textArea_SystemTemp.setLinespacing(0);
+    textArea_SystemTemp.setTypedText(touchgfx::TypedText(T___SINGLEUSE_OS39));
+    add(textArea_SystemTemp);
+
     flexButton_SystemReset.setBoxWithBorderPosition(0, 0, 60, 60);
     flexButton_SystemReset.setBorderSize(5);
     flexButton_SystemReset.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(171, 20, 25), touchgfx::Color::getColorFromRGB(171, 20, 25), touchgfx::Color::getColorFromRGB(66, 16, 18), touchgfx::Color::getColorFromRGB(51, 102, 153));
@@ -40,17 +64,20 @@ Screen_ConfigViewBase::Screen_ConfigViewBase() :
     flexButton_Home.setPosition(406, 202, 60, 60);
     add(flexButton_Home);
 
-    textArea_StatusText.setXY(190, 155);
-    textArea_StatusText.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
-    textArea_StatusText.setLinespacing(0);
-    textArea_StatusText.setTypedText(touchgfx::TypedText(T___SINGLEUSE_Y3W6));
-    add(textArea_StatusText);
+    textArea_SystemStatusMsg.setXY(190, 180);
+    textArea_SystemStatusMsg.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    textArea_SystemStatusMsg.setLinespacing(0);
+    Unicode::snprintf(textArea_SystemStatusMsgBuffer, TEXTAREA_SYSTEMSTATUSMSG_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_ZG8T).getText());
+    textArea_SystemStatusMsg.setWildcard(textArea_SystemStatusMsgBuffer);
+    textArea_SystemStatusMsg.resizeToCurrentText();
+    textArea_SystemStatusMsg.setTypedText(touchgfx::TypedText(T___SINGLEUSE_Y3W6));
+    add(textArea_SystemStatusMsg);
 
-    textArea_Status.setXY(15, 155);
-    textArea_Status.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
-    textArea_Status.setLinespacing(0);
-    textArea_Status.setTypedText(touchgfx::TypedText(T___SINGLEUSE_OQH2));
-    add(textArea_Status);
+    textArea_SystemStatus.setXY(15, 180);
+    textArea_SystemStatus.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    textArea_SystemStatus.setLinespacing(0);
+    textArea_SystemStatus.setTypedText(touchgfx::TypedText(T___SINGLEUSE_OQH2));
+    add(textArea_SystemStatus);
 
     textArea_NegSupplyMonitor.setXY(190, 108);
     textArea_NegSupplyMonitor.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
@@ -66,6 +93,12 @@ Screen_ConfigViewBase::Screen_ConfigViewBase() :
     textArea_NegSupply.setLinespacing(0);
     textArea_NegSupply.setTypedText(touchgfx::TypedText(T___SINGLEUSE_62QI));
     add(textArea_NegSupply);
+
+    textArea_System3V3.setXY(15, 132);
+    textArea_System3V3.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    textArea_System3V3.setLinespacing(0);
+    textArea_System3V3.setTypedText(touchgfx::TypedText(T___SINGLEUSE_4N6Q));
+    add(textArea_System3V3);
 
     textArea_PosSupplyMonitor.setXY(190, 84);
     textArea_PosSupplyMonitor.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));

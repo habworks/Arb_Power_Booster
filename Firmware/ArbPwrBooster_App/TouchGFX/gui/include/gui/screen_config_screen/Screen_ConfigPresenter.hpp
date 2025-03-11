@@ -27,6 +27,9 @@ public:
 
     virtual ~Screen_ConfigPresenter() {}
 
+    // HAB ADDED
+    virtual void updateConfigScreen_Presenter(void);
+
 private:
     Screen_ConfigPresenter();
 

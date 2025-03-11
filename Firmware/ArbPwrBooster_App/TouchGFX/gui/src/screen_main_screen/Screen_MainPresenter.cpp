@@ -16,3 +16,11 @@ void Screen_MainPresenter::deactivate()
 {
 
 }
+
+
+// HAB ADDED
+void Screen_MainPresenter::updateMainScreen_Presenter(void)
+{
+    view.updateMainScreen_View();
+
+}

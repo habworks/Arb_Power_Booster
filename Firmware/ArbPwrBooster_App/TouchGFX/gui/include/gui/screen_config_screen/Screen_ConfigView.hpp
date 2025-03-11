@@ -13,6 +13,8 @@ public:
     virtual void tearDownScreen();
     // ADDED FUNCTIONS
     virtual void update_Screen_Config(void);
+    // ADDED FUNCTIONS CALLED BY PRESENTER
+    virtual void updateConfigScreen_View(void);
 protected:
 };
 

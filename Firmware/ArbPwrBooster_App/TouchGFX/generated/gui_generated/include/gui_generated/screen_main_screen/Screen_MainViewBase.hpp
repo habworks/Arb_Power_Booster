@@ -79,7 +79,7 @@ protected:
     touchgfx::TextArea textArea_CH2_UnitsMin;
     touchgfx::TextAreaWithOneWildcard textArea_CH2_Amin;
     touchgfx::TextArea textArea_CH2_UnitsMax;
-    touchgfx::TextAreaWithOneWildcard textArea2_CH2_Amax;
+    touchgfx::TextAreaWithOneWildcard textArea_CH2_Amax;
     touchgfx::TextArea textArea_CH2_UnitsRMS;
     touchgfx::TextAreaWithOneWildcard textArea_CH2_Arms;
     touchgfx::TextArea textArea_CH2;
@@ -96,7 +96,7 @@ protected:
     touchgfx::TextArea textArea_CH1_UnitsMin;
     touchgfx::TextAreaWithOneWildcard textArea_CH1_Amin;
     touchgfx::TextArea textArea_CH1_UnitsMax;
-    touchgfx::TextAreaWithOneWildcard textArea2_CH1_Amax;
+    touchgfx::TextAreaWithOneWildcard textArea_CH1_Amax;
     touchgfx::TextArea textArea_CH1_UnitsRMS;
     touchgfx::TextAreaWithOneWildcard textArea_CH1_Arms;
     touchgfx::TextArea textArea_CH1;
@@ -108,16 +108,16 @@ protected:
     touchgfx::Unicode::UnicodeChar textArea_CH2_CurrentSetBuffer[TEXTAREA_CH2_CURRENTSET_SIZE];
     static const uint16_t TEXTAREA_CH2_AMIN_SIZE = 10;
     touchgfx::Unicode::UnicodeChar textArea_CH2_AminBuffer[TEXTAREA_CH2_AMIN_SIZE];
-    static const uint16_t TEXTAREA2_CH2_AMAX_SIZE = 10;
-    touchgfx::Unicode::UnicodeChar textArea2_CH2_AmaxBuffer[TEXTAREA2_CH2_AMAX_SIZE];
+    static const uint16_t TEXTAREA_CH2_AMAX_SIZE = 10;
+    touchgfx::Unicode::UnicodeChar textArea_CH2_AmaxBuffer[TEXTAREA_CH2_AMAX_SIZE];
     static const uint16_t TEXTAREA_CH2_ARMS_SIZE = 10;
     touchgfx::Unicode::UnicodeChar textArea_CH2_ArmsBuffer[TEXTAREA_CH2_ARMS_SIZE];
     static const uint16_t TEXTAREA_CH1_CURRENTSET_SIZE = 15;
     touchgfx::Unicode::UnicodeChar textArea_CH1_CurrentSetBuffer[TEXTAREA_CH1_CURRENTSET_SIZE];
     static const uint16_t TEXTAREA_CH1_AMIN_SIZE = 10;
     touchgfx::Unicode::UnicodeChar textArea_CH1_AminBuffer[TEXTAREA_CH1_AMIN_SIZE];
-    static const uint16_t TEXTAREA2_CH1_AMAX_SIZE = 10;
-    touchgfx::Unicode::UnicodeChar textArea2_CH1_AmaxBuffer[TEXTAREA2_CH1_AMAX_SIZE];
+    static const uint16_t TEXTAREA_CH1_AMAX_SIZE = 10;
+    touchgfx::Unicode::UnicodeChar textArea_CH1_AmaxBuffer[TEXTAREA_CH1_AMAX_SIZE];
     static const uint16_t TEXTAREA_CH1_ARMS_SIZE = 10;
     touchgfx::Unicode::UnicodeChar textArea_CH1_ArmsBuffer[TEXTAREA_CH1_ARMS_SIZE];
 

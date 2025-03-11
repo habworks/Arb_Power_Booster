@@ -9,9 +9,9 @@
 #include <gui/screen_config_screen/Screen_ConfigPresenter.hpp>
 #include <touchgfx/widgets/Box.hpp>
 #include <touchgfx/widgets/Image.hpp>
-#include <touchgfx/containers/buttons/Buttons.hpp>
-#include <touchgfx/widgets/TextArea.hpp>
 #include <touchgfx/widgets/TextAreaWithWildcard.hpp>
+#include <touchgfx/widgets/TextArea.hpp>
+#include <touchgfx/containers/buttons/Buttons.hpp>
 
 class Screen_ConfigViewBase : public touchgfx::View<Screen_ConfigPresenter>
 {
@@ -39,13 +39,17 @@ protected:
      */
     touchgfx::Box __background;
     touchgfx::Image image1;
+    touchgfx::TextAreaWithOneWildcard textArea_SystemTempMonitor;
+    touchgfx::TextAreaWithOneWildcard textArea_System3V3Monitor;
+    touchgfx::TextArea textArea_SystemTemp;
     touchgfx::IconButtonStyle< touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  >  flexButton_SystemReset;
     touchgfx::TextArea textArea_IMR_URL;
     touchgfx::IconButtonStyle< touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  >  flexButton_Home;
-    touchgfx::TextArea textArea_StatusText;
-    touchgfx::TextArea textArea_Status;
+    touchgfx::TextAreaWithOneWildcard textArea_SystemStatusMsg;
+    touchgfx::TextArea textArea_SystemStatus;
     touchgfx::TextAreaWithOneWildcard textArea_NegSupplyMonitor;
     touchgfx::TextArea textArea_NegSupply;
+    touchgfx::TextArea textArea_System3V3;
     touchgfx::TextAreaWithOneWildcard textArea_PosSupplyMonitor;
     touchgfx::TextArea textArea_PosSupply;
     touchgfx::TextAreaWithOneWildcard textArea_FW_Rev;
@@ -55,6 +59,12 @@ protected:
     /*
      * Wildcard Buffers
      */
+    static const uint16_t TEXTAREA_SYSTEMTEMPMONITOR_SIZE = 10;
+    touchgfx::Unicode::UnicodeChar textArea_SystemTempMonitorBuffer[TEXTAREA_SYSTEMTEMPMONITOR_SIZE];
+    static const uint16_t TEXTAREA_SYSTEM3V3MONITOR_SIZE = 10;
+    touchgfx::Unicode::UnicodeChar textArea_System3V3MonitorBuffer[TEXTAREA_SYSTEM3V3MONITOR_SIZE];
+    static const uint16_t TEXTAREA_SYSTEMSTATUSMSG_SIZE = 25;
+    touchgfx::Unicode::UnicodeChar textArea_SystemStatusMsgBuffer[TEXTAREA_SYSTEMSTATUSMSG_SIZE];
     static const uint16_t TEXTAREA_NEGSUPPLYMONITOR_SIZE = 10;
     touchgfx::Unicode::UnicodeChar textArea_NegSupplyMonitorBuffer[TEXTAREA_NEGSUPPLYMONITOR_SIZE];
     static const uint16_t TEXTAREA_POSSUPPLYMONITOR_SIZE = 10;

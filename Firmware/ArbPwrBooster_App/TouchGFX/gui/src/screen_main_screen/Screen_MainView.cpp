@@ -225,3 +225,32 @@ void Screen_MainView::setActiveLimit_CH2(void)
     ArbPwrBooster.ActiveChannel = CHANNEL_2;
 
 } // END OF setActiveLimit_CH2
+
+
+
+void Screen_MainView::updateMainScreen_View(void)
+{
+    // Updater Channel 1:
+    // RMS current
+    Unicode::snprintfFloat(textArea_CH1_ArmsBuffer, TEXTAREA_CH1_ARMS_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.MeanCurrent);
+    textArea_CH1_Arms.setWildcard(textArea_CH1_ArmsBuffer);
+    // Max Current
+    Unicode::snprintfFloat(textArea_CH1_AmaxBuffer, TEXTAREA_CH1_AMAX_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.MaxCurrent);
+    textArea_CH1_Amax.setWildcard(textArea_CH1_AmaxBuffer);
+    // Min Current
+    Unicode::snprintfFloat(textArea_CH1_AminBuffer, TEXTAREA_CH1_AMIN_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.MinCurrent);
+    textArea_CH1_Amin.setWildcard(textArea_CH1_AminBuffer);
+
+    // Updater Channel 2:
+    // RMS current
+    Unicode::snprintfFloat(textArea_CH2_ArmsBuffer, TEXTAREA_CH2_ARMS_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.MeanCurrent);
+    textArea_CH2_Arms.setWildcard(textArea_CH2_ArmsBuffer);
+    // Max Current
+    Unicode::snprintfFloat(textArea_CH2_AmaxBuffer, TEXTAREA_CH2_AMAX_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.MaxCurrent);
+    textArea_CH2_Amax.setWildcard(textArea_CH2_AmaxBuffer);
+    // Min Current
+    Unicode::snprintfFloat(textArea_CH2_AminBuffer, TEXTAREA_CH2_AMIN_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.MinCurrent);
+    textArea_CH2_Amin.setWildcard(textArea_CH2_AminBuffer);
+
+    this->invalidate();
+}
