@@ -30,6 +30,8 @@
 #include "stm32f7xx_hal_adc.h"
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
 
 extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc3;
@@ -425,6 +427,85 @@ void ADC1_StartConversion(void)
     HAL_ADC_Start_DMA(&hadc1, (uint32_t *)ADC1_CountValue, ADC1_NUMBER_OF_CHANNELS);
 
 }  // END OF ADC1_StartConversion
+
+
+
+/********************************************************************************************************
+* @brief Checks the system values of +20V, -20V, Temperature and Vref to see if they are within the specified
+* limits of operation.  All errors are OR together to the error variable, but only the first error description
+* is returned.
+*
+* @author original: Hab Collector \n
+*
+* @note: SYSTEM refers to quantities that impact the entire device - CHANNEL impacts on CH1 or CH2
+*
+* STEP 1: Check System +20V
+* STEP 2: Check System -20V
+* STEP 3: Check System Vref
+* STEP 4: Check System Temperature
+* STEP 5: For no error
+********************************************************************************************************/
+bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber)
+{
+    bool FirstErrorFound = false;
+    *ErrorNumber = CONFIG_NO_ERROR;
+
+    // STEP 1: Check System +20V
+    if ((ArbPwrBooster.SystemMeasure.Positive_20V > POS_20V_UPPER_LIMIT) || (ArbPwrBooster.SystemMeasure.Positive_20V < POS_20V_LOWER_LIMIT))
+    {
+        *ErrorNumber |= (1 << CONFIG_POS_20V_MASK);
+        if (!FirstErrorFound)
+        {
+            sprintf(ErrorDescription, "+20V: %3.1fV to %3.1fV", POS_20V_LOWER_LIMIT, POS_20V_UPPER_LIMIT);
+            FirstErrorFound = true;
+        }
+    }
+
+    // STEP 2: Check System -20V
+    if ((ArbPwrBooster.SystemMeasure.Negative_20V > NEG_20V_UPPER_LIMIT) || (ArbPwrBooster.SystemMeasure.Negative_20V < NEG_20V_LOWER_LIMIT))
+    {
+        *ErrorNumber |= (uint8_t)(1 << CONFIG_NEG_20V_MASK);
+        if (!FirstErrorFound)
+        {
+            sprintf(ErrorDescription, "-20V: %3.1fV to %3.1fV", NEG_20V_LOWER_LIMIT, NEG_20V_UPPER_LIMIT);
+            FirstErrorFound = true;
+        }
+    }
+
+    // STEP 3: Check System Vref
+    if ((ArbPwrBooster.SystemMeasure.VDD_VDREF > SYSTEM_3V3_UPPER_LIMIT) || (ArbPwrBooster.SystemMeasure.VDD_VDREF < SYSTEM_3V3_LOWER_LIMIT))
+    {
+        *ErrorNumber |= (uint8_t)(1 << CONFIG_VREF_MASK);
+        if (!FirstErrorFound)
+        {
+            sprintf(ErrorDescription, "VREF: %4.3fV to %4.3fV", SYSTEM_3V3_LOWER_LIMIT, SYSTEM_3V3_UPPER_LIMIT);
+            FirstErrorFound = true;
+        }
+    }
+
+    // STEP 4: Check System Temperature
+    if ((ArbPwrBooster.SystemMeasure.TempDegreeC > SYSTEM_TEMP_UPPER_LIMIT) || (ArbPwrBooster.SystemMeasure.TempDegreeC < SYSTEM_TEMP_LOWER_LIMIT))
+    {
+        *ErrorNumber |= (uint8_t)(1 << CONFIG_TEMP_MASK);
+        if (!FirstErrorFound)
+        {
+            sprintf(ErrorDescription, "%dC < Temp < %dC", SYSTEM_TEMP_LOWER_LIMIT, SYSTEM_TEMP_UPPER_LIMIT);
+            FirstErrorFound = true;
+        }
+    }
+
+    // STEP 5: For no error
+    if (*ErrorNumber == CONFIG_NO_ERROR)
+    {
+        sprintf(ErrorDescription, "I'm good how about you.");
+        return(true);
+    }
+    else
+    {
+        return(false);
+    }
+
+} // END OF systemMeasureWithinLimits
 
 
 

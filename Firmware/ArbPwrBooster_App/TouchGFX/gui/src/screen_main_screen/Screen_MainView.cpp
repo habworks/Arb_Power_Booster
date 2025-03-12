@@ -5,6 +5,7 @@
 #include "../../../../../../touchgfx/generated/texts/include/texts/TextKeysAndLanguages.hpp"
 #include "Main_Support.h"
 #include "IO_Support.h"
+#include "ADC_Support.h"
 
 
 Screen_MainView::Screen_MainView()
@@ -228,9 +229,19 @@ void Screen_MainView::setActiveLimit_CH2(void)
 
 
 
+/********************************************************************************************************
+* @brief Live update of the main screen.  All parameters for CH1 and CH are updated.  The Config Icon background
+* a flexbutton is also updated if there is a config related error condition
+*
+* @author original: Hab Collector \n
+*
+* STEP 1: Update Channel 1
+* STEP 2: Update Channel 2
+* STEP 3: Config Icon Color
+********************************************************************************************************/
 void Screen_MainView::updateMainScreen_View(void)
 {
-    // Updater Channel 1:
+    // STEP 1: Update Channel 1
     // RMS current
     Unicode::snprintfFloat(textArea_CH1_ArmsBuffer, TEXTAREA_CH1_ARMS_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.MeanCurrent);
     textArea_CH1_Arms.setWildcard(textArea_CH1_ArmsBuffer);
@@ -241,7 +252,7 @@ void Screen_MainView::updateMainScreen_View(void)
     Unicode::snprintfFloat(textArea_CH1_AminBuffer, TEXTAREA_CH1_AMIN_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.MinCurrent);
     textArea_CH1_Amin.setWildcard(textArea_CH1_AminBuffer);
 
-    // Updater Channel 2:
+    // STEP 2: Update Channel 2
     // RMS current
     Unicode::snprintfFloat(textArea_CH2_ArmsBuffer, TEXTAREA_CH2_ARMS_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.MeanCurrent);
     textArea_CH2_Arms.setWildcard(textArea_CH2_ArmsBuffer);
@@ -252,5 +263,19 @@ void Screen_MainView::updateMainScreen_View(void)
     Unicode::snprintfFloat(textArea_CH2_AminBuffer, TEXTAREA_CH2_AMIN_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.MinCurrent);
     textArea_CH2_Amin.setWildcard(textArea_CH2_AminBuffer);
 
+    // STEP 3: Config Icon Color
+    char NotUsedStatusText[50];
+    uint8_t NotUsedErrorNumber;
+    if (systemMeasureWithinLimits(NotUsedStatusText, &NotUsedErrorNumber))
+    {
+        flexButton_Config.setAlpha(ALPHA_ZERO_VISIBLE);
+    }
+    else
+    {
+        flexButton_Config.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(CONFIG_ICON_ERROR_COLOR), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(CONFIG_ICON_ERROR_COLOR), touchgfx::Color::getColorFromRGB(51, 102, 153));
+        flexButton_Config.setAlpha(ALPAH_FULL_VISIBLE);
+    }
+
     this->invalidate();
-}
+
+} // ENF OF updateMainScreen_View

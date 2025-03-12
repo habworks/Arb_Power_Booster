@@ -9,8 +9,8 @@
 #include <gui/screen_main_screen/Screen_MainPresenter.hpp>
 #include <touchgfx/widgets/Box.hpp>
 #include <touchgfx/widgets/Image.hpp>
-#include <touchgfx/widgets/ScalableImage.hpp>
 #include <touchgfx/containers/buttons/Buttons.hpp>
+#include <touchgfx/widgets/ScalableImage.hpp>
 #include <touchgfx/widgets/TextAreaWithWildcard.hpp>
 #include <touchgfx/widgets/TextArea.hpp>
 #include <touchgfx/widgets/canvas/Line.hpp>
@@ -22,7 +22,7 @@ public:
     Screen_MainViewBase();
     virtual ~Screen_MainViewBase();
     virtual void setupScreen();
-    virtual void afterTransition();
+    virtual void transitionBegins();
 
     /*
      * Virtual Action Handlers
@@ -66,8 +66,8 @@ protected:
      */
     touchgfx::Box __background;
     touchgfx::Image image_Background;
-    touchgfx::ScalableImage scalableImage_Config;
     touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_Config;
+    touchgfx::ScalableImage scalableImage_Config;
     touchgfx::Box box_CH2_Enable;
     touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_CH2_Enable;
     touchgfx::TextAreaWithOneWildcard textArea_CH2_CurrentSet;

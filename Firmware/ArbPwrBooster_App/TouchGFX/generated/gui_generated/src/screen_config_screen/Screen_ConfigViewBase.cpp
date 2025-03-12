@@ -64,12 +64,11 @@ Screen_ConfigViewBase::Screen_ConfigViewBase() :
     flexButton_Home.setPosition(406, 202, 60, 60);
     add(flexButton_Home);
 
-    textArea_SystemStatusMsg.setXY(190, 180);
+    textArea_SystemStatusMsg.setPosition(190, 180, 271, 24);
     textArea_SystemStatusMsg.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     textArea_SystemStatusMsg.setLinespacing(0);
     Unicode::snprintf(textArea_SystemStatusMsgBuffer, TEXTAREA_SYSTEMSTATUSMSG_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_ZG8T).getText());
     textArea_SystemStatusMsg.setWildcard(textArea_SystemStatusMsgBuffer);
-    textArea_SystemStatusMsg.resizeToCurrentText();
     textArea_SystemStatusMsg.setTypedText(touchgfx::TypedText(T___SINGLEUSE_Y3W6));
     add(textArea_SystemStatusMsg);
 
@@ -147,24 +146,24 @@ Screen_ConfigViewBase::~Screen_ConfigViewBase()
 
 void Screen_ConfigViewBase::setupScreen()
 {
-
+    transitionBegins();
 }
 
 void Screen_ConfigViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButtonContainer& src)
 {
     if (&src == &flexButton_Home)
     {
-        //Interaction1
+        //Interaction_GoToMainScreen
         //When flexButton_Home clicked change screen to Screen_Main
         //Go to Screen_Main with screen transition towards West
         application().gotoScreen_MainScreenSlideTransitionWest();
     }
 }
 
-void Screen_ConfigViewBase::afterTransition()
+void Screen_ConfigViewBase::transitionBegins()
 {
-    //Interaction2
-    //When screen transition ends call virtual function
+    //Interaction_UpdateConfigScreen
+    //When screen transition begins call virtual function
     //Call update_Screen_Config
     update_Screen_Config();
 }

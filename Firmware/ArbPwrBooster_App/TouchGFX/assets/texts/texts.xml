@@ -20,7 +20,7 @@
     </TextGroup>
     <TextGroup Id="Unsorted">
       <Text Id="__SingleUse_ZG8T" Alignment="Left" TypographyId="Default">
-        <Translation Language="GB">OK                                        </Translation>
+        <Translation Language="GB">OK                         </Translation>
       </Text>
       <Text Id="__SingleUse_788H" Alignment="Left" TypographyId="Default">
         <Translation Language="GB">25</Translation>
@@ -38,7 +38,7 @@
         <Translation Language="GB">System Temp: </Translation>
       </Text>
       <Text Id="__SingleUse_4N6Q" Alignment="Left" TypographyId="CenturyGothic_Units">
-        <Translation Language="GB">System 3.3V: </Translation>
+        <Translation Language="GB">System 3.3V Ref: </Translation>
       </Text>
       <Text Id="__SingleUse_4UZC" Alignment="Left" TypographyId="Iceland_Title">
         <Translation Language="GB">0</Translation>
@@ -225,6 +225,6 @@
     <Typography Id="Small" Font="verdana.ttf" Size="10" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" />
     <Typography Id="Iceland_Title" Font="Iceland-Regular.ttf" Size="60" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacters="-." WildcardCharacterRanges="0-9" />
     <Typography Id="Iceland_Numeric" Font="Iceland-Regular.ttf" Size="40" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacters="." WildcardCharacterRanges="0-9" />
-    <Typography Id="CenturyGothic_Units" Font="GOTHIC.TTF" Size="20" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacters=".,-°±' " WildcardCharacterRanges="0-9,A-Z,a-z" />
+    <Typography Id="CenturyGothic_Units" Font="GOTHIC.TTF" Size="20" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacters=".,-°±' &lt;&gt;≤+" WildcardCharacterRanges="0-9,A-Z,a-z" />
   </Typographies>
 </TextDatabase>

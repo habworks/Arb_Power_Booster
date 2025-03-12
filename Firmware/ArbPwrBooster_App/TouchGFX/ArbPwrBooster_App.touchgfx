@@ -90,16 +90,6 @@
             "RelativeFilename": "__generated\\dark_theme_images_backgrounds_480x272_wavy_lines.png"
           },
           {
-            "Type": "ScalableImage",
-            "Name": "scalableImage_Config",
-            "X": 198,
-            "Y": 192,
-            "Width": 84,
-            "Height": 80,
-            "Filename": "__generated\\icon_theme_images_action_settings_50_50_5EEB13.svg.png",
-            "ScalingAlgorithm": "Nearest-neighbor"
-          },
-          {
             "Type": "FlexButton",
             "Name": "flexButton_Config",
             "X": 198,
@@ -116,7 +106,6 @@
                 "Width": 84,
                 "Height": 80,
                 "LockToFlexButtonSize": true,
-                "BorderSize": 5,
                 "ColorReleased": {
                   "Green": 102,
                   "Blue": 153
@@ -136,6 +125,16 @@
                 }
               }
             ]
+          },
+          {
+            "Type": "ScalableImage",
+            "Name": "scalableImage_Config",
+            "X": 198,
+            "Y": 192,
+            "Width": 84,
+            "Height": 80,
+            "Filename": "__generated\\icon_theme_images_action_settings_50_50_5BAD2F.svg.png",
+            "ScalingAlgorithm": "Nearest-neighbor"
           },
           {
             "Type": "Box",
@@ -842,7 +841,7 @@
           {
             "InteractionName": "Interaction_UpdateMainScreen",
             "Trigger": {
-              "Type": "TriggerScreenEntered"
+              "Type": "TriggerScreenTransitionBegins"
             },
             "Action": {
               "Type": "ActionCustom",
@@ -1101,7 +1100,7 @@
             "Name": "textArea_SystemStatusMsg",
             "X": 190,
             "Y": 180,
-            "Width": 269,
+            "Width": 271,
             "Height": 24,
             "TextId": "__SingleUse_Y3W6",
             "TextRotation": "0",
@@ -1110,7 +1109,6 @@
               "Green": 255,
               "Blue": 255
             },
-            "AutoSize": true,
             "Wildcard1": {
               "TextId": "__SingleUse_ZG8T",
               "UseBuffer": true,
@@ -1175,7 +1173,7 @@
             "Name": "textArea_System3V3",
             "X": 15,
             "Y": 132,
-            "Width": 128,
+            "Width": 165,
             "Height": 24,
             "TextId": "__SingleUse_4N6Q",
             "TextRotation": "0",
@@ -1284,7 +1282,7 @@
         ],
         "Interactions": [
           {
-            "InteractionName": "Interaction1",
+            "InteractionName": "Interaction_GoToMainScreen",
             "Trigger": {
               "Type": "TriggerClicked",
               "TriggerComponent": "flexButton_Home"
@@ -1297,9 +1295,9 @@
             }
           },
           {
-            "InteractionName": "Interaction2",
+            "InteractionName": "Interaction_UpdateConfigScreen",
             "Trigger": {
-              "Type": "TriggerScreenEntered"
+              "Type": "TriggerScreenTransitionBegins"
             },
             "Action": {
               "Type": "ActionCustom",

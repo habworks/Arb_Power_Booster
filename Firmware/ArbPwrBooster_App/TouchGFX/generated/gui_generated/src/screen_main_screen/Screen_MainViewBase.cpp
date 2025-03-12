@@ -20,18 +20,18 @@ Screen_MainViewBase::Screen_MainViewBase() :
     image_Background.setBitmap(touchgfx::Bitmap(BITMAP_DARK_THEME_IMAGES_BACKGROUNDS_480X272_WAVY_LINES_ID));
     add(image_Background);
 
-    scalableImage_Config.setBitmap(touchgfx::Bitmap(BITMAP_ICON_THEME_IMAGES_ACTION_SETTINGS_50_50_5EEB13_SVG_ID));
-    scalableImage_Config.setPosition(198, 192, 84, 80);
-    scalableImage_Config.setScalingAlgorithm(touchgfx::ScalableImage::NEAREST_NEIGHBOR);
-    add(scalableImage_Config);
-
     flexButton_Config.setBoxWithBorderPosition(0, 0, 84, 80);
-    flexButton_Config.setBorderSize(5);
+    flexButton_Config.setBorderSize(0);
     flexButton_Config.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
     flexButton_Config.setAlpha(0);
     flexButton_Config.setAction(flexButtonCallback);
     flexButton_Config.setPosition(198, 192, 84, 80);
     add(flexButton_Config);
+
+    scalableImage_Config.setBitmap(touchgfx::Bitmap(BITMAP_ICON_THEME_IMAGES_ACTION_SETTINGS_50_50_5BAD2F_SVG_ID));
+    scalableImage_Config.setPosition(198, 192, 84, 80);
+    scalableImage_Config.setScalingAlgorithm(touchgfx::ScalableImage::NEAREST_NEIGHBOR);
+    add(scalableImage_Config);
 
     box_CH2_Enable.setPosition(419, 211, 56, 56);
     box_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(94, 235, 19));
@@ -263,7 +263,7 @@ Screen_MainViewBase::~Screen_MainViewBase()
 
 void Screen_MainViewBase::setupScreen()
 {
-
+    transitionBegins();
 }
 
 void Screen_MainViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButtonContainer& src)
@@ -329,10 +329,10 @@ void Screen_MainViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButt
     }
 }
 
-void Screen_MainViewBase::afterTransition()
+void Screen_MainViewBase::transitionBegins()
 {
     //Interaction_UpdateMainScreen
-    //When screen transition ends call virtual function
+    //When screen transition begins call virtual function
     //Call update_Screen_Main
     update_Screen_Main();
 }

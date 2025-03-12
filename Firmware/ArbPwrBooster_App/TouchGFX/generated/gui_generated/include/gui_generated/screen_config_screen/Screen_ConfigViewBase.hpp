@@ -19,7 +19,7 @@ public:
     Screen_ConfigViewBase();
     virtual ~Screen_ConfigViewBase();
     virtual void setupScreen();
-    virtual void afterTransition();
+    virtual void transitionBegins();
 
     /*
      * Virtual Action Handlers

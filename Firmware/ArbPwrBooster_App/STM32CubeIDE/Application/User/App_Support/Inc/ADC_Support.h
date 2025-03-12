@@ -50,6 +50,15 @@ extern"C" {
 #define VOLTAGE_AT_25C          0.76
 #define AVG_TEMP_SLOPE          2.50
 #define TEMP_25C                25.0
+// ACCEPTABLE CONVERSION LIMITS
+#define POS_20V_UPPER_LIMIT     21.0
+#define POS_20V_LOWER_LIMIT     19.0
+#define NEG_20V_UPPER_LIMIT     -19.0
+#define NEG_20V_LOWER_LIMIT     -21.0
+#define SYSTEM_3V3_UPPER_LIMIT  3.350
+#define SYSTEM_3V3_LOWER_LIMIT  3.250
+#define SYSTEM_TEMP_UPPER_LIMIT 38
+#define SYSTEM_TEMP_LOWER_LIMIT 2
 // FIFO BUFFERS
 #define SYSTEM_3V3_BUFFER_SIZE  16U     // Expected to be DC value
 #define SYSTEM_TEMP_BUFFER_SIZE 16U     // Expected to be slow moving temperature value
@@ -74,6 +83,23 @@ extern"C" {
 
 
 // TYPEDEFS AND ENUMS
+typedef enum
+{
+    CONFIG_POS_20V_MASK = 0,
+    CONFIG_NEG_20V_MASK,
+    CONFIG_TEMP_MASK,
+    CONFIG_VREF_MASK
+}Type_ConfigErrorMask;
+
+typedef enum
+{
+    CONFIG_NO_ERROR = 0,
+    CONFIG_POS_20V_ERROR = (1 << CONFIG_POS_20V_MASK),
+    CONFIG_NEG_20V_ERROR = (1 << CONFIG_NEG_20V_MASK),
+    CONFIG_TEMP_ERROR = (1 << CONFIG_TEMP_MASK),
+    CONFIG_VREF_ERROR = (1 << CONFIG_VREF_MASK)
+}Type_ConfigError;
+
 typedef enum
 {
     CH1_AMP_MON = 0,
@@ -106,6 +132,7 @@ typedef struct
 // FUNCTION PROTOTYPES
 void Init_ADC_Hardware(void);
 void ADC1_StartConversion(void);
+bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber);
 
 #ifdef __cplusplus
 }
