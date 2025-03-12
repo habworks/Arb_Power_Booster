@@ -39,9 +39,9 @@ extern ADC_HandleTypeDef hadc3;
 // Global
 uint16_t ADC1_CountValue[ADC1_NUMBER_OF_CHANNELS];
 uint16_t ADC3_CountValue[ADC3_NUMBER_OF_CHANNELS];
-double ADC_RawConvertedResult[NUMBER_OF_CHANNELS];
+static double System_ADC_Reference = ADC_REFERENCE_VOLTAGE;
 
-// Static Declarations
+// Static Function Declarations
 static Type_16b_FIFO *Init_FIFO_Buffer(uint16_t *Buffer, uint8_t BufferLength);
 static void writeTo_FIFO_Buffer(Type_16b_FIFO *Buffer, uint16_t Value);
 static double calculateSystem_3V3(void);
@@ -49,9 +49,7 @@ static double calculateSystemTemp(void);
 static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail);
 static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *FIFO_AmpMon, Type_ChannelMeasure *CurrentMeasure);
 
-static double update_rms(double new_value);
-
-static double System_ADC_Reference = ADC_REFERENCE_VOLTAGE;
+// Static FIFO Declarations
 // System 3V3
 static uint16_t BufferSystem_3V3[SYSTEM_3V3_BUFFER_SIZE] = {0x0000};
 static Type_16b_FIFO *FIFO_System_3V3;
@@ -161,19 +159,15 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
         // -20V Supply Rail
         writeTo_FIFO_Buffer(FIFO_N20V_Supply, ADC3_CountValue[RANK_1]);
         ArbPwrBooster.SystemMeasure.Negative_20V = calculateSystemSupply(FIFO_N20V_Supply) * -1.0;
-        ADC_RawConvertedResult[NEG_20V_MON] = ADC3_CountValue[RANK_1] * LSB_12BIT_VALUE * ADC_REFERENCE_VOLTAGE;
         // +20V Supply Rail
         writeTo_FIFO_Buffer(FIFO_P20V_Supply, ADC3_CountValue[RANK_2]);
         ArbPwrBooster.SystemMeasure.Positive_20V = calculateSystemSupply(FIFO_P20V_Supply);
-        ADC_RawConvertedResult[POS_20V_MON] = ADC3_CountValue[RANK_2] * LSB_12BIT_VALUE * ADC_REFERENCE_VOLTAGE;
         // Current Monitor CH1
         writeTo_FIFO_Buffer(FIFO_CH1_AmpMon, ADC3_CountValue[RANK_3]);
         calculateChannelCurrent(ADC3_CountValue[RANK_3], FIFO_CH1_AmpMon, &ArbPwrBooster.CH1.Measure);
-        ADC_RawConvertedResult[CH1_AMP_MON] = ADC3_CountValue[RANK_3] * LSB_12BIT_VALUE * ADC_REFERENCE_VOLTAGE;
         // Current Monitor CH2
         writeTo_FIFO_Buffer(FIFO_CH2_AmpMon, ADC3_CountValue[RANK_4]);
         calculateChannelCurrent(ADC3_CountValue[RANK_4], FIFO_CH2_AmpMon, &ArbPwrBooster.CH2.Measure);
-        ADC_RawConvertedResult[CH2_AMP_MON] = ADC3_CountValue[RANK_4] * LSB_12BIT_VALUE * ADC_REFERENCE_VOLTAGE;
         // Toggle at the end of conversion - for testing: ADC3 actual conversion rate VS calculated
         ADC3_C_RATE_TOGGLE();
     }
@@ -361,7 +355,7 @@ static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail)
 
 
 /********************************************************************************************************
-* @brief Calculates the CHANNEL current.  TODO ADD MORE NOTES HERE
+* @brief Calculates the CHANNEL mean, max, min and RMS current.
 *
 * @author original: Hab Collector \n
 *
@@ -369,27 +363,26 @@ static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail)
 * @note: TODO MORE NOTES
 * @note: SYSTEM refers to quantities that impact the entire device - CHANNEL impacts on CH1 or CH2
 *
-* @return As a positive number only the supply rail voltage
+* @param ADC_AmpMonitorCount: ADC Count from ADC channel for the specific current monitor
+* @param FIFO_AmpMon: FIFO structure associated with the specific Amp Monitor channel
+* @param CurrentMeasure: ArbPwrBooster current measure struct associated with the specific channel
 *
-* STEP 1:
-* STEP 2:
+* STEP 1: Calculate the mean of the Current Monitor
+* STEP 2: Calculate the instantaneous current
+* STEP 3: Update Min current - If Min set to zero overwrite with present value
+* STEP 4: Update Max current - if Max set to zero overwrite with present value
+* STEP 5: Calculate the RMS current
 ********************************************************************************************************/
+uint16_t RMS_Value;
 static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *FIFO_AmpMon, Type_ChannelMeasure *CurrentMeasure)
 {
     // STEP 1: Calculate the mean of the Current Monitor
     double MeanCurrentCount = 0.0;
-//    for (uint8_t Index = 0; Index < FIFO_AmpMon->Depth; Index++)
-//    {
-//        MeanCurrentCount += FIFO_AmpMon->Buffer[Index];
-//    }
-//    MeanCurrentCount /= FIFO_AmpMon->Depth;
     MeanCurrentCount = FIFO_AmpMon->Sum / FIFO_AmpMon->Depth;
     CurrentMeasure->MeanCurrent = ((MeanCurrentCount * LSB_12BIT_VALUE * System_ADC_Reference) / AMP_MONITOR_GAIN) / AMP_SENSE_RESISTOR;
 
     // STEP 2: Calculate the instantaneous current
     double AmpMonitorCurrent = ((ADC_AmpMonitorCount * LSB_12BIT_VALUE * System_ADC_Reference) / AMP_MONITOR_GAIN) / AMP_SENSE_RESISTOR;
-
-
 
     // STEP 3: Update Min current - If Min set to zero overwrite with present value
     if (CurrentMeasure->MinCurrent == 0)
@@ -404,7 +397,7 @@ static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *F
         CurrentMeasure->MaxCurrent = AmpMonitorCurrent;
 
     // STEP 5: Calculate the RMS current
-//    CurrentMeasure->RMS_Current = update_rms(AmpMonitorCurrent);
+    CurrentMeasure->RMS_Current = CurrentMeasure->RMS_UpdateFunctionPointer(AmpMonitorCurrent);
 
 }
 
@@ -512,31 +505,58 @@ bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber)
 
 // RMS STUFF
 // Circular buffer for storing recent ADC values
-#define WINDOW_SIZE 1000
-static double buffer[WINDOW_SIZE] = {0};
-static int Index = 0;
-static int count = 0;
-static double sum_squares = 0.0;
-static double rms = 0.0;
-
+static double BufferWindow_CH1[RMS_WINDOW_SIZE] = {0};
 // Function to update RMS in real-time
-static double update_rms(double new_value) {
+double update_CH1_RMS(double NewSampleValue)
+{
+    static int Index = 0;
+    static int Count = 0;
+    static double SumOfSquares = 0.0;
+
+    double RMS_CurrentValue;
     // Remove the oldest value from sum_squares if buffer is full
-    if (count >= WINDOW_SIZE) {
-        sum_squares -= buffer[Index] * buffer[Index];  // Remove old squared value
-    } else {
-        count++;
-    }
+    if (Count >= RMS_WINDOW_SIZE)
+        SumOfSquares -= BufferWindow_CH1[Index] * BufferWindow_CH1[Index];  // Remove old squared value
+    else
+        Count++;
 
     // Store new value and update sum of squares
-    buffer[Index] = new_value;
-    sum_squares += new_value * new_value;
+    BufferWindow_CH1[Index] = NewSampleValue;
+    SumOfSquares += NewSampleValue * NewSampleValue;
 
     // Update RMS
-    rms = sqrt(sum_squares / count);
+    RMS_CurrentValue = sqrt(SumOfSquares / Count);
 
     // Move buffer index (circular)
-    Index = (Index + 1) % WINDOW_SIZE;
+    Index = (Index + 1) % RMS_WINDOW_SIZE;
 
-    return(rms);
+    return(RMS_CurrentValue);
+}
+
+
+static double BufferWindow_CH2[RMS_WINDOW_SIZE] = {0};
+double update_CH2_RMS(double NewSampleValue)
+{
+    static int Index = 0;
+    static int Count = 0;
+    static double SumOfSquares = 0.0;
+
+    double RMS_CurrentValue;
+    // Remove the oldest value from sum_squares if buffer is full
+    if (Count >= RMS_WINDOW_SIZE)
+        SumOfSquares -= BufferWindow_CH2[Index] * BufferWindow_CH2[Index];  // Remove old squared value
+    else
+        Count++;
+
+    // Store new value and update sum of squares
+    BufferWindow_CH2[Index] = NewSampleValue;
+    SumOfSquares += NewSampleValue * NewSampleValue;
+
+    // Update RMS
+    RMS_CurrentValue = sqrt(SumOfSquares / Count);
+
+    // Move buffer index (circular)
+    Index = (Index + 1) % RMS_WINDOW_SIZE;
+
+    return(RMS_CurrentValue);
 }

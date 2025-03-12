@@ -69,6 +69,7 @@ extern"C" {
 #endif
 #define SYSTEM_P20V_BUFFER_SIZE 16U     // Expected DC Value
 #define SYSTEM_N20V_BUFFER_SIZE 16U     // Expected DC Value
+#define RMS_BUFFER_SIZE         16U     // For use with the average RMS value over time
 // FACTORY CALIBRATION VALUES AT SPECIFIC ADDRESS
 //#define TS_CAL1_ADDR            ((uint16_t*)0x1FFF75A8)     // Factory V_25 (25°C)
 //#define TS_CAL2_ADDR            ((uint16_t*)0x1FFF75CA)     // Factory V_110 (110°C)
@@ -77,9 +78,8 @@ extern"C" {
 //#define ADC_BASE_ADDR   0x40012000  // ADC register base address
 //#define ADC_CCR_OFFSET  0x308       // Offset for ADC_CCR register
 //#define ADC_CCR_ADDR    (ADC_BASE_ADDR + ADC_CCR_OFFSET)
-
-
-
+// RMS SPECIFIC
+#define RMS_WINDOW_SIZE         1024
 
 
 // TYPEDEFS AND ENUMS
@@ -133,6 +133,8 @@ typedef struct
 void Init_ADC_Hardware(void);
 void ADC1_StartConversion(void);
 bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber);
+double update_CH1_RMS(double NewSampleValue);
+double update_CH2_RMS(double NewSampleValue);
 
 #ifdef __cplusplus
 }

@@ -203,6 +203,7 @@ int main(void)
   /* Call PreOsInit function */
   MX_TouchGFX_PreOSInit();
   /* USER CODE BEGIN 2 */
+  Init_ArbPwrBoosterClass();
   Init_ArbPwrBoosterHardware();
   /* USER CODE END 2 */
 
@@ -996,12 +997,7 @@ void mainUpdateTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-      // Restart ADC1 DMA conversion
-      ADC1_StartConversion();
-      // Set semaphore to update the active display
-      if ((ArbPwrBooster.Screen == MAIN_SCREEN) || (ArbPwrBooster.Screen == CONFIG_SCREEN))
-          osSemaphoreRelease(DisplayUpdateSemaphoreHandle);
-      osDelay(200);
+      mainUpdateTaskActions();
   }
   /* USER CODE END mainUpdateTask */
 }

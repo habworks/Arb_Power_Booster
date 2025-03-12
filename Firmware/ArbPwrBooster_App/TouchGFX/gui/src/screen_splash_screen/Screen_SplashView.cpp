@@ -36,6 +36,4 @@ void Screen_SplashView::tearDownScreen()
 void Screen_SplashView::update_Screen_Splash(void)
 {
     ArbPwrBooster.Screen = SPLASH_SCREEN;
-    // HAB TODO: The init here is temporary - likely to be moved
-    Init_ArbPwrBoosterClass();
 }

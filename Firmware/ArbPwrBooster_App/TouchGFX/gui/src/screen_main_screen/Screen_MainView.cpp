@@ -243,7 +243,7 @@ void Screen_MainView::updateMainScreen_View(void)
 {
     // STEP 1: Update Channel 1
     // RMS current
-    Unicode::snprintfFloat(textArea_CH1_ArmsBuffer, TEXTAREA_CH1_ARMS_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.MeanCurrent);
+    Unicode::snprintfFloat(textArea_CH1_ArmsBuffer, TEXTAREA_CH1_ARMS_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.RMS_Current);
     textArea_CH1_Arms.setWildcard(textArea_CH1_ArmsBuffer);
     // Max Current
     Unicode::snprintfFloat(textArea_CH1_AmaxBuffer, TEXTAREA_CH1_AMAX_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.MaxCurrent);
@@ -254,7 +254,7 @@ void Screen_MainView::updateMainScreen_View(void)
 
     // STEP 2: Update Channel 2
     // RMS current
-    Unicode::snprintfFloat(textArea_CH2_ArmsBuffer, TEXTAREA_CH2_ARMS_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.MeanCurrent);
+    Unicode::snprintfFloat(textArea_CH2_ArmsBuffer, TEXTAREA_CH2_ARMS_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.RMS_Current);
     textArea_CH2_Arms.setWildcard(textArea_CH2_ArmsBuffer);
     // Max Current
     Unicode::snprintfFloat(textArea_CH2_AmaxBuffer, TEXTAREA_CH2_AMAX_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.MaxCurrent);
@@ -279,3 +279,33 @@ void Screen_MainView::updateMainScreen_View(void)
     this->invalidate();
 
 } // ENF OF updateMainScreen_View
+
+// HAB TODO: Not sure if and how I plan to use this TBD
+void Screen_MainView::POR_setControlDefaults(void)
+{
+    // STEP 1: Set controls for POR defaults
+    // Impedance
+    CH1_INPUT_50_DISABLE();
+    textArea_CH1_InputZ.setTypedText(TypedText(T_ONE_MEG_OHM));
+    ArbPwrBooster.CH1.InputImpedance = ONE_MEG_OHM;
+    // Ouptut Switch
+    CH1_OUTPUT_DISABLE();
+    box_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_BOX_COLOR));
+    box_CH1_Enable.setAlpha(ALPHA_50_VISIBLE);
+    textArea_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_TXT_COLOR));
+    ArbPwrBooster.CH1.OutputSwitch = OFF;
+
+    // STEP 1: Set controls for POR defaults
+    // Impedance
+    CH2_INPUT_50_DISABLE();
+    textArea_CH2_InputZ.setTypedText(TypedText(T_ONE_MEG_OHM));
+    ArbPwrBooster.CH2.InputImpedance = ONE_MEG_OHM;
+    // Ouptut Switch
+    CH1_OUTPUT_DISABLE();
+    box_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_BOX_COLOR));
+    box_CH2_Enable.setAlpha(ALPHA_50_VISIBLE);
+    textArea_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_TXT_COLOR));
+    ArbPwrBooster.CH2.OutputSwitch = OFF;
+
+    this->invalidate();
+}

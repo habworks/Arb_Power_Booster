@@ -120,12 +120,14 @@ typedef struct
     double                  Current;
 }Type_SetLimits;
 
+typedef double (*Type_RMS_Calculate)(double);
 typedef struct
 {
     double                  MinCurrent;
     double                  MaxCurrent;
     double                  MeanCurrent;
     double                  RMS_Current;
+    Type_RMS_Calculate      RMS_UpdateFunctionPointer;
 }Type_ChannelMeasure;
 
 typedef struct
@@ -165,6 +167,7 @@ void Init_ArbPwrBoosterHardware(void);
 void digitsFromDouble(double RationalNumber, int8_t *Integer, uint8_t *Tenths, uint8_t *Hundredths, uint8_t *Thousandths);
 double digitsToDouble(int8_t *Integer, uint8_t *Tenths, uint8_t *Hundredths, uint8_t *Thousandths);
 void systemErrorHandler(char *FileName, int FileLineNumber, uint32_t ErrorNumber, char *Description);
+void mainUpdateTaskActions(void);
 
 #ifdef __cplusplus
 }

@@ -26,12 +26,14 @@
 #include "Main_Support.h"
 #include "ADC_Support.h"
 #include "IO_Support.h"
-#include "Hab_Types.h"
+#include "cmsis_os2.h"
 #include <String.h>
 #include <stdlib.h>
 #include <stdio.h>
 
+extern osSemaphoreId_t DisplayUpdateSemaphoreHandle;
 
+// GLOBALS
 Type_ArbPwrBoosterStatus ArbPwrBooster;
 
 
@@ -52,6 +54,7 @@ void Init_ArbPwrBoosterHardware(void)
 
     // STEP 2: Init drivers
 
+
 } // END OF Init_ArbPwrBoosterHardware
 
 
@@ -66,6 +69,7 @@ void Init_ArbPwrBoosterHardware(void)
 void Init_ArbPwrBoosterClass(void)
 {
     // STEP 1: Set members to default POR value
+    ArbPwrBooster.ActiveChannel = CHANNEL_1;
     ArbPwrBooster.Screen = SPLASH_SCREEN;
     // Channel 1 Init
     ArbPwrBooster.CH1.InputImpedance = ONE_MEG_OHM;
@@ -74,6 +78,7 @@ void Init_ArbPwrBoosterClass(void)
     ArbPwrBooster.CH1.Limit.Current = -10.25432;
     ArbPwrBooster.CH1.Measure.MaxCurrent = 0;
     ArbPwrBooster.CH1.Measure.MinCurrent = 0;
+    ArbPwrBooster.CH1.Measure.RMS_UpdateFunctionPointer = update_CH1_RMS;
     // Channel 2 Init
     ArbPwrBooster.CH2.InputImpedance = ONE_MEG_OHM;
     ArbPwrBooster.CH2.OutputSwitch = OFF;
@@ -81,6 +86,7 @@ void Init_ArbPwrBoosterClass(void)
     ArbPwrBooster.CH2.Limit.Current = 5.125;
     ArbPwrBooster.CH2.Measure.MaxCurrent = 0;
     ArbPwrBooster.CH2.Measure.MinCurrent = 0;
+    ArbPwrBooster.CH2.Measure.RMS_UpdateFunctionPointer = update_CH2_RMS;
 
 } // END OF Init_ArbPwrBoosterClass
 
@@ -215,3 +221,27 @@ void systemErrorHandler(char *FileName, int FileLineNumber, uint32_t ErrorNumber
 
 } // END OF systemErrorHandler
 
+
+
+/********************************************************************************************************
+* @brief These are the actions taken my thread mainUpdateTask().  Actions are primarily related to live
+* updates of the Main and Config screens.  A secondary function of re-staring the non-contineous DMA ADC1
+* is also performed.
+*
+* @author original: Hab Collector \n
+*
+* STEP 1: Restart ADC1 DMA conversion
+* STEP 2: Set semaphore to update the active display
+********************************************************************************************************/
+void mainUpdateTaskActions(void)
+{
+    // STEP 1: Restart ADC1 DMA conversion
+    ADC1_StartConversion();
+
+    // STEP 2: Set semaphore to update the active display
+    if ((ArbPwrBooster.Screen == MAIN_SCREEN) || (ArbPwrBooster.Screen == CONFIG_SCREEN))
+        osSemaphoreRelease(DisplayUpdateSemaphoreHandle);
+
+    // STEP 3: Make task inactive for a period of time
+    osDelay(200);
+}
