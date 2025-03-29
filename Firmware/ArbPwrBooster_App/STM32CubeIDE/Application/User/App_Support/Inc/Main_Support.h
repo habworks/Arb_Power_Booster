@@ -78,6 +78,8 @@ extern"C" {
 #define OUTPUT_ON_TXT_COLOR     0xFF, 0xFF, 0xFF
 #define OUTPUT_OFF_BOX_COLOR    0xA7, 0xC4, 0xB2
 #define OUTPUT_OFF_TXT_COLOR    0x70, 0x70, 0x70
+// MISC
+#define GUI_UPDATE_RATE         200U
 
 
 // TYPEDEFS AND ENUMS

@@ -228,7 +228,7 @@ void systemErrorHandler(char *FileName, int FileLineNumber, uint32_t ErrorNumber
 
 
 /********************************************************************************************************
-* @brief These are the actions taken my thread mainUpdateTask().  Actions are primarily related to live
+* @brief These are the actions taken by thread mainUpdateTask().  Actions are primarily related to live
 * updates of the Main and Config screens.  A secondary function of re-staring the non-contineous DMA ADC1
 * is also performed.
 *
@@ -236,6 +236,7 @@ void systemErrorHandler(char *FileName, int FileLineNumber, uint32_t ErrorNumber
 *
 * STEP 1: Restart ADC1 DMA conversion
 * STEP 2: Set semaphore to update the active display
+* STEP 3: Make task inactive for a period of time - based on desired GUI update speed
 ********************************************************************************************************/
 void mainUpdateTaskActions(void)
 {
@@ -246,22 +247,23 @@ void mainUpdateTaskActions(void)
     if ((ArbPwrBooster.Screen == MAIN_SCREEN) || (ArbPwrBooster.Screen == CONFIG_SCREEN))
         osSemaphoreRelease(DisplayUpdateSemaphoreHandle);
 
-//    if (RxFlag)
-//    {
-//        strcpy(TxData, "Hello Hab How You\r\n");
-//        HAL_UART_Transmit_DMA(&huart6, TxData, strlen(TxData));
-//        RxFlag = false;
-//    }
+    // STEP 3: Make task inactive for a period of time - based on desired GUI update speed
+    osDelay(GUI_UPDATE_RATE);
 
-//    debugConsoleTask();
-
-    // STEP 3: Make task inactive for a period of time
-    osDelay(200);
-}
+} // END OF mainUpdateTaskActions
 
 
+
+/********************************************************************************************************
+* @brief Pre-actions to be performed before mainUpdateTaskActions - These actions are performed only once.
+*
+* @author original: Hab Collector \n
+*
+* STEP 1: Clear the debug port terminal and display entry information
+********************************************************************************************************/
 void mainUpdateTaskInit(void)
 {
+    // STEP 1: Clear the debug port terminal and display entry information
     terminal_ClearScreen();
     printGreen("IMR Engineering, LLC\r\n");
     printf("  Hab Collector, Principal Engineer\r\n");
@@ -272,7 +274,8 @@ void mainUpdateTaskInit(void)
     printf("For assistance type Help or just ?\r\n");
     commandPrompt();
     fflush(stdout);
-}
+
+} // END OF mainUpdateTaskInit
 
 
 

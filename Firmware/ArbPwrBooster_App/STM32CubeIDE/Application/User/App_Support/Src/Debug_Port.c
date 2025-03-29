@@ -32,40 +32,69 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
+// Static Function Declarations
 static void callDebugFunction(void);
 static void resetDebugCommandSearch(void);
 // Actionable Commands
 static void printDebugConsoleHelp(void);
-static void setDigitalPotAttenuation(char *CommandLine);
-
+static void writeDigitalPotAttenuation(char *CommandLine);
+static void readDigitalPotAttenuation(void);
+// Global
 static char CharsToProcessBuffer[10] = {0};
 static char DebugCommand[100] = {0};
 static uint8_t DebugCommandIndex = 0;
 
 
-
-
-
+/********************************************************************************************************
+* @brief These are the actions taken by thread debugConsoleTask().  Actions are solely related to the processing
+* of user input from the debug port.  On entry from the debug port by user action is taken to execute the
+* user command.
+*
+* @author original: Hab Collector \n
+*
+* STEP 1: Check if there is something to do
+* STEP 2: Load the characters to process and call the debug console parser
+* STEP 3: Delay based on how fast a person can type
+********************************************************************************************************/
 void debugConsoleTaskActions(void)
 {
+    // STEP 1: Check if there is something to do
     if (UART_DebugPort.Rx_FIFO_Count == 0)
         return;
 
+    // STEP 2: Load the characters to process and call the debug console parser
     memset(CharsToProcessBuffer, 0x00, sizeof(CharsToProcessBuffer));
     memcpy(CharsToProcessBuffer, UART_DebugPort.Rx_FIFO, UART_DebugPort.Rx_FIFO_Count);
     uint8_t CharsToProcess = UART_DebugPort.Rx_FIFO_Count;
     UART_DebugPort.Rx_FIFO_Count = 0;
     UART_DebugPort.Parser(CharsToProcessBuffer, CharsToProcess);
 
-    // STEP X: Delay based on how fast a person can type
-    osDelay(150);
-}
+    // STEP 3: Delay based on how fast a person can type
+    osDelay(DELAY_TIME_FAST_TYPER);
 
+} // END OF debugConsoleTaskActions
+
+
+
+/********************************************************************************************************
+* @brief Debug console parser - parse the incoming user command once \r has been entered.  Make special
+* accommodations for user '?' and backspace (user can backspace as they type).
+*
+* @author original: Hab Collector \n
+*
+* @param CharacterBuffer: The command buffer to be processed for user entry
+* @param NumberOfChars: Number of characters to process from CharacterBuffer
+*
+* STEP 1: Support all user entered characters except return, backspace and ?
+* STEP 2: Handle return entered - process command and reset for next entry
+* STEP 3: Process for user entered back space (user made a typing mistake and is backing up
+* STEP 4: Process for ? - Show help commands
+********************************************************************************************************/
 void debugPortParser(char *CharacterBuffer, uint8_t NumberOfChars)
 {
     for (uint8_t Index = 0; Index < NumberOfChars; Index++)
     {
+        // STEP 1: Support all user entered characters except return, backspace and ?
         if ((CharacterBuffer[Index] != '\r') && (CharacterBuffer[Index] != '\b') && (CharacterBuffer[Index] != '?'))
         {
             printf("%c", CharacterBuffer[Index]);
@@ -79,14 +108,16 @@ void debugPortParser(char *CharacterBuffer, uint8_t NumberOfChars)
             }
         }
 
-
+        // STEP 2: Handle return entered - process command and reset for next entry
         if (CharacterBuffer[Index] == '\r')
         {
+            DebugCommand[DebugCommandIndex] = NULL; // Ensures end of string for parsing
             printf("\r\n");
             fflush(stdout);
             callDebugFunction();
         }
 
+        // STEP 3: Process for user entered back space (user made a typing mistake and is backing up
         if (CharacterBuffer[Index] == '\b')
         {
             DebugCommand[DebugCommandIndex] = 0x00;
@@ -97,6 +128,7 @@ void debugPortParser(char *CharacterBuffer, uint8_t NumberOfChars)
             fflush(stdout);
         }
 
+        // STEP 4: Process for ? - Show help commands
         if (CharacterBuffer[Index] == '?')
         {
             printDebugConsoleHelp();
@@ -105,75 +137,142 @@ void debugPortParser(char *CharacterBuffer, uint8_t NumberOfChars)
         }
 
     }
+
 } // END OF debugPortParser
 
+
+
+/********************************************************************************************************
+* @brief print to screen the command prompt
+*
+* @author original: Hab Collector \n
+********************************************************************************************************/
 void commandPrompt(void)
 {
     printf("Command> ");
-}
+
+} // END OF commandPrompt
 
 
+
+/********************************************************************************************************
+* @brief Search the user entry for a valid debug command string.  If the command string is found process
+* the command
+*
+* @author original: Hab Collector \n
+*
+* @note: Allow the individual commands to do their own error checking, and command parsing for parameters
+*
+* STEP 1: Check for commands - call command function if found
+* STEP 2: Update if no valid command found
+********************************************************************************************************/
 static void callDebugFunction(void)
 {
+    // STEP 1: Check for commands - call command function if found
     bool CommandFound = true;
-    if (strstr(DebugCommand, SET_DIGITAL_POT_ATTEN) != NULL)
-    {
-        setDigitalPotAttenuation(DebugCommand);
-    }
-    else if (strstr(DebugCommand, DEBUG_CONSOLE_HELP != NULL))
+    if (strstr(DebugCommand, DEBUG_CONSOLE_HELP) != NULL)
     {
         printDebugConsoleHelp();
+    }
+    else if (strstr(DebugCommand, WRITE_DIGITAL_POT_ATTEN) != NULL)
+    {
+        writeDigitalPotAttenuation(DebugCommand);
+    }
+    else if (strstr(DebugCommand, READ_DIGITAL_POT_ATTEN) != NULL)
+    {
+        readDigitalPotAttenuation();
     }
     else
     {
         CommandFound = false;
     }
 
+    // STEP 2: Update if no valid command found
     if ((!CommandFound) && (DebugCommandIndex != 0))
         printYellow("No such command\r\n");
     resetDebugCommandSearch();
 
-}
+} // END OF callDebugFunction
 
 
+/********************************************************************************************************
+* @brief Reset Command buffer and index for a new search.
+*
+* @author original: Hab Collector \n
+*
+* @note: Call this function when you want to enter a new command
+*
+* STEP 1: Reset for new command search
+********************************************************************************************************/
 static void resetDebugCommandSearch(void)
 {
+    // STEP 1: Reset for new command search
     memset(DebugCommand, 0x00, sizeof(DebugCommand));
     DebugCommandIndex = 0;
     commandPrompt();
     fflush(stdout);
-}
+
+} // END OF resetDebugCommandSearch
 
 
-static void setDigitalPotAttenuation(char *CommandLine)
-{
-//    char StringValue[4] = {0};
-//    uint8_t Index = 0;
-//    char *StringValuePointer = DebugCommand + strlen(SET_DIGITAL_POT_ATTEN) + 1;
-//    while (*StringValuePointer != '\r')
-//    {
-//        StringValue[Index] = *StringValuePointer;
-//        StringValuePointer++;
-//        Index++;
-//    }
-//    int Value = atoi(StringValue);
-//    if ((Value > 100) || (Index > 3))
-//    {
-//        printf("Error: Bad command format..\r\n");
-//        printf("Format: \"%s X\" Where X is 1 to 100\r\n", SET_DIGITAL_POT_ATTEN);
-//        return;
-//    }
 
-//    printf("Pot value set to: %d\r\n", Value);
-    printf("Test of setting dpot\r\n");
+/********************************************************************************************************
+*                                     START OF ACTIONABLE COMMANDS
+********************************************************************************************************/
 
-}
-
+/********************************************************************************************************
+* @brief Provide a printed list to the user of all debug commands
+*
+* @author original: Hab Collector \n
+*
+* @note: I did not automate this as much as I have in the past - be sure to enter all commands here
+*
+* STEP 1: Print debug command help
+********************************************************************************************************/
 static void printDebugConsoleHelp(void)
 {
+    // STEP 1: Print debug command help
     printf("\r\nDEBUG COMMANDS: \r\n");
-    printf("  Set Pot X: Where X is value 0 to 255 of wiper\r\n");
-}
+    printf("  Write Pot X: Where X is value 0 to 255 of wiper\r\n");
+    printf("  Write Pot X: Returns value of pot wiper 0 - 255\r\n");
 
+} // END OF printDebugConsoleHelp
+
+
+
+static void writeDigitalPotAttenuation(char *CommandLine)
+{
+    // STEP 1: Make sure there is a space after command
+    char *SpaceChar = CommandLine + strlen(WRITE_DIGITAL_POT_ATTEN);
+    if (*SpaceChar != ' ')
+    {
+        printRed("Error: Command Syntax see help\r\n");
+        return;
+    }
+
+    // STEP 2: Get the value and convert it
+    uint8_t CommandLenght = strlen(CommandLine);
+    char *EndofCommandLinePointer = CommandLine + CommandLenght;
+    char *PotValuePointer = SpaceChar + 1;
+    char SetPotValue[4] = {0}; // 3 Digits terminated with null
+    uint8_t NumberOfDigits = EndofCommandLinePointer - PotValuePointer;
+    if (NumberOfDigits > (sizeof(SetPotValue) - 1))
+    {
+        printRed("Error: Command Syntax see help\r\n");
+        return;
+    }
+    else
+    {
+        strncpy(SetPotValue, PotValuePointer, NumberOfDigits);
+        uint16_t PotValue = atoi(SetPotValue);
+    }
+
+} // END OF writeDigitalPotAttenuation
+
+
+static void readDigitalPotAttenuation()
+{
+    printf("Read Pot Value\r\n");
+}
 
 

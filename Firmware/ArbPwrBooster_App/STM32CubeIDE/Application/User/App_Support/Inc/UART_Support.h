@@ -35,9 +35,9 @@ extern"C" {
 
 
 // DEFINES
-#define UART_TX_BUFFER_SIZE     256U
-#define UART_RX_BUFFER_SIZE     256U
-#define UART_RX_FIFO_BUFFER     10U
+#define UART_TX_BUFFER_SIZE         256U
+#define UART_RX_BUFFER_SIZE         10U
+#define UART_RX_FIFO_BUFFER_SIZE    10U
 
 
 // TYPEDEFS AND ENUMS
@@ -47,7 +47,7 @@ typedef struct
     UART_HandleTypeDef *    Handle;
     bool                    IsTransmitting;
     uint8_t                 Rx_FIFO_Count;
-    char                    Rx_FIFO[UART_RX_FIFO_BUFFER];
+    char                    Rx_FIFO[UART_RX_FIFO_BUFFER_SIZE];
     char                    RxDataBuffer[UART_RX_BUFFER_SIZE];
     char                    TxDataBuffer[UART_TX_BUFFER_SIZE];
     Type_UART_Parser        Parser;

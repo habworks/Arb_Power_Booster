@@ -171,18 +171,19 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 * @param huart: HAL UART handle
 *
 * STEP 1: Identify the active UART
-* STEP 2: Call the respective parsing function and re-enable the UART to receive via IRQ
+* STEP 2: Load the RX FIFO Buffer and re-enable the UART to receive via IRQ
 ********************************************************************************************************/
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
     // STEP 1: Identify the active UART
     if (huart == UART_DebugPort.Handle)
     {
-        // STEP 2: Call the respective parsing function and re-enable the UART to receive via IRQ
-//        printf("%c", UART_DebugPort.RxDataBuffer[0]);
+        // STEP 2: Load the RX FIFO Buffer and re-enable the UART to receive via IRQ
         UART_DebugPort.Rx_FIFO[UART_DebugPort.Rx_FIFO_Count] = UART_DebugPort.RxDataBuffer[0];
         UART_DebugPort.Rx_FIFO_Count++;
-//        UART_DebugPort.Parser(UART_DebugPort.RxDataBuffer, 1);
+        // Should not occur - but just to be safe test for over-write
+        if (UART_DebugPort.Rx_FIFO_Count >= UART_RX_FIFO_BUFFER_SIZE)
+            UART_DebugPort.Rx_FIFO_Count = 0;
         HAL_UART_Receive_IT(UART_DebugPort.Handle, (uint8_t *)UART_DebugPort.RxDataBuffer, 1);
     }
 

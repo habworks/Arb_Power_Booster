@@ -33,9 +33,11 @@ extern"C" {
 #include "Hab_Types.h"
 
 // DEFINES
+#define DELAY_TIME_FAST_TYPER       150U
 // Actionable Commands
 #define DEBUG_CONSOLE_HELP          "Help"
-#define SET_DIGITAL_POT_ATTEN       "Set Pot"
+#define WRITE_DIGITAL_POT_ATTEN     "Write Pot"
+#define READ_DIGITAL_POT_ATTEN      "Read Pot"
 
 // FUNCTION PROTOTYPES
 void debugConsoleTaskActions(void);
