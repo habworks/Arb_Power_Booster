@@ -26,6 +26,9 @@
 #include "Main_Support.h"
 #include "ADC_Support.h"
 #include "IO_Support.h"
+#include "UART_Support.h"
+#include "Debug_Port.h"
+#include "Terminal_Emulator_Support.h"
 #include "cmsis_os2.h"
 #include <String.h>
 #include <stdlib.h>
@@ -51,6 +54,7 @@ void Init_ArbPwrBoosterHardware(void)
     // STEP 1: Init hardware peripherals
     Init_GPIO_Hardware();
     Init_ADC_Hardware();
+    Init_UART_Hardware();
 
     // STEP 2: Init drivers
 
@@ -242,6 +246,33 @@ void mainUpdateTaskActions(void)
     if ((ArbPwrBooster.Screen == MAIN_SCREEN) || (ArbPwrBooster.Screen == CONFIG_SCREEN))
         osSemaphoreRelease(DisplayUpdateSemaphoreHandle);
 
+//    if (RxFlag)
+//    {
+//        strcpy(TxData, "Hello Hab How You\r\n");
+//        HAL_UART_Transmit_DMA(&huart6, TxData, strlen(TxData));
+//        RxFlag = false;
+//    }
+
+//    debugConsoleTask();
+
     // STEP 3: Make task inactive for a period of time
     osDelay(200);
 }
+
+
+void mainUpdateTaskInit(void)
+{
+    terminal_ClearScreen();
+    printGreen("IMR Engineering, LLC\r\n");
+    printf("  Hab Collector, Principal Engineer\r\n");
+    printf("  www.imrengineering.com\r\n");
+    printBrightRed("Arbitrary Power Booster\r\n");
+    printf("  HW REV: %d\r\n", HW_REVISION);
+    printf("  FW REV: %d.%d.%d\r\n\n", FW_MAJOR_REV, FW_MINOR_REV, FW_TEST_REV);
+    printf("For assistance type Help or just ?\r\n");
+    commandPrompt();
+    fflush(stdout);
+}
+
+
+

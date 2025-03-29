@@ -31,6 +31,7 @@ extern"C" {
 #endif
 
 #include "Hab_Types.h"
+#include "stm32f7xx_hal.h"
 
 // DEFINES
 // Revisions
@@ -157,6 +158,12 @@ typedef struct
 }Type_ArbPwrBoosterStatus;
 
 
+// MACROS
+#define NOT_USED(x)             (void)(x)
+#define DO_NOTHING()            __NOP()
+#define DO_NOTHING_X_TIMES(x)   for (uint32_t I = 0; I < x; I++) DO_NOTHING()
+
+
 // EXTERNS
 extern Type_ArbPwrBoosterStatus ArbPwrBooster;
 
@@ -168,6 +175,7 @@ void digitsFromDouble(double RationalNumber, int8_t *Integer, uint8_t *Tenths, u
 double digitsToDouble(int8_t *Integer, uint8_t *Tenths, uint8_t *Hundredths, uint8_t *Thousandths);
 void systemErrorHandler(char *FileName, int FileLineNumber, uint32_t ErrorNumber, char *Description);
 void mainUpdateTaskActions(void);
+void mainUpdateTaskInit(void);
 
 #ifdef __cplusplus
 }

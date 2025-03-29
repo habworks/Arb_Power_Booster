@@ -19,7 +19,7 @@
  *                  It is suggested that the documents be reviewed in the order shown.
  *			          Schematic: IMR-005-SCH
  *				      STM32F746G_DISCO
- *				      IMR
+ *				      IMR Engineering
  *
  * @copyright		IMR Engineering, LLC
  ********************************************************************************************************/

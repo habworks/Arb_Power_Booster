@@ -1,0 +1,6 @@
++20V Discharge
+
+Load 10K
+
+Measured
+Time to full dischage = 3.5s

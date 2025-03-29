@@ -27,6 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include "Main_Support.h"
 #include "ADC_Support.h"
+#include "Debug_Port.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -75,11 +76,15 @@ CRC_HandleTypeDef hcrc;
 
 DMA2D_HandleTypeDef hdma2d;
 
+I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c3;
 
 LTDC_HandleTypeDef hltdc;
 
 QSPI_HandleTypeDef hqspi;
+
+UART_HandleTypeDef huart6;
+DMA_HandleTypeDef hdma_usart6_tx;
 
 SDRAM_HandleTypeDef hsdram1;
 
@@ -111,6 +116,13 @@ const osThreadAttr_t TaskMainUpdate_attributes = {
   .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for TaskDebugConsol */
+osThreadId_t TaskDebugConsolHandle;
+const osThreadAttr_t TaskDebugConsol_attributes = {
+  .name = "TaskDebugConsol",
+  .stack_size = 512 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
 /* Definitions for DisplayUpdateSemaphore */
 osSemaphoreId_t DisplayUpdateSemaphoreHandle;
 const osSemaphoreAttr_t DisplayUpdateSemaphore_attributes = {
@@ -133,10 +145,13 @@ static void MX_LTDC_Init(void);
 static void MX_QUADSPI_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_ADC3_Init(void);
+static void MX_I2C1_Init(void);
+static void MX_USART6_UART_Init(void);
 void StartDefaultTask(void *argument);
 extern void TouchGFX_Task(void *argument);
 extern void videoTaskFunc(void *argument);
 void mainUpdateTask(void *argument);
+void debugConsoleTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 void GetManufacturerId (uint8_t *manufacturer_id);
@@ -199,6 +214,8 @@ int main(void)
   MX_LIBJPEG_Init();
   MX_ADC1_Init();
   MX_ADC3_Init();
+  MX_I2C1_Init();
+  MX_USART6_UART_Init();
   MX_TouchGFX_Init();
   /* Call PreOsInit function */
   MX_TouchGFX_PreOSInit();
@@ -242,6 +259,9 @@ int main(void)
 
   /* creation of TaskMainUpdate */
   TaskMainUpdateHandle = osThreadNew(mainUpdateTask, NULL, &TaskMainUpdate_attributes);
+
+  /* creation of TaskDebugConsol */
+  TaskDebugConsolHandle = osThreadNew(debugConsoleTask, NULL, &TaskDebugConsol_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -528,6 +548,54 @@ static void MX_DMA2D_Init(void)
 }
 
 /**
+  * @brief I2C1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C1_Init(void)
+{
+
+  /* USER CODE BEGIN I2C1_Init 0 */
+
+  /* USER CODE END I2C1_Init 0 */
+
+  /* USER CODE BEGIN I2C1_Init 1 */
+
+  /* USER CODE END I2C1_Init 1 */
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.Timing = 0x20404768;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Analogue filter
+  */
+  if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Digital filter
+  */
+  if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C1_Init 2 */
+
+  /* USER CODE END I2C1_Init 2 */
+
+}
+
+/**
   * @brief I2C3 Initialization Function
   * @param None
   * @retval None
@@ -676,6 +744,41 @@ static void MX_QUADSPI_Init(void)
 }
 
 /**
+  * @brief USART6 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART6_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART6_Init 0 */
+
+  /* USER CODE END USART6_Init 0 */
+
+  /* USER CODE BEGIN USART6_Init 1 */
+
+  /* USER CODE END USART6_Init 1 */
+  huart6.Instance = USART6;
+  huart6.Init.BaudRate = 115200;
+  huart6.Init.WordLength = UART_WORDLENGTH_8B;
+  huart6.Init.StopBits = UART_STOPBITS_1;
+  huart6.Init.Parity = UART_PARITY_NONE;
+  huart6.Init.Mode = UART_MODE_TX_RX;
+  huart6.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart6.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart6.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart6.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart6) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART6_Init 2 */
+
+  /* USER CODE END USART6_Init 2 */
+
+}
+
+/**
   * Enable DMA controller clock
   */
 static void MX_DMA_Init(void)
@@ -691,6 +794,9 @@ static void MX_DMA_Init(void)
   /* DMA2_Stream1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream1_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream1_IRQn);
+  /* DMA2_Stream6_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream6_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream6_IRQn);
 
 }
 
@@ -831,9 +937,6 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(LCD_DISP_GPIO_Port, LCD_DISP_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, FRAME_RATE_Pin|RENDER_TIME_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOG, EN_VO_2_Pin|MAIN_PWR_EN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
@@ -859,13 +962,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LCD_BL_CTRL_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : FRAME_RATE_Pin RENDER_TIME_Pin */
-  GPIO_InitStruct.Pin = FRAME_RATE_Pin|RENDER_TIME_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pin : EN_VO_2_Pin */
   GPIO_InitStruct.Pin = EN_VO_2_Pin;
@@ -994,12 +1090,31 @@ void StartDefaultTask(void *argument)
 void mainUpdateTask(void *argument)
 {
   /* USER CODE BEGIN mainUpdateTask */
+  mainUpdateTaskInit();
   /* Infinite loop */
   for(;;)
   {
       mainUpdateTaskActions();
   }
   /* USER CODE END mainUpdateTask */
+}
+
+/* USER CODE BEGIN Header_debugConsoleTask */
+/**
+* @brief Function implementing the TaskDebugConsol thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_debugConsoleTask */
+void debugConsoleTask(void *argument)
+{
+  /* USER CODE BEGIN debugConsoleTask */
+  /* Infinite loop */
+  for(;;)
+  {
+      debugConsoleTaskActions();
+  }
+  /* USER CODE END debugConsoleTask */
 }
 
  /* MPU Configuration */

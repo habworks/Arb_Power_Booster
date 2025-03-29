@@ -1,0 +1,11 @@
++20V INRUSH CURRENT
+
+Measured:
+CAPACITIVE LOAD = 990uF installed (1034uF actual)
+Peak current = 4A
+Dealy from Vin to output +20V = 62ms
+
+Simulated:
+CAPACITIVE LOAD = 1000uF
+Peak current = 4A
+Dealy from Vin to output +20V = 70ms

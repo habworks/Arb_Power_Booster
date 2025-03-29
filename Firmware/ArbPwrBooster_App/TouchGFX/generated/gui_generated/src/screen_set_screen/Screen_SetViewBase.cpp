@@ -183,7 +183,7 @@ void Screen_SetViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButto
 {
     if (&src == &flexButton_Home)
     {
-        //Interaction_MainTransistion
+        //Interaction_GoToMainScreen
         //When flexButton_Home clicked change screen to Screen_Main
         //Go to Screen_Main with screen transition towards West
         application().gotoScreen_MainScreenSlideTransitionWest();
@@ -232,10 +232,15 @@ void Screen_SetViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButto
     }
     if (&src == &flexButton_ResetMinMax)
     {
-        //Interaction1
+        //Interaction_ResetMinMax
         //When flexButton_ResetMinMax clicked call virtual function
         //Call resetMinMaxCurrentLimits
         resetMinMaxCurrentLimits();
+    
+        //Interaction_GoToMainScreenAfterReset
+        //When Interaction_ResetMinMax completed change screen to Screen_Main
+        //Go to Screen_Main with screen transition towards West
+        application().gotoScreen_MainScreenSlideTransitionWest();
     }
 }
 

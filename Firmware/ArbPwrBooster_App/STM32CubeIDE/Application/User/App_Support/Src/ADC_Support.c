@@ -1,6 +1,6 @@
 /** ****************************************************************************************************
  * @file 			ADC_Support.c
- * @brief			<Add a descrition of what the file does>
+ * @brief			A collection of functions relevant to the ADC peripheral channels and their conversions
  * ****************************************************************************************************
  * @author original Hab Collector (habco)\n
  *
@@ -19,7 +19,7 @@
  *                  It is suggested that the documents be reviewed in the order shown.
  *                    Schematic: IMR-005-SCH
  *                    STM32F746G_DISCO
- *                    IMR
+ *                    IMR Engineering
  *
  * @copyright       IMR Engineering, LLC
  ********************************************************************************************************/

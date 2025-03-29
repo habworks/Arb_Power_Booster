@@ -46,6 +46,7 @@ Screen_ConfigViewBase::Screen_ConfigViewBase() :
     flexButton_SystemReset.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(171, 20, 25), touchgfx::Color::getColorFromRGB(171, 20, 25), touchgfx::Color::getColorFromRGB(66, 16, 18), touchgfx::Color::getColorFromRGB(51, 102, 153));
     flexButton_SystemReset.setIconBitmaps(Bitmap(BITMAP_ICON_THEME_IMAGES_NAVIGATION_REFRESH_50_50_E8F6FB_SVG_ID), Bitmap(BITMAP_ICON_THEME_IMAGES_ACTION_DONE_50_50_E8F6FB_SVG_ID));
     flexButton_SystemReset.setIconXY(6, 5);
+    flexButton_SystemReset.setAction(flexButtonCallback);
     flexButton_SystemReset.setPosition(320, 202, 60, 60);
     add(flexButton_SystemReset);
 
@@ -157,6 +158,13 @@ void Screen_ConfigViewBase::flexButtonCallbackHandler(const touchgfx::AbstractBu
         //When flexButton_Home clicked change screen to Screen_Main
         //Go to Screen_Main with screen transition towards West
         application().gotoScreen_MainScreenSlideTransitionWest();
+    }
+    if (&src == &flexButton_SystemReset)
+    {
+        //Interaction1
+        //When flexButton_SystemReset clicked call virtual function
+        //Call systemReset
+        systemReset();
     }
 }
 

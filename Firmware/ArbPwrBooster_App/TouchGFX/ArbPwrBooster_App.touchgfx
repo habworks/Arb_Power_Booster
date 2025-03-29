@@ -1303,6 +1303,17 @@
               "Type": "ActionCustom",
               "FunctionName": "update_Screen_Config"
             }
+          },
+          {
+            "InteractionName": "Interaction1",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "flexButton_SystemReset"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "systemReset"
+            }
           }
         ]
       },
@@ -1836,7 +1847,7 @@
         ],
         "Interactions": [
           {
-            "InteractionName": "Interaction_MainTransistion",
+            "InteractionName": "Interaction_GoToMainScreen",
             "Trigger": {
               "Type": "TriggerClicked",
               "TriggerComponent": "flexButton_Home"
@@ -1947,7 +1958,8 @@
             }
           },
           {
-            "InteractionName": "Interaction1",
+            "InteractionName": "Interaction_ResetMinMax",
+            "HasCompletedTrigger": true,
             "Trigger": {
               "Type": "TriggerClicked",
               "TriggerComponent": "flexButton_ResetMinMax"
@@ -1955,6 +1967,19 @@
             "Action": {
               "Type": "ActionCustom",
               "FunctionName": "resetMinMaxCurrentLimits"
+            }
+          },
+          {
+            "InteractionName": "Interaction_GoToMainScreenAfterReset",
+            "Trigger": {
+              "Type": "TriggerInteractionCompleted",
+              "InteractionToTriggerOn": "Interaction_ResetMinMax"
+            },
+            "Action": {
+              "Type": "ActionGotoScreen",
+              "ScreenTransitionType": "ScreenTransitionSlide",
+              "ScreenTransitionDirection": "West",
+              "ActionComponent": "Screen_Main"
             }
           }
         ]

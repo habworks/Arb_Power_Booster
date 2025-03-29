@@ -68,10 +68,6 @@ void Error_Handler(void);
 #define LCD_BL_CTRL_GPIO_Port GPIOK
 #define LCD_DISP_Pin GPIO_PIN_12
 #define LCD_DISP_GPIO_Port GPIOI
-#define FRAME_RATE_Pin GPIO_PIN_7
-#define FRAME_RATE_GPIO_Port GPIOC
-#define RENDER_TIME_Pin GPIO_PIN_6
-#define RENDER_TIME_GPIO_Port GPIOC
 #define EN_VO_2_Pin GPIO_PIN_7
 #define EN_VO_2_GPIO_Port GPIOG
 #define MAIN_PWR_EN_Pin GPIO_PIN_6

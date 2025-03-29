@@ -28,6 +28,10 @@ public:
     {
         // Override and implement this function in Screen_Config
     }
+    virtual void systemReset()
+    {
+        // Override and implement this function in Screen_Config
+    }
 
 protected:
     FrontendApplication& application() {
