@@ -60,6 +60,8 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define VSYNC_FREQ_Pin GPIO_PIN_4
 #define VSYNC_FREQ_GPIO_Port GPIOB
+#define R_SHDN_1_Pin GPIO_PIN_15
+#define R_SHDN_1_GPIO_Port GPIOA
 #define EN_50_Z_2_Pin GPIO_PIN_3
 #define EN_50_Z_2_GPIO_Port GPIOI
 #define EN_VO_1_Pin GPIO_PIN_2
@@ -68,6 +70,8 @@ void Error_Handler(void);
 #define LCD_BL_CTRL_GPIO_Port GPIOK
 #define LCD_DISP_Pin GPIO_PIN_12
 #define LCD_DISP_GPIO_Port GPIOI
+#define R_WLAT_1_Pin GPIO_PIN_8
+#define R_WLAT_1_GPIO_Port GPIOA
 #define EN_VO_2_Pin GPIO_PIN_7
 #define EN_VO_2_GPIO_Port GPIOG
 #define MAIN_PWR_EN_Pin GPIO_PIN_6

@@ -563,7 +563,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x20404768;
+  hi2c1.Init.Timing = 0x6000030D;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -928,6 +928,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOB, VSYNC_FREQ_Pin|EN_50_Z_1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, R_SHDN_1_Pin|R_WLAT_1_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOI, EN_50_Z_2_Pin|EN_VO_1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
@@ -948,6 +951,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(VSYNC_FREQ_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : R_SHDN_1_Pin R_WLAT_1_Pin */
+  GPIO_InitStruct.Pin = R_SHDN_1_Pin|R_WLAT_1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : EN_50_Z_2_Pin EN_VO_1_Pin LCD_DISP_Pin */
   GPIO_InitStruct.Pin = EN_50_Z_2_Pin|EN_VO_1_Pin|LCD_DISP_Pin;
@@ -1109,6 +1119,7 @@ void mainUpdateTask(void *argument)
 void debugConsoleTask(void *argument)
 {
   /* USER CODE BEGIN debugConsoleTask */
+  debugConsoleTaskInit();
   /* Infinite loop */
   for(;;)
   {

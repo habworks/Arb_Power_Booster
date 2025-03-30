@@ -31,10 +31,22 @@ extern"C" {
 #endif
 
 #include "Hab_Types.h"
+#include "main.h"
 #include "stm32f7xx_hal.h"
 
 
 // DEFINES
+// PART NUMBER IN USE
+#define USING_MCP45HV31
+//#define USING_MCP45HV51
+#ifdef USING_MCP45HV31
+#define MCP45HVX1_POT_FULL_RESOLUTION   ((uint8_t)0x7F)
+#else
+#define MCP45HVX1_POT_FULL_RESOLUTION   ((uint8_t)0xFF)
+#endif
+#if defined(USING_MCP45HV31) && defined(USING_MCP45HV51)
+#error User must define either USING_MCP45HV31 or USING_MCP45HV51 not both
+#endif
 // I2C_BASE_ADDRESS
 #define A1A0_EXTERNAL_ADDR_CH1          ((uint8_t)0x00)
 #define A1A0_EXTERNAL_ADDR_CH2          ((uint8_t)0x01)
@@ -47,9 +59,25 @@ extern"C" {
 #define MCP45HVX1_READ_COMMAND          ((uint8_t)0x03)
 
 
+// MACROS
+// SHUTDOWN CONTROL
+#define MCP45HVX1_ENABLE_CH1()          HAL_GPIO_WritePin(R_SHDN_1_GPIO_Port, R_SHDN_1_Pin, GPIO_PIN_SET)
+#define MCP45HVX1_DISABLE_CH1()         HAL_GPIO_WritePin(R_SHDN_1_GPIO_Port, R_SHDN_1_Pin, GPIO_PIN_RESET)
+#define MCP45HVX1_STATUS_CH1()          HAL_GPIO_ReadPin(R_SHDN_1_GPIO_Port, R_SHDN_1_Pin)
+// I2C WIPER LATCH
+#define USING_WIPER_I2C_LATCH           // Comment out if not using latch in firmware - latch pulled down in hardware
+#ifdef USING_WIPER_I2C_LATCH
+#define MCP45HVX1_I2C_LATCH_CH1()       HAL_GPIO_WritePin(R_WLAT_1_GPIO_Port, R_WLAT_1_Pin, GPIO_PIN_SET)
+#define MCP45HVX1_I2C_PASS_CH1()        HAL_GPIO_WritePin(R_WLAT_1_GPIO_Port, R_WLAT_1_Pin, GPIO_PIN_RESET)
+#define MCP45HVX1_I2C_STATUS()          HAL_GPIO_ReadPin(R_WLAT_1_GPIO_Port, R_WLAT_1_Pin)
+#endif
+
+
 // FUNCTION PROTOTYPES
-bool MCP45HVX1_SetWiperValue(I2C_HandleTypeDef *I2C_Handle, uint8_t A1A0_ExternalAddress, uint8_t Value);
+void Init_MCP45HVX1(void);
+bool MCP45HVX1_WriteWiperValue(I2C_HandleTypeDef *I2C_Handle, uint8_t A1A0_ExternalAddress, uint8_t Value);
 bool MCP45HVX1_ReadWiperValue(I2C_HandleTypeDef *I2C_Handle, uint8_t A1A0_ExternalAddress, uint8_t *Value);
+bool MCP45HVX1_WriteWiperVerify(I2C_HandleTypeDef *I2C_Handle, uint8_t A1A0_ExternalAddress, uint8_t Value);
 
 
 #ifdef __cplusplus

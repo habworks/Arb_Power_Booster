@@ -29,6 +29,7 @@
 #include "UART_Support.h"
 #include "Debug_Port.h"
 #include "Terminal_Emulator_Support.h"
+#include "MCP45HVX1_Driver.h"
 #include "cmsis_os2.h"
 #include <String.h>
 #include <stdlib.h>
@@ -57,7 +58,7 @@ void Init_ArbPwrBoosterHardware(void)
     Init_UART_Hardware();
 
     // STEP 2: Init drivers
-
+    Init_MCP45HVX1();
 
 } // END OF Init_ArbPwrBoosterHardware
 

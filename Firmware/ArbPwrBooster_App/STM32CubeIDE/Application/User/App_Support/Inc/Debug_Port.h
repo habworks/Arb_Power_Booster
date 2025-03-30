@@ -40,6 +40,7 @@ extern"C" {
 #define READ_DIGITAL_POT_ATTEN      "Read Pot"
 
 // FUNCTION PROTOTYPES
+void debugConsoleTaskInit(void);
 void debugConsoleTaskActions(void);
 void debugPortParser(char *CharacterBuffer, uint8_t NumberOfChars);
 void commandPrompt(void);

@@ -157,6 +157,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 } // END OF HAL_UART_TxCpltCallback
 
 
+
 /********************************************************************************************************
 * @brief REDECLARATION of the HAL HAL_UART_RxCpltCallback.  The function is defined weak elsewhere.  It is
 * redefined here for use.  This function is called by the HAL when the UART has completed a reception.
@@ -203,10 +204,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 * @param len: Size of the print message
 *
 * @return: The number of characters printed
+*
+* STEP 1: If Not transmitting write the contents to be be printed to the UART DMA
+* STEP 2: Do nothing until the DMA has completed the transmission - this will stop over-writes of the output printf
 ********************************************************************************************************/
 int _write(int file, char *ptr, int len)
 {
-
     uint16_t BytesTransmitted = 0;
     if (!UART_DebugPort.IsTransmitting)
     {
