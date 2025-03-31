@@ -48,6 +48,7 @@ static double calculateSystem_3V3(void);
 static double calculateSystemTemp(void);
 static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail);
 static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *FIFO_AmpMon, Type_ChannelMeasure *CurrentMeasure);
+static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *FIFO_VoltMon, Type_ChannelMeasure *VoltageMeasure);
 
 // Static FIFO Declarations
 // System 3V3
@@ -68,6 +69,12 @@ static Type_16b_FIFO *FIFO_P20V_Supply;
 // Negative 20V Supply Rail Monitor
 static uint16_t Buffer_N20V_Supply[SYSTEM_N20V_BUFFER_SIZE] = {0x0000};
 static Type_16b_FIFO *FIFO_N20V_Supply;
+// CH1 Current Monitor
+static uint16_t Buffer_CH1_VoltMon[CH1_VOLT_MON_BUFFER_SIZE] = {0x0000};
+static Type_16b_FIFO *FIFO_CH1_VoltMon;
+// CH2 Current Monitor
+static uint16_t Buffer_CH2_VoltMon[CH2_VOLT_MON_BUFFER_SIZE] = {0x0000};
+static Type_16b_FIFO *FIFO_CH2_VoltMon;
 
 
 /********************************************************************************************************
@@ -114,6 +121,8 @@ void Init_ADC_Hardware(void)
     FIFO_P20V_Supply = Init_FIFO_Buffer(Buffer_P20V_Supply, SYSTEM_P20V_BUFFER_SIZE);
     FIFO_CH1_AmpMon = Init_FIFO_Buffer(Buffer_CH1_AmpMon, CH1_AMP_MON_BUFFER_SIZE);
     FIFO_CH2_AmpMon = Init_FIFO_Buffer(Buffer_CH2_AmpMon, CH2_AMP_MON_BUFFER_SIZE);
+    FIFO_CH1_VoltMon = Init_FIFO_Buffer(Buffer_CH1_VoltMon, CH1_VOLT_MON_BUFFER_SIZE);
+    FIFO_CH2_VoltMon = Init_FIFO_Buffer(Buffer_CH2_VoltMon, CH2_VOLT_MON_BUFFER_SIZE);
 
 } // END OF Init_ADC_Hardware
 
@@ -168,6 +177,12 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
         // Current Monitor CH2
         writeTo_FIFO_Buffer(FIFO_CH2_AmpMon, ADC3_CountValue[RANK_4]);
         calculateChannelCurrent(ADC3_CountValue[RANK_4], FIFO_CH2_AmpMon, &ArbPwrBooster.CH2.Measure);
+        // Voltage Monitor CH1
+        writeTo_FIFO_Buffer(FIFO_CH1_VoltMon, ADC3_CountValue[RANK_5]);
+        calculateChannelVoltage(ADC3_CountValue[RANK_5], FIFO_CH1_VoltMon, &ArbPwrBooster.CH1.Measure);
+        // Voltage Monitor CH2
+        writeTo_FIFO_Buffer(FIFO_CH2_VoltMon, ADC3_CountValue[RANK_6]);
+        calculateChannelVoltage(ADC3_CountValue[RANK_6], FIFO_CH2_VoltMon, &ArbPwrBooster.CH2.Measure);
         // Toggle at the end of conversion - for testing: ADC3 actual conversion rate VS calculated
         ADC3_C_RATE_TOGGLE();
     }
@@ -373,7 +388,7 @@ static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail)
 * STEP 4: Update Max current - if Max set to zero overwrite with present value
 * STEP 5: Calculate the RMS current
 ********************************************************************************************************/
-uint16_t RMS_Value;
+//uint16_t RMS_Value;
 static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *FIFO_AmpMon, Type_ChannelMeasure *CurrentMeasure)
 {
     // STEP 1: Calculate the mean of the Current Monitor
@@ -400,6 +415,32 @@ static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *F
     CurrentMeasure->RMS_Current = CurrentMeasure->RMS_UpdateFunctionPointer(AmpMonitorCurrent);
 
 }
+
+
+
+static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *FIFO_VoltMon, Type_ChannelMeasure *VoltageMeasure)
+{
+    // STEP 1: Calculate the mean of the Voltage Monitor
+    double MeanVoltageCount = 0.0;
+    MeanVoltageCount = FIFO_VoltMon->Sum / FIFO_VoltMon->Depth;
+    VoltageMeasure->MeanVoltage = MeanVoltageCount * LSB_12BIT_VALUE * System_ADC_Reference * DIVIDER_VOLT_MON_CONVERSION;
+
+    // STEP 2: Calculate the instantaneous current
+    double VoltMonitorVoltage = ADC_VoltMonitorCount * LSB_12BIT_VALUE * System_ADC_Reference * DIVIDER_VOLT_MON_CONVERSION;
+
+    // STEP 3: Update Min current - If Min set to zero overwrite with present value
+    if (VoltageMeasure->MinVoltage == 0)
+        VoltageMeasure->MinVoltage = VoltMonitorVoltage;
+    else if (VoltMonitorVoltage < VoltageMeasure->MinVoltage)
+        VoltageMeasure->MinVoltage = VoltMonitorVoltage;
+
+    // STEP 4: Update Max current - if Max set to zero overwrite with present value
+    if (VoltageMeasure->MaxVoltage == 0)
+        VoltageMeasure->MaxVoltage = VoltMonitorVoltage;
+    else if (VoltMonitorVoltage > VoltageMeasure->MaxVoltage)
+        VoltageMeasure->MaxVoltage = VoltMonitorVoltage;
+}
+
 
 
 
