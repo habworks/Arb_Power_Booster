@@ -155,6 +155,7 @@ typedef struct
 
 typedef struct
 {
+    bool                Ready;
     Type_ScreenType     Screen;
     Type_SetLimitDigit  SetLimitDigit;
     Type_SystemMeasure  SystemMeasure;

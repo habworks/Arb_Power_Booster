@@ -40,7 +40,7 @@
         ],
         "Interactions": [
           {
-            "InteractionName": "Interaction1",
+            "InteractionName": "Interaction_FadeInLog",
             "HasCompletedTrigger": true,
             "Trigger": {
               "Type": "TriggerScreenTransitionBegins"
@@ -55,10 +55,11 @@
             }
           },
           {
-            "InteractionName": "Interaction2",
+            "InteractionName": "Interaction_GoToMainScreen",
+            "HasCompletedTrigger": true,
             "Trigger": {
               "Type": "TriggerInteractionCompleted",
-              "InteractionToTriggerOn": "Interaction1"
+              "InteractionToTriggerOn": "Interaction_FadeInLog"
             },
             "Action": {
               "Type": "ActionGotoScreen",
@@ -67,13 +68,24 @@
             }
           },
           {
-            "InteractionName": "Interaction3",
+            "InteractionName": "Interaction_Init",
             "Trigger": {
               "Type": "TriggerScreenEntered"
             },
             "Action": {
               "Type": "ActionCustom",
               "FunctionName": "update_Screen_Splash"
+            }
+          },
+          {
+            "InteractionName": "Interaction_GUI_Intro_Done",
+            "Trigger": {
+              "Type": "TriggerInteractionCompleted",
+              "InteractionToTriggerOn": "Interaction_GoToMainScreen"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "GUI_IntroComplete"
             }
           }
         ]

@@ -13,6 +13,7 @@ public:
     virtual void tearDownScreen();
     // ADDED FUNCTIONS
     virtual void update_Screen_Splash(void);
+    virtual void GUI_IntroComplete(void);
 protected:
 };
 

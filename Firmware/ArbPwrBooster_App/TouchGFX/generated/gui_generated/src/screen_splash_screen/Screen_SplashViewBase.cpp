@@ -7,7 +7,7 @@
 #include <texts/TextKeysAndLanguages.hpp>
 
 Screen_SplashViewBase::Screen_SplashViewBase() :
-    interaction1EndedCallback(this, &Screen_SplashViewBase::interaction1EndedCallbackHandler)
+    interaction_FadeInLogEndedCallback(this, &Screen_SplashViewBase::interaction_FadeInLogEndedCallbackHandler)
 {
     __background.setPosition(0, 0, 480, 272);
     __background.setColor(touchgfx::Color::getColorFromRGB(0, 0, 0));
@@ -42,27 +42,33 @@ void Screen_SplashViewBase::setupScreen()
 
 void Screen_SplashViewBase::transitionBegins()
 {
-    //Interaction1
+    //Interaction_FadeInLog
     //When screen transition begins fade scalableImage_IMR_Logo
     //Fade scalableImage_IMR_Logo to alpha:255 with LinearIn easing in 2000 ms (120 Ticks)
     scalableImage_IMR_Logo.clearFadeAnimationEndedAction();
     scalableImage_IMR_Logo.setFadeAnimationDelay(15);
     scalableImage_IMR_Logo.startFadeAnimation(255, 120, touchgfx::EasingEquations::linearEaseIn);
-    scalableImage_IMR_Logo.setFadeAnimationEndedAction(interaction1EndedCallback);
+    scalableImage_IMR_Logo.setFadeAnimationEndedAction(interaction_FadeInLogEndedCallback);
 }
 
-void Screen_SplashViewBase::interaction1EndedCallbackHandler(const touchgfx::FadeAnimator<touchgfx::ScalableImage>& comp)
+void Screen_SplashViewBase::interaction_FadeInLogEndedCallbackHandler(const touchgfx::FadeAnimator<touchgfx::ScalableImage>& comp)
 {
-    //Interaction2
-    //When Interaction1 completed change screen to Screen_Main
+    //Interaction_GoToMainScreen
+    //When Interaction_FadeInLog completed change screen to Screen_Main
     //Go to Screen_Main with no screen transition
     application().gotoScreen_MainScreenNoTransition();
+
+    //Interaction_GUI_Intro_Done
+    //When Interaction_GoToMainScreen completed call virtual function
+    //Call GUI_IntroComplete
+    GUI_IntroComplete();
+
 
 }
 
 void Screen_SplashViewBase::afterTransition()
 {
-    //Interaction3
+    //Interaction_Init
     //When screen transition ends call virtual function
     //Call update_Screen_Splash
     update_Screen_Splash();

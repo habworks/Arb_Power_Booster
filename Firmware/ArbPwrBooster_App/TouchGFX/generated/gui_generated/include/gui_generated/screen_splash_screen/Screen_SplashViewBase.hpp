@@ -30,6 +30,10 @@ public:
     {
         // Override and implement this function in Screen_Splash
     }
+    virtual void GUI_IntroComplete()
+    {
+        // Override and implement this function in Screen_Splash
+    }
 
 protected:
     FrontendApplication& application() {
@@ -49,12 +53,12 @@ private:
     /*
      * Callback Declarations
      */
-    touchgfx::Callback < Screen_SplashViewBase, const touchgfx::FadeAnimator<touchgfx::ScalableImage>& > interaction1EndedCallback;
+    touchgfx::Callback < Screen_SplashViewBase, const touchgfx::FadeAnimator<touchgfx::ScalableImage>& > interaction_FadeInLogEndedCallback;
 
     /*
      * Callback Handler Declarations
      */
-    void interaction1EndedCallbackHandler(const touchgfx::FadeAnimator<touchgfx::ScalableImage>& comp);
+    void interaction_FadeInLogEndedCallbackHandler(const touchgfx::FadeAnimator<touchgfx::ScalableImage>& comp);
 
 };
 

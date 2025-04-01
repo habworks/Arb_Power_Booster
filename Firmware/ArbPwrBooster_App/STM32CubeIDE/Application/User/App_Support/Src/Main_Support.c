@@ -74,6 +74,7 @@ void Init_ArbPwrBoosterHardware(void)
 void Init_ArbPwrBoosterClass(void)
 {
     // STEP 1: Set members to default POR value
+    ArbPwrBooster.Ready = false;
     ArbPwrBooster.ActiveChannel = CHANNEL_1;
     ArbPwrBooster.Screen = SPLASH_SCREEN;
     // Channel 1 Init
@@ -219,11 +220,11 @@ void systemErrorHandler(char *FileName, int FileLineNumber, uint32_t ErrorNumber
     bool WaitHere = true;
 
     // STEP 1: Print out error information
-//    printf("CRITICAL ERROR:");
-//    printf("\tError Number:     %d\r\n", ErrorNumber);
-//    printf("\tDescription:      %s\r\n", Description);
-//    printf("\tFile Name:        %s\r\n". FileName);
-//    printf("\tFile Line Number: %d", FileLineNumber);
+    printf("CRITICAL ERROR:");
+    printf("\tError Number:     %d\r\n", ErrorNumber);
+    printf("\tDescription:      %s\r\n", Description);
+    printf("\tFile Name:        %s\r\n", FileName);
+    printf("\tFile Line Number: %d", FileLineNumber);
 
     // STEP 2: Trap here forever
     while(WaitHere);
@@ -235,7 +236,7 @@ void systemErrorHandler(char *FileName, int FileLineNumber, uint32_t ErrorNumber
 /********************************************************************************************************
 * @brief These are the actions taken by thread mainUpdateTask().  Actions are primarily related to live
 * updates of the Main and Config screens.  A secondary function of re-staring the non-contineous DMA ADC1
-* is also performed.
+* is also performed.  These actions should only be performed when the ArbPwrStatus is Ready.
 *
 * @author original: Hab Collector \n
 *
@@ -245,6 +246,9 @@ void systemErrorHandler(char *FileName, int FileLineNumber, uint32_t ErrorNumber
 ********************************************************************************************************/
 void mainUpdateTaskActions(void)
 {
+    if (!ArbPwrBooster.Ready)
+        return;
+
     // STEP 1: Restart ADC1 DMA conversion
     ADC1_StartConversion();
 

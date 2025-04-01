@@ -123,6 +123,13 @@ const osThreadAttr_t TaskDebugConsol_attributes = {
   .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for TaskMonitor */
+osThreadId_t TaskMonitorHandle;
+const osThreadAttr_t TaskMonitor_attributes = {
+  .name = "TaskMonitor",
+  .stack_size = 512 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
 /* Definitions for DisplayUpdateSemaphore */
 osSemaphoreId_t DisplayUpdateSemaphoreHandle;
 const osSemaphoreAttr_t DisplayUpdateSemaphore_attributes = {
@@ -152,6 +159,7 @@ extern void TouchGFX_Task(void *argument);
 extern void videoTaskFunc(void *argument);
 void mainUpdateTask(void *argument);
 void debugConsoleTask(void *argument);
+void monitorTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 void GetManufacturerId (uint8_t *manufacturer_id);
@@ -262,6 +270,9 @@ int main(void)
 
   /* creation of TaskDebugConsol */
   TaskDebugConsolHandle = osThreadNew(debugConsoleTask, NULL, &TaskDebugConsol_attributes);
+
+  /* creation of TaskMonitor */
+  TaskMonitorHandle = osThreadNew(monitorTask, NULL, &TaskMonitor_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -1135,6 +1146,25 @@ void debugConsoleTask(void *argument)
       debugConsoleTaskActions();
   }
   /* USER CODE END debugConsoleTask */
+}
+
+/* USER CODE BEGIN Header_monitorTask */
+/**
+* @brief Function implementing the TaskMonitor thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_monitorTask */
+void monitorTask(void *argument)
+{
+  /* USER CODE BEGIN monitorTask */
+  monitorTaskInit();
+  /* Infinite loop */
+  for(;;)
+  {
+    monitorTaskActions();
+  }
+  /* USER CODE END monitorTask */
 }
 
  /* MPU Configuration */

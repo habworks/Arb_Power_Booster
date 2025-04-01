@@ -86,6 +86,13 @@ extern"C" {
 //#define ADC_CCR_ADDR    (ADC_BASE_ADDR + ADC_CCR_OFFSET)
 // RMS SPECIFIC
 #define RMS_WINDOW_SIZE         1024
+// MISC
+#define MONITOR_UPDATE_RATE         10U
+// SYSTEM SUPPLY LIMITS
+#define POS_SUPPLY_UPPER_LIMIT     17.0
+#define POS_SUPPLY_LOWER_LIMIT     15.0
+#define NEG_SUPPLY_UPPER_LIMIT     -15.0
+#define NEG_SUPPLY_LOWER_LIMIT     -17.0
 
 
 // TYPEDEFS AND ENUMS
@@ -105,17 +112,6 @@ typedef enum
     CONFIG_TEMP_ERROR = (1 << CONFIG_TEMP_MASK),
     CONFIG_VREF_ERROR = (1 << CONFIG_VREF_MASK)
 }Type_ConfigError;
-
-//typedef enum
-//{
-//    CH1_AMP_MON = 0,
-//    CH2_AMP_MON,
-//    POS_20V_MON,
-//    NEG_20V_MON,
-//    TEMP_SENSOR,
-//    INTERNAL_REF,
-//    NUMBER_OF_CHANNELS
-//}Type_ADC_Channel;
 
 typedef enum
 {
@@ -139,10 +135,13 @@ typedef struct
 
 // FUNCTION PROTOTYPES
 void Init_ADC_Hardware(void);
+void ADC13_StartConversion(void);
 void ADC1_StartConversion(void);
 bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber);
 double update_CH1_RMS(double NewSampleValue);
 double update_CH2_RMS(double NewSampleValue);
+void monitorTaskInit(void);
+void monitorTaskActions(void);
 
 #ifdef __cplusplus
 }

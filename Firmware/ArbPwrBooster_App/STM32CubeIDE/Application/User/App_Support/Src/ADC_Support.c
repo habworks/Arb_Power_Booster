@@ -39,7 +39,7 @@ extern ADC_HandleTypeDef hadc3;
 // Global
 uint16_t ADC1_CountValue[ADC1_NUMBER_OF_CHANNELS];
 uint16_t ADC3_CountValue[ADC3_NUMBER_OF_CHANNELS];
-static double System_ADC_Reference = ADC_REFERENCE_VOLTAGE;
+static double System_ADC_Reference = ADC_REFERENCE_VOLTAGE;     // Init condition - it will be updated later in calculation of ADC1 3V3
 
 // Static Function Declarations
 static Type_16b_FIFO *Init_FIFO_Buffer(uint16_t *Buffer, uint8_t BufferLength);
@@ -93,30 +93,23 @@ static Type_16b_FIFO *FIFO_CH2_VoltMon;
 * @note: ADC3 is set in DMA continuous conversion mode - continuous non-stop conversions once started
 * @note: See the ADC DMA callback HAL_ADC_ConvCpltCallback
 * @note: The STM32F series makes no provision for a calibration as it is trimmed by the factory
+* @note: See function ADC13_StartConversion() - which actually starts the conversion
+* @note: See also ArbPwrBooster member Ready
 *
 * STEP 1: Enable Internal reference and temperature measure
-* STEP 2: Start ADC1 and ADC3 in DMA continuous conversion: CH1 & 2 Amp Monitor, Micro-Temp Sensor, System 3.3V, ±20V rail
-* STEP 3: Init FIFO Buffers for use with ADC1: Micro-Temp Sensor, System 3.3V
-* STEP 4: Init FIFO Buffers for use with ADC3: ±20V rail, CH1 & CH2 Amp Monitor
+* STEP 2: Init FIFO Buffers for use with ADC1: Micro-Temp Sensor, System 3.3V
+* STEP 3: Init FIFO Buffers for use with ADC3: ±20V rail, CH1 & CH2 Amp Monitor
 ********************************************************************************************************/
 void Init_ADC_Hardware(void)
 {
-    HAL_StatusTypeDef ADC_InitStatus = HAL_OK;
-
     // STEP 1: Enable Internal reference and temperature measure
     ADC->CCR |= ADC_CCR_TSVREFE_Msk;
 
-    // STEP 2: Start ADC1 and ADC3 in DMA continuous conversion: CH1 & 2 Amp Monitor, Micro-Temp Sensor, System 3.3V, ±20V rail
-    ADC_InitStatus |= HAL_ADC_Start_DMA(&hadc1, (uint32_t *)ADC1_CountValue, ADC1_NUMBER_OF_CHANNELS);
-    ADC_InitStatus |= HAL_ADC_Start_DMA(&hadc3, (uint32_t *)ADC3_CountValue, ADC3_NUMBER_OF_CHANNELS);
-    if (ADC_InitStatus != HAL_OK)
-        systemErrorHandler(__FILE__, __LINE__, 0, "Failed to init ADC peripheral");
-
-    // STEP 3: Init FIFO Buffers for use with ADC1: Micro-Temp Sensor, System 3.3V
+    // STEP 2: Init FIFO Buffers for use with ADC1: Micro-Temp Sensor, System 3.3V
     FIFO_SystemTemp = Init_FIFO_Buffer(BufferSystemTemp, SYSTEM_TEMP_BUFFER_SIZE);
     FIFO_System_3V3 = Init_FIFO_Buffer(BufferSystem_3V3, SYSTEM_3V3_BUFFER_SIZE);
 
-    // STEP 4: Init FIFO Buffers for use with ADC3: ±20V rail, CH1 & CH2 Amp Monitor
+    // STEP 3: Init FIFO Buffers for use with ADC3: ±20V rail, CH1 & CH2 Amp Monitor
     FIFO_N20V_Supply = Init_FIFO_Buffer(Buffer_N20V_Supply, SYSTEM_N20V_BUFFER_SIZE);
     FIFO_P20V_Supply = Init_FIFO_Buffer(Buffer_P20V_Supply, SYSTEM_P20V_BUFFER_SIZE);
     FIFO_CH1_AmpMon = Init_FIFO_Buffer(Buffer_CH1_AmpMon, CH1_AMP_MON_BUFFER_SIZE);
@@ -125,6 +118,34 @@ void Init_ADC_Hardware(void)
     FIFO_CH2_VoltMon = Init_FIFO_Buffer(Buffer_CH2_VoltMon, CH2_VOLT_MON_BUFFER_SIZE);
 
 } // END OF Init_ADC_Hardware
+
+
+
+/********************************************************************************************************
+* @brief Start Conversions for both ADC1 and ADC3.  Note this function should be call only once as part of
+* the start up process.  Though ADC1 is configured in single shot mode and the start can be called on the
+* completion of every ADC1 conversion, ADC3 is configured in circular mode and does not (should not) be called
+* repeatedly as the conversions will automatically restart.
+*
+* @author original: Hab Collector \n
+*
+* @note: ADC1 is configured in single shot mode and its conversion rate is based on the rate at which it is called
+* @note: ADC3 is configured in circular mode and will automatically restart the conversions
+*
+*
+* STEP 1: Start ADC 1 & ADC 3 conversion all channels
+********************************************************************************************************/
+void ADC13_StartConversion(void)
+{
+    HAL_StatusTypeDef ADC_InitStatus = HAL_OK;
+
+    // STEP 1: Start ADC 1 & ADC 3 conversion all channels
+    ADC_InitStatus |= HAL_ADC_Start_DMA(&hadc1, (uint32_t *)ADC1_CountValue, ADC1_NUMBER_OF_CHANNELS);
+    ADC_InitStatus |= HAL_ADC_Start_DMA(&hadc3, (uint32_t *)ADC3_CountValue, ADC3_NUMBER_OF_CHANNELS);
+    if (ADC_InitStatus != HAL_OK)
+        systemErrorHandler(__FILE__, __LINE__, 0, "Failed to init ADC peripheral");
+
+} // END OF ADC13_StartConversion
 
 
 
@@ -388,9 +409,9 @@ static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail)
 * STEP 4: Update Max current - if Max set to zero overwrite with present value
 * STEP 5: Calculate the RMS current
 ********************************************************************************************************/
-//uint16_t RMS_Value;
 static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *FIFO_AmpMon, Type_ChannelMeasure *CurrentMeasure)
 {
+    // TODO Hab Min Max needs work - think about setting a flag
     // STEP 1: Calculate the mean of the Current Monitor
     double MeanCurrentCount = 0.0;
     MeanCurrentCount = FIFO_AmpMon->Sum / FIFO_AmpMon->Depth;
@@ -414,12 +435,34 @@ static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *F
     // STEP 5: Calculate the RMS current
     CurrentMeasure->RMS_Current = CurrentMeasure->RMS_UpdateFunctionPointer(AmpMonitorCurrent);
 
-}
+} // END OF calculateChannelCurrent
 
 
 
+/********************************************************************************************************
+* @brief Calculates the CHANNEL mean, max, min and RMS voltage.
+*
+* @author original: Hab Collector \n
+*
+* @note: TODO MORE NOTES
+* @note: TODO MORE NOTES
+* @note: SYSTEM refers to quantities that impact the entire device - CHANNEL impacts on CH1 or CH2
+*
+* @param ADC_VoltMonitorCount: ADC Count from ADC channel for the specific voltage monitor
+* @param FIFO_AmpMon: FIFO structure associated with the specific Volt Monitor channel
+* @param VoltageMeasure: ArbPwrBooster measure struct associated with the specific channel
+*
+* STEP 1: Calculate the mean of the Current Monitor
+* STEP 2: Calculate the instantaneous current
+* STEP 3: Update Min current - If Min set to zero overwrite with present value
+* STEP 4: Update Max current - if Max set to zero overwrite with present value
+* STEP 5: Calculate the RMS current
+********************************************************************************************************/
 static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *FIFO_VoltMon, Type_ChannelMeasure *VoltageMeasure)
 {
+    // TODO Hab Min Max needs work - Think about a periodic reset
+    // TODO Hab need to add an RMS measure - do it the same as calculateChannelCurrent()
+    // TODO Change paramater VoltageMeasure and AmpMeasure to just Measure here and calculateChannelCurrent()
     // STEP 1: Calculate the mean of the Voltage Monitor
     double MeanVoltageCount = 0.0;
     MeanVoltageCount = FIFO_VoltMon->Sum / FIFO_VoltMon->Depth;
@@ -443,11 +486,46 @@ static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *
 
 
 
+void monitorTaskInit(void)
+{
+
+}
+
+
+void monitorTaskActions(void)
+{
+    if (!ArbPwrBooster.Ready)
+        return;
+
+//    // STEP 1: Verify input supply voltages are valid
+//    if ((ArbPwrBooster.SystemMeasure.Positive_20V >= POS_SUPPLY_LOWER_LIMIT) && (ArbPwrBooster.SystemMeasure.Positive_20V <= POS_SUPPLY_UPPER_LIMIT) && \
+//        (ArbPwrBooster.SystemMeasure.Negative_20V >= NEG_SUPPLY_LOWER_LIMIT) && (ArbPwrBooster.SystemMeasure.Negative_20V <= NEG_SUPPLY_UPPER_LIMIT))
+//    {
+//        MAIN_PWR_ON();
+//    }
+//    else
+//    {
+//        CH1_OUTPUT_DISABLE();
+//        CH2_OUTPUT_DISABLE();
+//        MAIN_PWR_OFF();
+//        return;
+//    }
+
+    // STEP 2: Check for short circuit conditions
+
+    // STEP 3: Check for current limit conditions
+
+    // STEP 3: Make task inactive for a period of time
+    osDelay(MONITOR_UPDATE_RATE);
+}
+
+
 
 /********************************************************************************************************
 * @brief ADC1 is configured for DMA single shot conversion mode.  At the end of each conversion the ADC must
 * be restarted for the next conversion.  Issue this command to start a conversion.  When the conversion is
-* completed the results will be handled in HAL_ADC_ConvCpltCallback().
+* completed the results will be handled in HAL_ADC_ConvCpltCallback().  As this is single shot, you must call
+* this function at the end of conversion if you want another conversion - and so on and so on.
 *
 * @author original: Hab Collector \n
 *
