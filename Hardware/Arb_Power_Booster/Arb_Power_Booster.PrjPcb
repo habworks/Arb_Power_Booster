@@ -226,29 +226,46 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=AWWYMJQT
 
+[Document12]
+DocumentPath=..\SCH\ArbPwrBoost_P44.SchDoc
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=YEGHSFCT
+
 [GeneratedDocument1]
 DocumentPath=Outputs\Design Rule Check - ArbPwrBoost.html
 DItemRevisionGUID=
 
 [Parameter1]
-Name=ProjectDate
-Value=02/25/25
+Name=ProjectTitle
+Value=Arbitrary Power Booster
 
 [Parameter2]
-Name=ProjectDocumentNumber
-Value=IMR-005-SCH
-
-[Parameter3]
-Name=ProjectRevision
-Value=1
-
-[Parameter4]
 Name=ProjectTime
 Value=08:00
 
+[Parameter3]
+Name=ProjectRevision
+Value=2
+
+[Parameter4]
+Name=ProjectDocumentNumber
+Value=IMR-005-SCH
+
 [Parameter5]
-Name=ProjectTitle
-Value=Arbitrary Power Booster
+Name=ProjectDate
+Value=04/11/25
 
 [Configuration1]
 Name=Default Configuration
@@ -369,7 +386,7 @@ OutputDefault7=0
 PageOptions7=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
 OutputType8=Schematic Print
 OutputName8=Schematic Prints
-OutputDocumentPath8=C:\IMR_Projects\IMR\Arb_Power_Booster\Hardware\SCH\ArbPwrBoost_P7.SchDoc
+OutputDocumentPath8=C:\IMR_Projects\IMR\Arb_Power_Booster\Hardware\SCH\ArbPwrBoost_P4.SchDoc
 OutputVariantName8=
 OutputDefault8=0
 PageOptions8=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1

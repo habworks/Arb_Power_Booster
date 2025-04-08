@@ -1,6 +1,6 @@
 Circuit: * C:\IMR_Projects\IMR\Arb_Power_Booster\Simulate\Current Amplifier-1_REV_22.asc
 
-WARNING: Less than two connections to node NC_01.  This node is used by V3.
+WARNING: Less than two connections to node NC_01.  This node is used by V6.
 Direct Newton iteration failed to find .op point.  (Use ".option noopiter" to skip.)
 Starting Gmin stepping
 Increasing initial diagonal Gmin to 100
@@ -21,125 +21,122 @@ vernier = 0.125
 vernier = 0.0625
 vernier = 0.03125
 vernier = 0.015625
-Gmin = 0.00197761
 vernier = 0.0078125
+Gmin = 0.00212577
 vernier = 0.00390625
-vernier = 0.00520833
-Gmin = 0.00196925
-vernier = 0.00694444
-Gmin = 0.00193959
-vernier = 0.00925925
-vernier = 0.0123457
-Gmin = 0.00189198
-vernier = 0.0164609
-vernier = 0.0219478
-Gmin = 0.00181896
-vernier = 0.0292638
-Gmin = 0.00170652
-vernier = 0.0390184
-vernier = 0.0520245
-Gmin = 0.0015375
-vernier = 0.0693659
-vernier = 0.0924879
-Gmin = 0.00130392
-vernier = 0.123317
+vernier = 0.00195313
+Gmin = 0.00211645
+vernier = 0.00260417
+vernier = 0.00347222
+Gmin = 0.0021009
+vernier = 0.00462963
+vernier = 0.00617283
+Gmin = 0.00207634
+vernier = 0.00823044
+Gmin = 0.00203828
+vernier = 0.0109739
+vernier = 0.0146319
+Gmin = 0.00197597
+vernier = 0.0195092
+vernier = 0.0260122
+Gmin = 0.00188062
+vernier = 0.034683
+Gmin = 0.00173998
+vernier = 0.046244
 vernier = 0.0616586
-Gmin = 0.00109431
-vernier = 0.0308293
-vernier = 0.0154146
-vernier = 0.00770732
-vernier = 0.00385366
-Gmin = 0.00109633
-vernier = 0.00192683
-vernier = 0.00256911
-Gmin = 0.00109159
-vernier = 0.00342548
-vernier = 0.0045673
-Gmin = 0.00108267
-vernier = 0.00608973
-Gmin = 0.00106836
-vernier = 0.00811964
-vernier = 0.0108262
-Gmin = 0.00104532
-vernier = 0.0144349
-vernier = 0.0192465
-Gmin = 0.00100985
-vernier = 0.025662
-Gmin = 0.000954877
-vernier = 0.0342161
+Gmin = 0.00152763
+vernier = 0.0822114
+vernier = 0.109615
+Gmin = 0.00124233
+vernier = 0.146154
+Gmin = 0.000898998
+vernier = 0.194871
+vernier = 0.0974357
+vernier = 0.0487178
+vernier = 0.0243589
+Gmin = 0.000774722
+vernier = 0.0121795
+vernier = 0.0162393
+Gmin = 0.000753816
+vernier = 0.0216524
+vernier = 0.0288698
+Gmin = 0.000715807
+vernier = 0.0384931
+Gmin = 0.000658238
+vernier = 0.0513241
+vernier = 0.0684321
+Gmin = 0.000573985
+vernier = 0.0912428
 vernier = 0.0456214
-Gmin = 0.000871364
-vernier = 0.0608285
-vernier = 0.0811047
-Gmin = 0.000754011
-vernier = 0.10814
-Gmin = 0.000596847
-vernier = 0.144186
-vernier = 0.192248
-Gmin = 0.000408171
-vernier = 0.25633
-vernier = 0.128165
-vernier = 0.0640826
-Gmin = 0.000294276
-vernier = 0.0320413
-vernier = 0.0160207
-vernier = 0.00801033
+vernier = 0.0228107
+vernier = 0.0114053
+Gmin = 0.000543955
+vernier = 0.00570267
+vernier = 0.00285134
+vernier = 0.00142567
+Gmin = 0.000542407
+vernier = 0.000712834
+vernier = 0.000534626
+vernier = 0.000712834
+Gmin = 0.000542045
+vernier = 0.000950445
+Gmin = 0.000540887
+vernier = 0.00126726
+vernier = 0.00168968
+Gmin = 0.000538948
+vernier = 0.00225291
+vernier = 0.00300387
+Gmin = 0.000535872
 vernier = 0.00400516
-Gmin = 0.000290773
-vernier = 0.00200258
-vernier = 0.00100129
-Gmin = 0.000290046
-vernier = 0.00133505
-vernier = 0.00178007
-Gmin = 0.000289007
-vernier = 0.00237343
-vernier = 0.00316457
-Gmin = 0.000287369
-vernier = 0.00421943
-Gmin = 0.00028473
-vernier = 0.0056259
-vernier = 0.0075012
-Gmin = 0.000280461
-vernier = 0.0100016
-vernier = 0.0133355
-Gmin = 0.000273828
-vernier = 0.0177806
-Gmin = 0.000263403
-vernier = 0.0237075
-vernier = 0.03161
-Gmin = 0.000247195
-vernier = 0.0421466
-vernier = 0.0561954
-Gmin = 0.00022357
-vernier = 0.0749272
-Gmin = 0.000190029
-vernier = 0.099903
-vernier = 0.133204
-Gmin = 0.000145813
-vernier = 0.177605
-vernier = 0.236807
-Gmin = 9.61466e-005
-vernier = 0.315742
-Gmin = 4.93245e-005
-vernier = 0.42099
-vernier = 0.561319
-Gmin = 1.69129e-005
-vernier = 0.748426
-vernier = 0.374213
-Gmin = 4.83814e-006
-vernier = 0.187106
-vernier = 0.249475
-vernier = 0.124738
-Gmin = 3.52021e-006
-vernier = 0.0623688
-vernier = 0.0311844
-vernier = 0.0155922
-vernier = 0.0077961
-vernier = 0.00389805
-vernier = 0.00194903
-vernier = 0.000974513
-Gmin = 3.49293e-006
-vernier = 0.000487256
+Gmin = 0.000531067
+vernier = 0.00534022
+vernier = 0.00712029
+Gmin = 0.000523098
+vernier = 0.00949371
+vernier = 0.0126583
+Gmin = 0.000510642
+vernier = 0.0168777
+Gmin = 0.00049165
+vernier = 0.0225036
+vernier = 0.0300048
+Gmin = 0.000461376
+vernier = 0.0400064
+vernier = 0.0533418
+Gmin = 0.00041699
+vernier = 0.0711224
+Gmin = 0.000355785
+vernier = 0.0948299
+vernier = 0.12644
+Gmin = 0.000272942
+vernier = 0.168586
+vernier = 0.224782
+Gmin = 0.000179464
+vernier = 0.299709
+Gmin = 9.34816e-005
+vernier = 0.399612
+vernier = 0.532816
+Gmin = 3.2016e-005
+vernier = 0.710421
+vernier = 0.947227
+Gmin = 6.11153e-006
+vernier = 1
+vernier = 0.5
+vernier = 0.25
+Gmin = 1.33725e-006
+vernier = 0.125
+vernier = 0.0625
+vernier = 0.03125
+vernier = 0.0416667
+Gmin = 1.25983e-006
+vernier = 0.0555555
+vernier = 0.0277778
+vernier = 0.0138889
+Gmin = 1.15968e-006
+vernier = 0.00694444
+vernier = 0.00347222
+vernier = 0.00173611
+vernier = 0.000868055
+vernier = 0.000434028
 Gmin = 0
 Gmin stepping failed
 
@@ -185,7 +182,44 @@ Source Step = 53.7516%
 Source Step = 59.1449%
 Source Step = 64.5382%
 Source Step = 69.9315%
-Source Step = 71.5832%
+Source Step = 75.3248%
+Source Step = 80.7181%
+vernier = 0.266968
+Source Step = 84.7662%
+Source Step = 84.7978%
+Source Step = 84.8294%
+Source Step = 84.861%
+Source Step = 84.8926%
+Source Step = 84.9242%
+vernier = 0.00156426
+Source Step = 84.9669%
+Source Step = 85.0143%
+Source Step = 85.0617%
+Source Step = 85.1091%
+Source Step = 85.1565%
+vernier = 0.0023464
+Source Step = 85.2181%
+Source Step = 85.2892%
+Source Step = 85.3603%
+Source Step = 85.4314%
+Source Step = 85.5025%
+vernier = 0.00351959
+Source Step = 85.5914%
+Source Step = 85.698%
+Source Step = 85.8047%
+Source Step = 85.9113%
+Source Step = 86.018%
+vernier = 0.00527939
+Source Step = 86.146%
+Source Step = 86.306%
+Source Step = 86.466%
+Source Step = 86.6259%
+Source Step = 86.7859%
+vernier = 0.00791909
+Source Step = 86.9699%
+Source Step = 87.2099%
+Source Step = 87.4498%
+Source Step = 87.6898%
 Starting source stepping with srcstepmethod=1
 Source Step = 3.0303%
 vernier = 0.25
@@ -204,55 +238,104 @@ vernier = 0.0351563
 Source Step = 6.67614%
 Source Step = 7.74148%
 Source Step = 8.80682%
-Source Step = 9.87216%
-Source Step = 10.9375%
-vernier = 0.0527344
-Source Step = 12.2692%
-Source Step = 13.8672%
-Source Step = 15.4652%
-Source Step = 17.0632%
-Source Step = 18.6612%
-vernier = 0.0791016
-Source Step = 20.5788%
-Source Step = 22.9759%
-Source Step = 25.3729%
-Source Step = 27.7699%
-Source Step = 30.1669%
-vernier = 0.118652
-Source Step = 32.9235%
-Source Step = 36.519%
-Source Step = 40.1145%
-Source Step = 43.71%
-Source Step = 47.3056%
-vernier = 0.177979
-Source Step = 51.2607%
-Source Step = 56.6539%
-Source Step = 62.0472%
-Source Step = 67.4405%
-Source Step = 72.8338%
-vernier = 0.266968
-Source Step = 78.4968%
-Source Step = 86.5867%
-Source Step = 91.4533%
 Source stepping failed
 
-Pseudo Transient succeeded in finding the operating point at 620.83 ms.
+Pseudo Transient succeeded in finding the operating point at 1.4024 s.
+Heightened Def Con from 5.95093e-010 to 1.59509e-009
+Heightened Def Con from 0.000570384 ++to 0.000570384
+Heightened Def Con from 0.000570384 to 0.000570386
+Heightened Def Con from 0.000574765 ++++++++++++++++++++++++++++++to 0.000574765
+Heightened Def Con from 0.000580165 to 0.000580168
+Heightened Def Con from 0.00058017 to 0.000580176
+Heightened Def Con from 0.000659343 +++++to 0.000659343
+Heightened Def Con from 0.000659343 to 0.000659345
+Heightened Def Con from 0.000659447 to 0.00065945
+Heightened Def Con from 0.000768885 ++to 0.000768885
+Heightened Def Con from 0.000768885 to 0.000768887
+Heightened Def Con from 0.000770601 +++++++++++++++++++++++++to 0.000770601
+Heightened Def Con from 0.000770601 to 0.000770603
+Heightened Def Con from 0.000770712 +to 0.000770712
+Heightened Def Con from 0.000775185 ++++++++++++++++++++++++++++++to 0.000775186
+Heightened Def Con from 0.000780355 to 0.000780356
+Heightened Def Con from 0.000780358 to 0.000780361
+Heightened Def Con from 0.000856961 to 0.000856962
+Heightened Def Con from 0.000859415 +to 0.000859415
+Heightened Def Con from 0.000970546 +to 0.000970547
+Heightened Def Con from 0.000975447 ++++++++++++++++++++++++++++++to 0.000975447
+Heightened Def Con from 0.000980355 to 0.000980356
+Heightened Def Con from 0.000980356 to 0.000980356
+Heightened Def Con from 0.000980358 to 0.000980361
+Heightened Def Con from 0.000980362 to 0.000980368
+Heightened Def Con from 0.00105593 to 0.00105593
+Heightened Def Con from 0.00105925 +++++++++++++++++++++++++++to 0.00105925
+Heightened Def Con from 0.00106557 to 0.00106558
+Heightened Def Con from 0.00116943 ++++++++++++++++++++++++++++++to 0.00116944
+Heightened Def Con from 0.00117118 to 0.00117118
+Heightened Def Con from 0.0011805 to 0.0011805
+Heightened Def Con from 0.0012594 +++++++++to 0.00125941
+Heightened Def Con from 0.00136895 +to 0.00136895
+Heightened Def Con from 0.00137065 +to 0.00137065
+Heightened Def Con from 0.00137065 to 0.00137065
+Heightened Def Con from 0.00137523 ++++++++++++++++++++++++++++++to 0.00137523
+Heightened Def Con from 0.00145825 ++++++++++++++++++++++++++++++to 0.00145825
+Heightened Def Con from 0.0014591 ++++++++++++++++to 0.0014591
+Heightened Def Con from 0.0014591 to 0.0014591
+Heightened Def Con from 0.00146371 to 0.00146371
+Heightened Def Con from 0.00156889 +++++++++++++++++++++++++++++++++to 0.0015689
+Heightened Def Con from 0.00157271 ++++++++++++++++++++++++++to 0.00157271
+Heightened Def Con from 0.00165941 +++++++++++++++++++++++++to 0.00165941
+Heightened Def Con from 0.00166572 to 0.00166572
+Heightened Def Con from 0.00176758 to 0.00176758
+Heightened Def Con from 0.00177061 ++++++++++++++++++++++++to 0.00177061
+Heightened Def Con from 0.00177061 to 0.00177061
+Heightened Def Con from 0.00177072 to 0.00177072
+Heightened Def Con from 0.00177544 ++++++++++++++++++++++++++++++to 0.00177544
+Heightened Def Con from 0.00178036 to 0.00178036
+Heightened Def Con from 0.00178036 to 0.00178036
+Heightened Def Con from 0.00178036 to 0.00178036
+Heightened Def Con from 0.00185802 +++++++++++++++++++++++++++++++to 0.00185802
+Heightened Def Con from 0.00185914 +++++++++++++to 0.00185914
+Heightened Def Con from 0.00185914 to 0.00185914
+Heightened Def Con from 0.00185923 to 0.00185924
+Heightened Def Con from 0.00197059 ++to 0.00197059
+Heightened Def Con from 0.00197059 to 0.00197059
+Heightened Def Con from 0.0019707 to 0.0019707
+Heightened Def Con from 0.0019707 to 0.0019707
+Heightened Def Con from 0.00197074 to 0.00197074
+Heightened Def Con from 0.00197525 ++++++++++++++++++++++++++++++to 0.00197525
+Heightened Def Con from 0.0020592 ++++++++++++++++++++++++++++to 0.0020592
+Heightened Def Con from 0.00206569 to 0.00206569
+Heightened Def Con from 0.00216891 to 0.00216891
+Heightened Def Con from 0.00217061 ++to 0.00217061
+Heightened Def Con from 0.00217073 to 0.00217073
+Heightened Def Con from 0.00217527 ++++++++++++++++++++++++++++++to 0.00217527
+Heightened Def Con from 0.00218036 to 0.00218036
+Heightened Def Con from 0.00225919 ++++++++++++++++++++++++++++++to 0.0022592
+Heightened Def Con from 0.0022595 ++++++++++++++++++++++++++to 0.0022595
+Heightened Def Con from 0.002264 to 0.002264
+Heightened Def Con from 0.00237064 +++++++++++++++++++++to 0.00237064
+Heightened Def Con from 0.00237544 ++++++++++++++++++++++++++++++to 0.00237544
+Heightened Def Con from 0.00238036 to 0.00238036
+Heightened Def Con from 0.00245934 +to 0.00245934
+Heightened Def Con from 0.00245934 to 0.00245934
+Heightened Def Con from 0.00246572 to 0.00246572
+Heightened Def Con from 0.00246572 to 0.00246572
 
-Date: Thu Apr 03 19:59:09 2025
-Total elapsed time: 5.382 seconds.
+Date: Sat Apr 05 12:21:27 2025
+Total elapsed time: 7.685 seconds.
 
 tnom = 27
 temp = 27
 method = modified trap
-totiter = 23382
-traniter = 3768
-tranpoints = 1118
-accept = 1094
-rejected = 140
+totiter = 188738
+traniter = 172844
+tranpoints = 29947
+accept = 17446
+rejected = 13312
 matrix size = 333
-fillins = 811
+fillins = 788
 solver = Normal
-Thread vector: 24.3/13.7[6] 4.5/1.9[6] 4.6/2.2[6] 1.3/2.0[1]  2592/500
-Matrix Compiler1: 82.62 KB object code size  10.9/4.9/[2.5]
-Matrix Compiler2: 43.08 KB object code size  3.9/6.1/[1.8]
+Thread vector: 21.2/7.1[6] 5.4/2.0[6] 4.1/2.0[6] 1.5/2.1[1]  2592/500
+Matrix Compiler1: 79.71 KB object code size  12.9/6.1/[2.9]
+Matrix Compiler2: 42.60 KB object code size  4.1/4.5/[1.6]
 

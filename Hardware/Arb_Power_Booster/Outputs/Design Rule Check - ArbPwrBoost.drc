@@ -1,13 +1,17 @@
 Protel Design System Design Rule Check
 PCB File : C:\IMR_Projects\IMR\Arb_Power_Booster\Hardware\PCB\ArbPwrBoost.CSPcbDoc
-Date     : 3/3/2025
-Time     : 6:00:47 AM
+Date     : 4/8/2025
+Time     : 9:02:34 AM
 
 Processing Rule : Short-Circuit Constraint (Allowed=No) (All),(All)
 Rule Violations :0
 
 Processing Rule : Un-Routed Net Constraint ( (All) )
-Rule Violations :0
+   Violation between Un-Routed Net Constraint: Net +VSW Between Pad R18-2 (72,70.66mm) And Pad Q5-3 (82.3,65.75mm)
+   Violation between Un-Routed Net Constraint: Net +VSW Between Pad R54-2 (72,30.66mm) And Pad Q25-3 (82.412,25.75mm)
+   Violation between Un-Routed Net Constraint: Net -VSW Between Track on layer Top Layer (72,9.5mm) And Pad Q31-3 (77.7,12mm)
+   Violation between Un-Routed Net Constraint: Net -VSW Between Pad R29-1 (72,47.34mm) And Pad Q11-3 (77.7,52mm)
+Rule Violations :4
 
 Processing Rule : Clearance Constraint (Gap=0.254mm) (All),(All)
 Rule Violations :0
@@ -52,5 +56,5 @@ Processing Rule : Minimum Solder Mask Sliver (Gap=0.025mm) (HasFootprint('SC-70-
 Rule Violations :0
 
 
-Violations Detected : 0
+Violations Detected : 4
 Time Elapsed        : 00:00:01
