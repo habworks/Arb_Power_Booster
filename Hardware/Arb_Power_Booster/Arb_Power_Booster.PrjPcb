@@ -210,6 +210,23 @@ GenerateClassCluster=0
 DocumentUniqueId=RPFCNWCB
 
 [Document11]
+DocumentPath=..\SCH\ArbPwrBoost_P8.SchDoc
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=YEGHSFCT
+
+[Document12]
 DocumentPath=..\PCB\ArbPwrBoost.CSPcbDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -225,23 +242,6 @@ ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=AWWYMJQT
-
-[Document12]
-DocumentPath=..\SCH\ArbPwrBoost_P44.SchDoc
-AnnotationEnabled=1
-AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
-AnnotateSuffix=
-AnnotateScope=All
-AnnotateOrder=-1
-DoLibraryUpdate=1
-DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
-ClassGenCCAutoRoomEnabled=1
-ClassGenNCAutoScope=None
-DItemRevisionGUID=
-GenerateClassCluster=0
-DocumentUniqueId=YEGHSFCT
 
 [GeneratedDocument1]
 DocumentPath=Outputs\Design Rule Check - ArbPwrBoost.html
@@ -265,7 +265,7 @@ Value=IMR-005-SCH
 
 [Parameter5]
 Name=ProjectDate
-Value=04/11/25
+Value=04/15/25
 
 [Configuration1]
 Name=Default Configuration
