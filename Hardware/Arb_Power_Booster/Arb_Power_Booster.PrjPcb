@@ -248,24 +248,24 @@ DocumentPath=Outputs\Design Rule Check - ArbPwrBoost.html
 DItemRevisionGUID=
 
 [Parameter1]
-Name=ProjectTitle
-Value=Arbitrary Power Booster
+Name=ProjectDate
+Value=04/15/25
 
 [Parameter2]
-Name=ProjectTime
-Value=08:00
+Name=ProjectDocumentNumber
+Value=IMR-005-SCH
 
 [Parameter3]
 Name=ProjectRevision
 Value=2
 
 [Parameter4]
-Name=ProjectDocumentNumber
-Value=IMR-005-SCH
+Name=ProjectTime
+Value=08:00
 
 [Parameter5]
-Name=ProjectDate
-Value=04/15/25
+Name=ProjectTitle
+Value=Arbitrary Power Booster
 
 [Configuration1]
 Name=Default Configuration
