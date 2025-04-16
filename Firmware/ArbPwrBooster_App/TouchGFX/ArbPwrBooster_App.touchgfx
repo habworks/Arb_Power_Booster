@@ -209,9 +209,9 @@
             "TextId": "__SingleUse_6SWA",
             "TextRotation": "0",
             "Color": {
-              "Red": 23,
-              "Green": 148,
-              "Blue": 194
+              "Red": 255,
+              "Green": 51,
+              "Blue": 255
             },
             "AutoSize": true,
             "Wildcard1": {
@@ -246,9 +246,9 @@
             "TextId": "__SingleUse_CESP",
             "TextRotation": "0",
             "Color": {
-              "Red": 23,
-              "Green": 148,
-              "Blue": 194
+              "Red": 255,
+              "Green": 51,
+              "Blue": 255
             },
             "AutoSize": true
           },
@@ -300,9 +300,9 @@
             "TextId": "__SingleUse_8Q9T",
             "TextRotation": "0",
             "Color": {
-              "Red": 23,
-              "Green": 148,
-              "Blue": 194
+              "Red": 255,
+              "Green": 51,
+              "Blue": 255
             },
             "AutoSize": true
           },
@@ -354,9 +354,9 @@
             "TextId": "__SingleUse_25ZC",
             "TextRotation": "0",
             "Color": {
-              "Red": 23,
-              "Green": 148,
-              "Blue": 194
+              "Red": 255,
+              "Green": 51,
+              "Blue": 255
             },
             "AutoSize": true
           },
@@ -370,9 +370,9 @@
             "TextId": "__SingleUse_LO15",
             "TextRotation": "0",
             "Color": {
-              "Red": 23,
-              "Green": 148,
-              "Blue": 194
+              "Red": 255,
+              "Green": 51,
+              "Blue": 255
             },
             "AutoSize": true,
             "Wildcard1": {
@@ -391,9 +391,9 @@
             "TextId": "__SingleUse_M8BM",
             "TextRotation": "0",
             "Color": {
-              "Red": 23,
-              "Green": 148,
-              "Blue": 194
+              "Red": 255,
+              "Green": 51,
+              "Blue": 255
             },
             "AutoSize": true
           },
@@ -407,9 +407,9 @@
             "TextId": "__SingleUse_LA7G",
             "TextRotation": "0",
             "Color": {
-              "Red": 23,
-              "Green": 148,
-              "Blue": 194
+              "Red": 255,
+              "Green": 51,
+              "Blue": 255
             },
             "AutoSize": true,
             "Wildcard1": {
@@ -428,9 +428,9 @@
             "TextId": "__SingleUse_XNQ5",
             "TextRotation": "0",
             "Color": {
-              "Red": 23,
-              "Green": 148,
-              "Blue": 194
+              "Red": 255,
+              "Green": 51,
+              "Blue": 255
             },
             "AutoSize": true
           },
@@ -444,9 +444,9 @@
             "TextId": "__SingleUse_ZPA4",
             "TextRotation": "0",
             "Color": {
-              "Red": 23,
-              "Green": 148,
-              "Blue": 194
+              "Red": 255,
+              "Green": 51,
+              "Blue": 255
             },
             "AutoSize": true,
             "Wildcard1": {
@@ -465,9 +465,9 @@
             "TextId": "__SingleUse_WRLI",
             "TextRotation": "0",
             "Color": {
-              "Red": 23,
-              "Green": 148,
-              "Blue": 194
+              "Red": 255,
+              "Green": 51,
+              "Blue": 255
             },
             "AutoSize": true
           },

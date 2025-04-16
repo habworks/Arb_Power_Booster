@@ -45,10 +45,10 @@ extern"C" {
 #define CH1_BASE_COLOR_GRN      ((uint8_t)(0xC7))
 #define CH1_BASE_COLOR_BLU      ((uint8_t)(0x19))
 // BASE COLOR CH2
-#define CH2_BASE_COLOR          0x17, 0x94, 0xC2
-#define CH2_BASE_COLOR_RED      ((uint8_t)(0x17))
-#define CH2_BASE_COLOR_GRN      ((uint8_t)(0x94))
-#define CH2_BASE_COLOR_BLU      ((uint8_t)(0xC2))
+#define CH2_BASE_COLOR          0xFF, 0x33, 0xFF
+#define CH2_BASE_COLOR_RED      ((uint8_t)(0xFF))
+#define CH2_BASE_COLOR_GRN      ((uint8_t)(0x33))
+#define CH2_BASE_COLOR_BLU      ((uint8_t)(0xFF))
 // DISABLE COLOR
 #define DISABLE_BASE_COLOR      0x96, 0x96, 0x96
 #define DISABLE_BASE_COLOR_RED  ((uint8_t)(0x96))
