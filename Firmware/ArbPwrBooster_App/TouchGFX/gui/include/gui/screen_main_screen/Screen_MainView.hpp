@@ -13,11 +13,15 @@ public:
     virtual void tearDownScreen();
     // ADDED FUNCTIONS
     virtual void update_Screen_Main(void);
-    virtual void switchOutput_CH1(void);
-    virtual void InputImpedanceSet_CH1(void);
+    virtual void outputToggle_CH1(void);
+    virtual void outputSwitch_CH1(void);
+    virtual void inputImpedanceToggle_CH1(void);
+    virtual void inputImpedanceSet_CH1(void);
     virtual void setActiveLimit_CH1(void);
-    virtual void switchOutput_CH2(void);
-    virtual void InputImpedanceSet_CH2(void);
+    virtual void outputToggle_CH2(void);
+    virtual void outputSwitch_CH2(void);
+    virtual void inputImpedanceToggle_CH2(void);
+    virtual void inputImpedanceSet_CH2(void);
     virtual void setActiveLimit_CH2(void);
     virtual void POR_setControlDefaults(void);
     // ADDED FUNCTIONS CALLED BY PRESENTER

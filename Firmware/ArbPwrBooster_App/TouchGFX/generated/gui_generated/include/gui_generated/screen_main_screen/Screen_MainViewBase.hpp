@@ -27,7 +27,7 @@ public:
     /*
      * Virtual Action Handlers
      */
-    virtual void InputImpedanceSet_CH1()
+    virtual void inputImpedanceToggle_CH1()
     {
         // Override and implement this function in Screen_Main
     }
@@ -35,15 +35,15 @@ public:
     {
         // Override and implement this function in Screen_Main
     }
-    virtual void switchOutput_CH1()
+    virtual void outputToggle_CH1()
     {
         // Override and implement this function in Screen_Main
     }
-    virtual void switchOutput_CH2()
+    virtual void outputToggle_CH2()
     {
         // Override and implement this function in Screen_Main
     }
-    virtual void InputImpedanceSet_CH2()
+    virtual void inputImpedanceToggle_CH2()
     {
         // Override and implement this function in Screen_Main
     }

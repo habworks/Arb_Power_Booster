@@ -47,11 +47,11 @@ void Screen_SplashView::update_Screen_Splash(void)
 *
 * @note: Splash screen occurs after a POR - Can use this to init various parameters or do it elsewhere
 *
-* STEP 1: Set the active screen
+* STEP 1: Alert the system the GUI intro is completed and start ADC conversions both channels
 ********************************************************************************************************/
 void Screen_SplashView::GUI_IntroComplete(void)
 {
-    // STEP 1: Alert the system the GUI intro is completed
+    // STEP 1: Alert the system the GUI intro is completed and start ADC conversions both channels
     ArbPwrBooster.Ready = true;
     ADC13_StartConversion();
 

@@ -31,11 +31,14 @@
 #include "Terminal_Emulator_Support.h"
 #include "MCP45HVX1_Driver.h"
 #include "cmsis_os2.h"
+#include "ff.h"
 #include <String.h>
 #include <stdlib.h>
 #include <stdio.h>
 
 extern osSemaphoreId_t DisplayUpdateSemaphoreHandle;
+extern FATFS SDFatFS;
+extern char SDPath[4];
 
 // GLOBALS
 Type_ArbPwrBoosterStatus ArbPwrBooster;
@@ -80,8 +83,8 @@ void Init_ArbPwrBoosterClass(void)
     // Channel 1 Init
     ArbPwrBooster.CH1.InputImpedance = ONE_MEG_OHM;
     ArbPwrBooster.CH1.OutputSwitch = OFF;
-    ArbPwrBooster.CH1.Limit.Enable = false;
-    ArbPwrBooster.CH1.Limit.Current = -10.25432;
+    ArbPwrBooster.CH1.Limit.Enable = true;
+    ArbPwrBooster.CH1.Limit.Current = 3.125;
     ArbPwrBooster.CH1.Measure.MaxCurrent = 0;
     ArbPwrBooster.CH1.Measure.MinCurrent = 0;
     ArbPwrBooster.CH1.Measure.RMS_UpdateFunctionPointer = update_CH1_RMS;
@@ -91,7 +94,7 @@ void Init_ArbPwrBoosterClass(void)
     ArbPwrBooster.CH2.InputImpedance = ONE_MEG_OHM;
     ArbPwrBooster.CH2.OutputSwitch = OFF;
     ArbPwrBooster.CH2.Limit.Enable = true;
-    ArbPwrBooster.CH2.Limit.Current = 5.125;
+    ArbPwrBooster.CH2.Limit.Current = -2.250;
     ArbPwrBooster.CH2.Measure.MaxCurrent = 0;
     ArbPwrBooster.CH2.Measure.MinCurrent = 0;
     ArbPwrBooster.CH2.Measure.RMS_UpdateFunctionPointer = update_CH2_RMS;
@@ -221,10 +224,10 @@ void systemErrorHandler(char *FileName, int FileLineNumber, uint32_t ErrorNumber
 
     // STEP 1: Print out error information
     printf("CRITICAL ERROR:");
-    printf("\tError Number:     %d\r\n", ErrorNumber);
+    printf("\tError Number:     %d\r\n", (int)ErrorNumber);
     printf("\tDescription:      %s\r\n", Description);
     printf("\tFile Name:        %s\r\n", FileName);
-    printf("\tFile Line Number: %d", FileLineNumber);
+    printf("\tFile Line Number: %d", (int)FileLineNumber);
 
     // STEP 2: Trap here forever
     while(WaitHere);
@@ -268,11 +271,15 @@ void mainUpdateTaskActions(void)
 *
 * @author original: Hab Collector \n
 *
-* STEP 1: Clear the debug port terminal and display entry information
+* STEP 1: Load POR Configuration from file
+* STEP 2: Clear the debug port terminal and display entry information
 ********************************************************************************************************/
 void mainUpdateTaskInit(void)
 {
-    // STEP 1: Clear the debug port terminal and display entry information
+    // STEP 1: Load POR Configuration from file
+    Type_ConfigParameterStatus ConfigLoadStatus = loadConfigParameters();
+
+    // STEP 2: Clear the debug port terminal and display entry information
     terminal_ClearScreen();
     printGreen("IMR Engineering, LLC\r\n");
     printf("  Hab Collector, Principal Engineer\r\n");
@@ -280,11 +287,159 @@ void mainUpdateTaskInit(void)
     printBrightRed("Arbitrary Power Booster\r\n");
     printf("  HW REV: %d\r\n", HW_REVISION);
     printf("  FW REV: %d.%d.%d\r\n\n", FW_MAJOR_REV, FW_MINOR_REV, FW_TEST_REV);
+    if (ConfigLoadStatus == CONFIG_FILE_ERROR)
+        printYellow("WARNING: No access to uSD card\r\n");
     printf("For assistance type Help or just ?\r\n");
     commandPrompt();
     fflush(stdout);
 
 } // END OF mainUpdateTaskInit
+
+
+
+Type_ConfigParameterStatus loadConfigParameters(void)
+{
+    FRESULT FileStatus;
+    FIL ConfigFileObject;
+    uint8_t ConfigParameterTotalBytes = 20;
+    Type_ConfigParameterStatus ConfigLoadStatus = CONFIG_FILE_ERROR;
+
+    // STEP 1: Mount the drive
+    FileStatus = f_mount(&SDFatFS, (TCHAR const*)SDPath, 1);
+    if (FileStatus != FR_OK)
+    {
+        printYellow("WARNING: Could not mount uSD Drive\r\n");
+        return(CONFIG_FILE_ERROR);
+    }
+
+    // STEP 2: Open Config File
+    FileStatus = f_open(&ConfigFileObject, CONFIG_FILENAME, FA_READ);
+
+    // STEP 3: Take action to create if the file does not exist
+    if (FileStatus == FR_NO_FILE)
+    {
+        printf("Config file does not exist - create and load defaults\r\n");
+        FileStatus = f_open(&ConfigFileObject, CONFIG_FILENAME, FA_CREATE_ALWAYS | FA_WRITE);
+        if (FileStatus == FR_OK)
+        {
+            UINT BytesWritten = 0;
+            uint16_t TotalBytesWritten = 0;
+            Type_Double CurrentLimit;
+            // Set Channel 1 POR Defaults
+            Init_ArbPwrBoosterClass();
+            // Write Channel 1 config parameters: Order of write must correspond with subsequent order of read
+            f_write(&ConfigFileObject, &ArbPwrBooster.CH1.InputImpedance, 1, &BytesWritten);
+            TotalBytesWritten += BytesWritten;
+            f_write(&ConfigFileObject, &ArbPwrBooster.CH1.Limit.Enable, 1, &BytesWritten);
+            TotalBytesWritten += BytesWritten;
+            CurrentLimit.Value = ArbPwrBooster.CH1.Limit.Current;
+            f_write(&ConfigFileObject, &CurrentLimit.Byte0, sizeof(double), &BytesWritten);
+            TotalBytesWritten += BytesWritten;
+            // Write Channel 2 config parameters: Order of write must correspond with subsequent order of read
+            f_write(&ConfigFileObject, &ArbPwrBooster.CH2.InputImpedance, 1, &BytesWritten);
+            TotalBytesWritten += BytesWritten;
+            f_write(&ConfigFileObject, &ArbPwrBooster.CH2.Limit.Enable, 1, &BytesWritten);
+            TotalBytesWritten += BytesWritten;
+            CurrentLimit.Value = ArbPwrBooster.CH2.Limit.Current;
+            f_write(&ConfigFileObject, &CurrentLimit.Byte0, sizeof(double), &BytesWritten);
+            TotalBytesWritten += BytesWritten;
+            printf("Bytes Written to create config file = %d\r\n", (int)TotalBytesWritten);
+            ConfigLoadStatus = (TotalBytesWritten == ConfigParameterTotalBytes)? CONFIG_CREATE_NEW : CONFIG_FILE_ERROR;
+        }
+    }
+
+    // STEP 4: Take action to read file contents when it does exist
+    else if (FileStatus == FR_OK)
+    {
+        UINT BytesRead = 0;
+        uint16_t TotalBytesRead = 0;
+        Type_Double CurrentLimit;
+        f_lseek(&ConfigFileObject, 0);
+        // Read Channel 1 config parameters: Order of read must correspond to previous order of write
+        f_read(&ConfigFileObject, &ArbPwrBooster.CH1.InputImpedance, 1, &BytesRead);
+        TotalBytesRead += BytesRead;
+        f_read(&ConfigFileObject, &ArbPwrBooster.CH1.Limit.Enable, 1, &BytesRead);
+        TotalBytesRead += BytesRead;
+        f_read(&ConfigFileObject, &CurrentLimit.Byte0, sizeof(double), &BytesRead);
+        ArbPwrBooster.CH1.Limit.Current = CurrentLimit.Value;
+        TotalBytesRead += BytesRead;
+        // Read Channel 2 config parameters: Order of read must correspond to previous order of write
+        f_read(&ConfigFileObject, &ArbPwrBooster.CH2.InputImpedance, 1, &BytesRead);
+        TotalBytesRead += BytesRead;
+        f_read(&ConfigFileObject, &ArbPwrBooster.CH2.Limit.Enable, 1, &BytesRead);
+        TotalBytesRead += BytesRead;
+        f_read(&ConfigFileObject, &CurrentLimit.Byte0, sizeof(double), &BytesRead);
+        ArbPwrBooster.CH2.Limit.Current = CurrentLimit.Value;
+        TotalBytesRead += BytesRead;
+        printf("Total Bytes Read = %d\r\n", (int)TotalBytesRead);
+        ConfigLoadStatus = (TotalBytesRead == ConfigParameterTotalBytes)? CONFIG_LOAD_OK : CONFIG_FILE_ERROR;
+    }
+
+    // STEP 5: An error occurred
+    else
+    {
+        printYellow("WARNING: Could not create or read config file - using defaults\r\n");
+        Init_ArbPwrBoosterClass();
+        ConfigLoadStatus = CONFIG_FILE_ERROR;
+    }
+
+    // STEP 6: Sync and close file, unmount and return
+    f_sync(&ConfigFileObject);
+    f_close(&ConfigFileObject);
+    f_mount(0, (TCHAR const*)SDPath, 0);
+    return(ConfigLoadStatus);
+
+} // END OF loadConfigStatus
+
+
+Type_ConfigParameterStatus saveConfigParameters(void)
+{
+    FRESULT FileStatus;
+    FIL ConfigFileObject;
+    uint8_t ConfigParameterTotalBytes = 20;
+    Type_ConfigParameterStatus ConfigSaveStatus = CONFIG_FILE_ERROR;
+
+    // STEP 1: Mount the drive
+    FileStatus = f_mount(&SDFatFS, (TCHAR const*)SDPath, 1);
+    if (FileStatus != FR_OK)
+    {
+        printYellow("WARNING: Could not mount uSD Drive\r\n");
+        return(CONFIG_FILE_ERROR);
+    }
+
+    // STEP 2: Open Config File for updating with information
+    FileStatus = f_open(&ConfigFileObject, CONFIG_FILENAME, FA_CREATE_ALWAYS | FA_WRITE);
+    if (FileStatus == FR_OK)
+    {
+        UINT BytesWritten = 0;
+        uint16_t TotalBytesWritten = 0;
+        Type_Double CurrentLimit;
+        // Write Channel 1 config parameters: Order of write must correspond with subsequent order of read
+        f_write(&ConfigFileObject, &ArbPwrBooster.CH1.InputImpedance, 1, &BytesWritten);
+        TotalBytesWritten += BytesWritten;
+        f_write(&ConfigFileObject, &ArbPwrBooster.CH1.Limit.Enable, 1, &BytesWritten);
+        TotalBytesWritten += BytesWritten;
+        CurrentLimit.Value = ArbPwrBooster.CH1.Limit.Current;
+        f_write(&ConfigFileObject, &CurrentLimit.Byte0, sizeof(double), &BytesWritten);
+        TotalBytesWritten += BytesWritten;
+        // Write Channel 2 config parameters: Order of write must correspond with subsequent order of read
+        f_write(&ConfigFileObject, &ArbPwrBooster.CH2.InputImpedance, 1, &BytesWritten);
+        TotalBytesWritten += BytesWritten;
+        f_write(&ConfigFileObject, &ArbPwrBooster.CH2.Limit.Enable, 1, &BytesWritten);
+        TotalBytesWritten += BytesWritten;
+        CurrentLimit.Value = ArbPwrBooster.CH2.Limit.Current;
+        f_write(&ConfigFileObject, &CurrentLimit.Byte0, sizeof(double), &BytesWritten);
+        TotalBytesWritten += BytesWritten;
+        printf("Bytes Written to create config file = %d\r\n", (int)TotalBytesWritten);
+        ConfigSaveStatus = (TotalBytesWritten == ConfigParameterTotalBytes)? CONFIG_SAVE_OK : CONFIG_FILE_ERROR;
+    }
+
+    f_sync(&ConfigFileObject);
+    f_close(&ConfigFileObject);
+    f_mount(0, (TCHAR const*)SDPath, 0);
+    return(ConfigSaveStatus);
+
+} // END OF saveConfigParameters
 
 
 

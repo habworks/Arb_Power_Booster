@@ -66,6 +66,8 @@ void Error_Handler(void);
 #define EN_50_Z_2_GPIO_Port GPIOI
 #define EN_VO_1_Pin GPIO_PIN_2
 #define EN_VO_1_GPIO_Port GPIOI
+#define USD_DETECT_Pin GPIO_PIN_13
+#define USD_DETECT_GPIO_Port GPIOC
 #define LCD_BL_CTRL_Pin GPIO_PIN_3
 #define LCD_BL_CTRL_GPIO_Port GPIOK
 #define ADC1_CRATE_Pin GPIO_PIN_1

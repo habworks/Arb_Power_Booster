@@ -27,6 +27,7 @@
 #include "UART_Support.h"
 #include "Main_Support.h"
 #include "Debug_Port.h"
+#include "stm32f7xx_hal_uart.h"
 #include <string.h>
 #include <stdio.h>
 

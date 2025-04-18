@@ -37,8 +37,8 @@ extern"C" {
 // Revisions
 #define FW_MAJOR_REV            0U
 #define FW_MINOR_REV            0U
-#define FW_TEST_REV             1U
-#define HW_REVISION             1U
+#define FW_TEST_REV             2U
+#define HW_REVISION             2U
 // BASE COLOR CH1
 #define CH1_BASE_COLOR          0xD4, 0xC7, 0x19
 #define CH1_BASE_COLOR_RED      ((uint8_t)(0xD4))
@@ -80,9 +80,18 @@ extern"C" {
 #define OUTPUT_OFF_TXT_COLOR    0x70, 0x70, 0x70
 // MISC
 #define GUI_UPDATE_RATE         200U
+#define CONFIG_FILENAME         "ArbPwrBoosterConfig.bin"
 
 
 // TYPEDEFS AND ENUMS
+typedef enum
+{
+    CONFIG_LOAD_OK = 0,
+    CONFIG_CREATE_NEW,
+    CONFIG_SAVE_OK,
+    CONFIG_FILE_ERROR
+}Type_ConfigParameterStatus;
+
 typedef enum
 {
     SPLASH_SCREEN = 0,
@@ -183,6 +192,8 @@ double digitsToDouble(int8_t *Integer, uint8_t *Tenths, uint8_t *Hundredths, uin
 void systemErrorHandler(char *FileName, int FileLineNumber, uint32_t ErrorNumber, char *Description);
 void mainUpdateTaskActions(void);
 void mainUpdateTaskInit(void);
+Type_ConfigParameterStatus loadConfigParameters(void);
+Type_ConfigParameterStatus saveConfigParameters(void);
 
 #ifdef __cplusplus
 }

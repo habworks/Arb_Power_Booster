@@ -86,6 +86,22 @@ typedef union
     float           Value;
 }Type_Float;
 
+typedef union
+{
+    struct
+    {
+        uint8_t     Byte0;
+        uint8_t     Byte1;
+        uint8_t     Byte2;
+        uint8_t     Byte3;
+        uint8_t     Byte4;
+        uint8_t     Byte5;
+        uint8_t     Byte6;
+        uint8_t     Byte7;
+    };
+    double          Value;
+}Type_Double;
+
 
 // MACROS
 #ifndef MIN

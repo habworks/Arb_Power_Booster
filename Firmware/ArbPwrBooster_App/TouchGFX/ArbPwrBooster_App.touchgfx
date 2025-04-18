@@ -814,14 +814,14 @@
         ],
         "Interactions": [
           {
-            "InteractionName": "Interaction_CH1_SetZ",
+            "InteractionName": "Interaction_CH1_ToggleZ",
             "Trigger": {
               "Type": "TriggerClicked",
               "TriggerComponent": "flexButton_CH1_InputZ"
             },
             "Action": {
               "Type": "ActionCustom",
-              "FunctionName": "InputImpedanceSet_CH1"
+              "FunctionName": "inputImpedanceToggle_CH1"
             }
           },
           {
@@ -861,36 +861,36 @@
             }
           },
           {
-            "InteractionName": "Interaction_CH1_OutputEnable",
+            "InteractionName": "Interaction_CH1_OutputToggle",
             "Trigger": {
               "Type": "TriggerClicked",
               "TriggerComponent": "flexButton_CH1_Enable"
             },
             "Action": {
               "Type": "ActionCustom",
-              "FunctionName": "switchOutput_CH1"
+              "FunctionName": "outputToggle_CH1"
             }
           },
           {
-            "InteractionName": "Interaction_CH2_OutputEnable",
+            "InteractionName": "Interaction_CH2_OutputToggle",
             "Trigger": {
               "Type": "TriggerClicked",
               "TriggerComponent": "flexButton_CH2_Enable"
             },
             "Action": {
               "Type": "ActionCustom",
-              "FunctionName": "switchOutput_CH2"
+              "FunctionName": "outputToggle_CH2"
             }
           },
           {
-            "InteractionName": "Interaction_CH2_SetZ",
+            "InteractionName": "Interaction_CH2_ToggleZ",
             "Trigger": {
               "Type": "TriggerClicked",
               "TriggerComponent": "flexButton_CH2_InputZ"
             },
             "Action": {
               "Type": "ActionCustom",
-              "FunctionName": "InputImpedanceSet_CH2"
+              "FunctionName": "inputImpedanceToggle_CH2"
             }
           },
           {

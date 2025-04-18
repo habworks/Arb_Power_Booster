@@ -270,10 +270,10 @@ void Screen_MainViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButt
 {
     if (&src == &flexButton_CH1_InputZ)
     {
-        //Interaction_CH1_SetZ
+        //Interaction_CH1_ToggleZ
         //When flexButton_CH1_InputZ clicked call virtual function
-        //Call InputImpedanceSet_CH1
-        InputImpedanceSet_CH1();
+        //Call inputImpedanceToggle_CH1
+        inputImpedanceToggle_CH1();
     }
     if (&src == &flexButton_Config)
     {
@@ -284,24 +284,24 @@ void Screen_MainViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButt
     }
     if (&src == &flexButton_CH1_Enable)
     {
-        //Interaction_CH1_OutputEnable
+        //Interaction_CH1_OutputToggle
         //When flexButton_CH1_Enable clicked call virtual function
-        //Call switchOutput_CH1
-        switchOutput_CH1();
+        //Call outputToggle_CH1
+        outputToggle_CH1();
     }
     if (&src == &flexButton_CH2_Enable)
     {
-        //Interaction_CH2_OutputEnable
+        //Interaction_CH2_OutputToggle
         //When flexButton_CH2_Enable clicked call virtual function
-        //Call switchOutput_CH2
-        switchOutput_CH2();
+        //Call outputToggle_CH2
+        outputToggle_CH2();
     }
     if (&src == &flexButton_CH2_InputZ)
     {
-        //Interaction_CH2_SetZ
+        //Interaction_CH2_ToggleZ
         //When flexButton_CH2_InputZ clicked call virtual function
-        //Call InputImpedanceSet_CH2
-        InputImpedanceSet_CH2();
+        //Call inputImpedanceToggle_CH2
+        inputImpedanceToggle_CH2();
     }
     if (&src == &flexButton_CH1_Set)
     {

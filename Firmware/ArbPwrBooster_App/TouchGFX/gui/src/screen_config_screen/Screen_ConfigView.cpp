@@ -31,7 +31,7 @@ void Screen_ConfigView::tearDownScreen()
 * @author original: Hab Collector \n
 *
 * @note: Called at the end of the config screen transition
-* @note: ±20V, 3V3, Temp and device status are updated by the listener on a periodic interval
+* @note: ±VS, 3V3, Temp and device status are updated by the listener on a periodic interval
 *
 * STEP 1: Set the active screen
 * STEP 2: Update FW Revision
@@ -57,7 +57,7 @@ void Screen_ConfigView::update_Screen_Config(void)
 
 
 /********************************************************************************************************
-* @brief Live update of the config screen.  All system variables: +20V, -20V, Temperature and reference
+* @brief Live update of the config screen.  All system variables: +VS, -VS, Temperature and reference
 * voltage are updated.
 *
 * @author original: Hab Collector \n
@@ -65,7 +65,7 @@ void Screen_ConfigView::update_Screen_Config(void)
 * @note: Screen is updated by the semaphore in the model
 *
 * STEP 1: Check and update for config error conditions
-* STEP 2: Update displayed values: +20V, -20V, Vref, and Temp
+* STEP 2: Update displayed values: +VS, -VS, Vref, and Temp
 * STEP 3: Display System Status message
 ********************************************************************************************************/
 void Screen_ConfigView::updateConfigScreen_View(void)
@@ -76,15 +76,15 @@ void Screen_ConfigView::updateConfigScreen_View(void)
     // STEP 1: Check and update for config error conditions
     systemMeasureWithinLimits(StatusMsg, &ConfigError);
 
-    // STEP 2: Update displayed values: +20V, -20V, Vref, and Temp
-    // Power +20V
+    // STEP 2: Update displayed values: +VS, -VS, Vref, and Temp
+    // Power +VS
     Unicode::snprintfFloat(textArea_PosSupplyMonitorBuffer, TEXTAREA_POSSUPPLYMONITOR_SIZE, "%3.1f", ArbPwrBooster.SystemMeasure.Positive_20V);
     textArea_PosSupplyMonitor.setWildcard(textArea_PosSupplyMonitorBuffer);
     if (ConfigError & CONFIG_POS_20V_ERROR)
         textArea_PosSupplyMonitor.setColor(touchgfx::Color::getColorFromRGB(STATUS_MSG_ERROR_COLOR));
     else
         textArea_PosSupplyMonitor.setColor(touchgfx::Color::getColorFromRGB(STATUS_MSG_OK_COLOR));
-    // Power -20V
+    // Power -VS
     Unicode::snprintfFloat(textArea_NegSupplyMonitorBuffer, TEXTAREA_NEGSUPPLYMONITOR_SIZE, "%3.1f", ArbPwrBooster.SystemMeasure.Negative_20V);
     textArea_NegSupplyMonitor.setWildcard(textArea_NegSupplyMonitorBuffer);
     if (ConfigError & CONFIG_NEG_20V_ERROR)

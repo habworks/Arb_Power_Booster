@@ -44,18 +44,20 @@ void Screen_MainView::update_Screen_Main(void)
     ArbPwrBooster.Screen = MAIN_SCREEN;
 
     // STEP 2: Update Channel 1
+    inputImpedanceSet_CH1();
+    outputSwitch_CH1();
     // Update Current Set Values for channel1
     Unicode::snprintfFloat(textArea_CH1_CurrentSetBuffer, TEXTAREA_CH1_CURRENTSET_SIZE, "%05.3f", ArbPwrBooster.CH1.Limit.Current);
     textArea_CH1_CurrentSet.setWildcard(textArea_CH1_CurrentSetBuffer);
     textArea_CH1_CurrentSet.invalidate();
 
     // STEP 3: Update Channel 2
+    inputImpedanceSet_CH2();
+    outputSwitch_CH2();
     // Update Current Set Values for channel2
     Unicode::snprintfFloat(textArea_CH2_CurrentSetBuffer, TEXTAREA_CH2_CURRENTSET_SIZE, "%06.3f", ArbPwrBooster.CH2.Limit.Current);
     textArea_CH2_CurrentSet.setWildcard(textArea_CH2_CurrentSetBuffer);
     textArea_CH2_CurrentSet.invalidate();
-
-    // HAB TODO: Add for others this function is incomplete
 
 } // END OF update_Screen_Main
 
@@ -71,10 +73,8 @@ void Screen_MainView::update_Screen_Main(void)
 *
 * STEP 1: Toggle the output relay ON / OFF
 ********************************************************************************************************/
-void Screen_MainView::switchOutput_CH1(void)
+void Screen_MainView::outputToggle_CH1(void)
 {
-    // HAB TODO: May want to add some pre-qualifers to turning on output
-    // HAB TODO: Add defines for these magic numbers
     // STEP 1: Toggle the output relay ON / OFF
     if (ArbPwrBooster.CH1.OutputSwitch == OFF)
     {
@@ -95,7 +95,44 @@ void Screen_MainView::switchOutput_CH1(void)
     box_CH1_Enable.invalidate();
     textArea_CH1_Enable.invalidate();
 
-} // END OF switchOutput_CH1
+} // END OF outputToggle_CH1
+
+
+
+/********************************************************************************************************
+* @brief Switch the output of channel 1.  Update the background to a bright green if ON, a grey if off.  In
+* addition adjust colors of the ON value to make obvious to user.  The output is set according to the ArbPwrBooster
+* status.
+*
+* @author original: Hab Collector \n
+*
+* @note: Make updates for Input Z, Output Enable and Current Limit for both channels
+*
+* STEP 1: Switch the output relay ON / OFF according to ArbPwrBooster status
+********************************************************************************************************/
+void Screen_MainView::outputSwitch_CH1(void)
+{
+    // STEP 1: Switch the output relay ON / OFF according to ArbPwrBooster status
+    if (ArbPwrBooster.CH1.OutputSwitch == OFF)
+    {
+        CH1_OUTPUT_DISABLE();
+        box_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_BOX_COLOR));
+        box_CH1_Enable.setAlpha(ALPHA_50_VISIBLE);
+        textArea_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_TXT_COLOR));
+        ArbPwrBooster.CH1.OutputSwitch = OFF;
+    }
+    else
+    {
+        CH1_OUTPUT_ENABLE();
+        box_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_ON_BOX_COLOR));
+        box_CH1_Enable.setAlpha(ALPAH_FULL_VISIBLE);
+        textArea_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_ON_TXT_COLOR));
+        ArbPwrBooster.CH1.OutputSwitch = ON;
+    }
+    box_CH1_Enable.invalidate();
+    textArea_CH1_Enable.invalidate();
+
+} // END OF outputSwitch_CH1
 
 
 
@@ -109,9 +146,8 @@ void Screen_MainView::switchOutput_CH1(void)
 *
 * STEP 1: Toggle the output relay ON / OFF
 ********************************************************************************************************/
-void Screen_MainView::switchOutput_CH2(void)
+void Screen_MainView::outputToggle_CH2(void)
 {
-    // HAB TODO: May want to add some pre-qualifers to turning on output
     // STEP 1: Toggle the output relay ON / OFF
     if (ArbPwrBooster.CH2.OutputSwitch == OFF)
     {
@@ -132,7 +168,44 @@ void Screen_MainView::switchOutput_CH2(void)
     box_CH2_Enable.invalidate();
     textArea_CH2_Enable.invalidate();
 
-} // END OF switchOutput_CH2
+} // END OF outputToggle_CH2
+
+
+
+/********************************************************************************************************
+* @brief Switch the output of channel 2.  Update the background to a bright green if ON, a grey if off.  In
+* addition adjust colors of the ON value to make obvious to user.  The output is set according to the ArbPwrBooster
+* status.
+*
+* @author original: Hab Collector \n
+*
+* @note: The POR default is OFF.
+*
+* STEP 1: Switch the output relay ON / OFF according to ArbPwrBooster status
+********************************************************************************************************/
+void Screen_MainView::outputSwitch_CH2(void)
+{
+    // STEP 1: Switch the output relay ON / OFF according to ArbPwrBooster status
+    if (ArbPwrBooster.CH2.OutputSwitch == OFF)
+    {
+        CH2_OUTPUT_DISABLE();
+        box_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_BOX_COLOR));
+        box_CH2_Enable.setAlpha(ALPHA_50_VISIBLE);
+        textArea_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_TXT_COLOR));
+        ArbPwrBooster.CH2.OutputSwitch = OFF;
+    }
+    else
+    {
+        CH2_OUTPUT_ENABLE();
+        box_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_ON_BOX_COLOR));
+        box_CH2_Enable.setAlpha(ALPAH_FULL_VISIBLE);
+        textArea_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_ON_TXT_COLOR));
+        ArbPwrBooster.CH2.OutputSwitch = ON;
+    }
+    box_CH2_Enable.invalidate();
+    textArea_CH2_Enable.invalidate();
+
+} // END OF outputSwitch_CH2
 
 
 
@@ -143,10 +216,12 @@ void Screen_MainView::switchOutput_CH2(void)
 * @author original: Hab Collector \n
 *
 * @note: Input impedance switches between 1M (POR default) and 50 ohm
+* @note: Input impedance is a configurable parameter so the config file must be updated
 *
 * STEP 1: Toggle input impedance
+* STEP 2: Update config file for future POR
 ********************************************************************************************************/
-void Screen_MainView::InputImpedanceSet_CH1(void)
+void Screen_MainView::inputImpedanceToggle_CH1(void)
 {
     // STEP 1: Toggle input impedance
     if (ArbPwrBooster.CH1.InputImpedance == ONE_MEG_OHM)
@@ -163,7 +238,41 @@ void Screen_MainView::InputImpedanceSet_CH1(void)
     }
     textArea_CH1_InputZ.invalidate();
 
-} // END OF InputImpedanceSet_CH1
+    // STEP 2: Update config file for future POR
+    saveConfigParameters();
+
+} // END OF inputImpedanceToggle_CH1
+
+
+
+/********************************************************************************************************
+* @brief Set the input Z of channel 1.  Update the background text to reflect the present value of that
+* impedance.  The input impedance is set according to the ArbPwrBooster status.
+*
+* @author original: Hab Collector \n
+*
+* @note: Input impedance switches between 1M (POR default) and 50 ohm
+*
+* STEP 1: Set input impedance according to the ArbPwrBooster status
+********************************************************************************************************/
+void Screen_MainView::inputImpedanceSet_CH1(void)
+{
+    // STEP 1: Set input impedance according to the ArbPwrBooster status
+    if (ArbPwrBooster.CH1.InputImpedance == ONE_MEG_OHM)
+    {
+        CH1_INPUT_50_DISABLE();
+        textArea_CH1_InputZ.setTypedText(TypedText(T_ONE_MEG_OHM));
+        ArbPwrBooster.CH1.InputImpedance = ONE_MEG_OHM;
+    }
+    else
+    {
+        CH1_INPUT_50_ENABLE();
+        textArea_CH1_InputZ.setTypedText(TypedText(T_FIFTY_OHM));
+        ArbPwrBooster.CH1.InputImpedance = FIFTY_OHM;
+    }
+    textArea_CH1_InputZ.invalidate();
+
+} // END OF inputImpedanceSet_CH1
 
 
 
@@ -174,10 +283,12 @@ void Screen_MainView::InputImpedanceSet_CH1(void)
 * @author original: Hab Collector \n
 *
 * @note: Input impedance switches between 1M (POR default) and 50 ohm
+* @note: Input impedance is a configurable parameter so the config file must be updated
 *
 * STEP 1: Toggle input impedance
+* STEP 2: Update config file for future POR
 ********************************************************************************************************/
-void Screen_MainView::InputImpedanceSet_CH2(void)
+void Screen_MainView::inputImpedanceToggle_CH2(void)
 {
     // STEP 1: Toggle input impedance
     if (ArbPwrBooster.CH2.InputImpedance == ONE_MEG_OHM)
@@ -194,7 +305,41 @@ void Screen_MainView::InputImpedanceSet_CH2(void)
     }
     textArea_CH2_InputZ.invalidate();
 
-} // END OF InputImpedanceSet_CH2
+    // STEP 2: Update config file for future POR
+    saveConfigParameters();
+
+} // END OF inputImpedanceToggle_CH2
+
+
+
+/********************************************************************************************************
+* @brief Set the input Z of channel 2.  Update the background text to reflect the present value of that
+* impedance.  The input impedance is set according to the ArbPwrBooster status.
+*
+* @author original: Hab Collector \n
+*
+* @note: Input impedance switches between 1M (POR default) and 50 ohm
+*
+* STEP 1: Set input impedance according to ArbPwrBooster status
+********************************************************************************************************/
+void Screen_MainView::inputImpedanceSet_CH2(void)
+{
+    // STEP 1: Set input impedance according to ArbPwrBooster status
+    if (ArbPwrBooster.CH2.InputImpedance == ONE_MEG_OHM)
+    {
+        CH2_INPUT_50_DISABLE();
+        textArea_CH2_InputZ.setTypedText(TypedText(T_ONE_MEG_OHM));
+        ArbPwrBooster.CH2.InputImpedance = ONE_MEG_OHM;
+    }
+    else
+    {
+        CH2_INPUT_50_ENABLE();
+        textArea_CH2_InputZ.setTypedText(TypedText(T_FIFTY_OHM));
+        ArbPwrBooster.CH2.InputImpedance = FIFTY_OHM;
+    }
+    textArea_CH2_InputZ.invalidate();
+
+} // END OF inputImpedanceSet_CH2
 
 
 
@@ -278,17 +423,17 @@ void Screen_MainView::updateMainScreen_View(void)
 
     this->invalidate();
 
-} // ENF OF updateMainScreen_View
+} // END OF updateMainScreen_View
 
 // HAB TODO: Not sure if and how I plan to use this TBD
 void Screen_MainView::POR_setControlDefaults(void)
 {
     // STEP 1: Set controls for POR defaults
     // Impedance
-    CH1_INPUT_50_DISABLE();
-    textArea_CH1_InputZ.setTypedText(TypedText(T_ONE_MEG_OHM));
-    ArbPwrBooster.CH1.InputImpedance = ONE_MEG_OHM;
-    // Ouptut Switch
+//    CH1_INPUT_50_DISABLE();
+//    textArea_CH1_InputZ.setTypedText(TypedText(T_ONE_MEG_OHM));
+//    ArbPwrBooster.CH1.InputImpedance = ONE_MEG_OHM;
+    // Output Switch
     CH1_OUTPUT_DISABLE();
     box_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_BOX_COLOR));
     box_CH1_Enable.setAlpha(ALPHA_50_VISIBLE);
@@ -297,10 +442,10 @@ void Screen_MainView::POR_setControlDefaults(void)
 
     // STEP 1: Set controls for POR defaults
     // Impedance
-    CH2_INPUT_50_DISABLE();
-    textArea_CH2_InputZ.setTypedText(TypedText(T_ONE_MEG_OHM));
-    ArbPwrBooster.CH2.InputImpedance = ONE_MEG_OHM;
-    // Ouptut Switch
+//    CH2_INPUT_50_DISABLE();
+//    textArea_CH2_InputZ.setTypedText(TypedText(T_ONE_MEG_OHM));
+//    ArbPwrBooster.CH2.InputImpedance = ONE_MEG_OHM;
+    // Output Switch
     CH1_OUTPUT_DISABLE();
     box_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_BOX_COLOR));
     box_CH2_Enable.setAlpha(ALPHA_50_VISIBLE);
