@@ -5,6 +5,9 @@
 #include "touchgfx/Color.hpp"
 #include "../../../../../../touchgfx/generated/texts/include/texts/TextKeysAndLanguages.hpp"
 
+double StartValueCurrentLimit;
+bool StartValueLimitEnable;
+
 Screen_SetView::Screen_SetView()
 {
 
@@ -28,9 +31,11 @@ void Screen_SetView::tearDownScreen()
 * @author original: Hab Collector \n
 *
 * @note: Make updates for current limit, enable, and the correct channel color
+* @note: Must capture the current limit and its enable status on screen entry to know if it has changed on screen exit
 *
 * STEP 1: Set the active screen and init conditions
 * STEP 2: Render screen based on active channel
+* STEP 3: Capture the start conditions for current limit
 ********************************************************************************************************/
 void Screen_SetView::update_Screen_Set(void)
 {
@@ -40,6 +45,18 @@ void Screen_SetView::update_Screen_Set(void)
 
     // STEP 2: Render screen based on active channel
     render_Screen_Set(ArbPwrBooster.ActiveChannel);
+
+    // STEP 3: Capture the start conditions for current limit
+    if (ArbPwrBooster.ActiveChannel == CHANNEL_1)
+    {
+        StartValueCurrentLimit = ArbPwrBooster.CH1.Limit.Current;
+        StartValueLimitEnable = ArbPwrBooster.CH1.Limit.Enable;
+    }
+    else
+    {
+        StartValueCurrentLimit = ArbPwrBooster.CH2.Limit.Current;
+        StartValueLimitEnable = ArbPwrBooster.CH2.Limit.Enable;
+    }
 
 } // END OF update_Screen_Set
 
@@ -530,8 +547,10 @@ void Screen_SetView::incrementDigitDown(void)
 * @author original: Hab Collector \n
 *
 * @note: Values are reset to 0 - the updating function knows 0 is neither the min or max but
+* @note: It is possible user changed current limit so save config
 *
 * STEP 1: Reset the active channel min max limit
+* STEP 2: Save config file
 ********************************************************************************************************/
 void Screen_SetView::resetMinMaxCurrentLimits(void)
 {
@@ -546,4 +565,34 @@ void Screen_SetView::resetMinMaxCurrentLimits(void)
         ArbPwrBooster.CH2.Measure.MinCurrent = 0;
         ArbPwrBooster.CH2.Measure.MaxCurrent = 0;
     }
-}
+
+    // STEP 2: Save config file
+    saveConfigParameters();
+
+} // END OF resetMinMaxCurrentLimits
+
+
+
+/********************************************************************************************************
+* @brief update the config file parameters as necessary
+*
+* @author original: Hab Collector \n
+*
+* @note: If there was a change from when the screen opening in vars StartValueCurrentLimit or StartValueLimitEnable
+*
+* STEP 1: Update as necessary based on active channel
+********************************************************************************************************/
+void Screen_SetView::updateConfigFile(void)
+{
+    if (ArbPwrBooster.ActiveChannel == CHANNEL_1)
+    {
+        if ((ArbPwrBooster.CH1.Limit.Current != StartValueCurrentLimit) || (ArbPwrBooster.CH1.Limit.Enable != StartValueLimitEnable))
+            saveConfigParameters();
+    }
+    else
+    {
+        if ((ArbPwrBooster.CH2.Limit.Current != StartValueCurrentLimit) || (ArbPwrBooster.CH2.Limit.Enable != StartValueLimitEnable))
+            saveConfigParameters();
+    }
+
+} // END OF updateConfigFile

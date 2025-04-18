@@ -237,36 +237,6 @@ void systemErrorHandler(char *FileName, int FileLineNumber, uint32_t ErrorNumber
 
 
 /********************************************************************************************************
-* @brief These are the actions taken by thread mainUpdateTask().  Actions are primarily related to live
-* updates of the Main and Config screens.  A secondary function of re-staring the non-contineous DMA ADC1
-* is also performed.  These actions should only be performed when the ArbPwrStatus is Ready.
-*
-* @author original: Hab Collector \n
-*
-* STEP 1: Restart ADC1 DMA conversion
-* STEP 2: Set semaphore to update the active display
-* STEP 3: Make task inactive for a period of time - based on desired GUI update speed
-********************************************************************************************************/
-void mainUpdateTaskActions(void)
-{
-    if (!ArbPwrBooster.Ready)
-        return;
-
-    // STEP 1: Restart ADC1 DMA conversion
-    ADC1_StartConversion();
-
-    // STEP 2: Set semaphore to update the active display
-    if ((ArbPwrBooster.Screen == MAIN_SCREEN) || (ArbPwrBooster.Screen == CONFIG_SCREEN))
-        osSemaphoreRelease(DisplayUpdateSemaphoreHandle);
-
-    // STEP 3: Make task inactive for a period of time - based on desired GUI update speed
-    osDelay(GUI_UPDATE_RATE);
-
-} // END OF mainUpdateTaskActions
-
-
-
-/********************************************************************************************************
 * @brief Pre-actions to be performed before mainUpdateTaskActions - These actions are performed only once.
 *
 * @author original: Hab Collector \n
@@ -297,6 +267,61 @@ void mainUpdateTaskInit(void)
 
 
 
+/********************************************************************************************************
+* @brief These are the actions taken by thread mainUpdateTask().  Actions are primarily related to live
+* updates of the Main and Config screens.  A secondary function of re-staring the non-contineous DMA ADC1
+* is also performed.  These actions should only be performed when the ArbPwrStatus is Ready.
+*
+* @author original: Hab Collector \n
+*
+* STEP 1: Restart ADC1 DMA conversion
+* STEP 2: Set semaphore to update the active display
+* STEP 3: Make task inactive for a period of time - based on desired GUI update speed
+********************************************************************************************************/
+void mainUpdateTaskActions(void)
+{
+    if (!ArbPwrBooster.Ready)
+        return;
+
+    // STEP 1: Restart ADC1 DMA conversion
+    ADC1_StartConversion();
+
+    // STEP 2: Set semaphore to update the active display
+    if ((ArbPwrBooster.Screen == MAIN_SCREEN) || (ArbPwrBooster.Screen == CONFIG_SCREEN))
+        osSemaphoreRelease(DisplayUpdateSemaphoreHandle);
+
+    // STEP 3: Make task inactive for a period of time - based on desired GUI update speed
+    osDelay(GUI_UPDATE_RATE);
+
+} // END OF mainUpdateTaskActions
+
+
+
+/********************************************************************************************************
+* @brief Intended for POR load the configuration parameters from the configuration file.  The configuration
+* file is a binary file that holds the configurable parameters for both channels.  Parameters include:
+*   Input Impedance
+*   Current Limit Enable
+*   Current Limit Value
+* If the file is not present it will be created with the default.  If the file is present, the parameter
+* values will be loaded as such.  Should an error occur during the loading or creation of a file the default
+* values are used.
+*
+* @author original: Hab Collector \n
+*
+* @note: Drive use will be minimal - for safety the drive will be unmounted when not active
+* @note: The configuration file is stored on the root path of the uSD
+* @note: The order of save must match the order of recall
+*
+* @return: Status of the operation - should be either CONFIG_CREATE_NEW or CONFIG_LOAD_OK if things went well
+*
+* STEP 1: Mount the drive
+* STEP 2: Open Config File
+* STEP 3: Take action to create if the file does not exist
+* STEP 4: Take action to read file contents when it does exist
+* STEP 5: An error occurred
+* STEP 6: Sync and close file, unmount and return
+********************************************************************************************************/
 Type_ConfigParameterStatus loadConfigParameters(void)
 {
     FRESULT FileStatus;
@@ -392,6 +417,23 @@ Type_ConfigParameterStatus loadConfigParameters(void)
 } // END OF loadConfigStatus
 
 
+
+/********************************************************************************************************
+* @brief Save the configuration file.  Intended for when there is a parameter change.  The configuration
+* file is a binary file that holds the configurable parameters for both channels.  The order of save must
+* match that of function loadConfigStatus().  See function loadConfigStatus header notes for more details
+*
+* @author original: Hab Collector \n
+*
+* @note: Drive use will be minimal - for safety the drive will be unmounted when not active
+* @note: The configuration file is stored on the root path of the uSD
+*
+* @return: Status of the operation, CONFIG_SAVE_OK if all is well
+*
+* STEP 1: Mount the drive
+* STEP 2: Open Config File for updating with config parameters and save
+* STEP 3: Sync and close file, unmount and return
+********************************************************************************************************/
 Type_ConfigParameterStatus saveConfigParameters(void)
 {
     FRESULT FileStatus;
@@ -407,7 +449,7 @@ Type_ConfigParameterStatus saveConfigParameters(void)
         return(CONFIG_FILE_ERROR);
     }
 
-    // STEP 2: Open Config File for updating with information
+    // STEP 2: Open Config File for updating with config parameters and save
     FileStatus = f_open(&ConfigFileObject, CONFIG_FILENAME, FA_CREATE_ALWAYS | FA_WRITE);
     if (FileStatus == FR_OK)
     {

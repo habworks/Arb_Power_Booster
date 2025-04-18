@@ -187,6 +187,11 @@ void Screen_SetViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButto
         //When flexButton_Home clicked change screen to Screen_Main
         //Go to Screen_Main with screen transition towards West
         application().gotoScreen_MainScreenSlideTransitionWest();
+    
+        //Interaction_UpdateConfigOnExit
+        //When Interaction_GoToMainScreen completed call virtual function
+        //Call updateConfigFile
+        updateConfigFile();
     }
     if (&src == &flexButton_AmpsDigit_0)
     {

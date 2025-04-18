@@ -23,7 +23,7 @@ public:
     virtual void inputImpedanceToggle_CH2(void);
     virtual void inputImpedanceSet_CH2(void);
     virtual void setActiveLimit_CH2(void);
-    virtual void POR_setControlDefaults(void);
+//    virtual void POR_setControlDefaults(void);
     // ADDED FUNCTIONS CALLED BY PRESENTER
     virtual void updateMainScreen_View(void);
 protected:

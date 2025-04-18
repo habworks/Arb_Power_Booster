@@ -66,6 +66,10 @@ public:
     {
         // Override and implement this function in Screen_Set
     }
+    virtual void updateConfigFile()
+    {
+        // Override and implement this function in Screen_Set
+    }
 
 protected:
     FrontendApplication& application() {

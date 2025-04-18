@@ -1860,6 +1860,7 @@
         "Interactions": [
           {
             "InteractionName": "Interaction_GoToMainScreen",
+            "HasCompletedTrigger": true,
             "Trigger": {
               "Type": "TriggerClicked",
               "TriggerComponent": "flexButton_Home"
@@ -1992,6 +1993,17 @@
               "ScreenTransitionType": "ScreenTransitionSlide",
               "ScreenTransitionDirection": "West",
               "ActionComponent": "Screen_Main"
+            }
+          },
+          {
+            "InteractionName": "Interaction_UpdateConfigOnExit",
+            "Trigger": {
+              "Type": "TriggerInteractionCompleted",
+              "InteractionToTriggerOn": "Interaction_GoToMainScreen"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "updateConfigFile"
             }
           }
         ]

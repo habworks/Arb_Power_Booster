@@ -425,32 +425,32 @@ void Screen_MainView::updateMainScreen_View(void)
 
 } // END OF updateMainScreen_View
 
-// HAB TODO: Not sure if and how I plan to use this TBD
-void Screen_MainView::POR_setControlDefaults(void)
-{
-    // STEP 1: Set controls for POR defaults
-    // Impedance
-//    CH1_INPUT_50_DISABLE();
-//    textArea_CH1_InputZ.setTypedText(TypedText(T_ONE_MEG_OHM));
-//    ArbPwrBooster.CH1.InputImpedance = ONE_MEG_OHM;
-    // Output Switch
-    CH1_OUTPUT_DISABLE();
-    box_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_BOX_COLOR));
-    box_CH1_Enable.setAlpha(ALPHA_50_VISIBLE);
-    textArea_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_TXT_COLOR));
-    ArbPwrBooster.CH1.OutputSwitch = OFF;
-
-    // STEP 1: Set controls for POR defaults
-    // Impedance
-//    CH2_INPUT_50_DISABLE();
-//    textArea_CH2_InputZ.setTypedText(TypedText(T_ONE_MEG_OHM));
-//    ArbPwrBooster.CH2.InputImpedance = ONE_MEG_OHM;
-    // Output Switch
-    CH1_OUTPUT_DISABLE();
-    box_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_BOX_COLOR));
-    box_CH2_Enable.setAlpha(ALPHA_50_VISIBLE);
-    textArea_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_TXT_COLOR));
-    ArbPwrBooster.CH2.OutputSwitch = OFF;
-
-    this->invalidate();
-}
+//// HAB TODO: Not sure if and how I plan to use this TBD
+//void Screen_MainView::POR_setControlDefaults(void)
+//{
+//    // STEP 1: Set controls for POR defaults
+//    // Impedance
+////    CH1_INPUT_50_DISABLE();
+////    textArea_CH1_InputZ.setTypedText(TypedText(T_ONE_MEG_OHM));
+////    ArbPwrBooster.CH1.InputImpedance = ONE_MEG_OHM;
+//    // Output Switch
+//    CH1_OUTPUT_DISABLE();
+//    box_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_BOX_COLOR));
+//    box_CH1_Enable.setAlpha(ALPHA_50_VISIBLE);
+//    textArea_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_TXT_COLOR));
+//    ArbPwrBooster.CH1.OutputSwitch = OFF;
+//
+//    // STEP 1: Set controls for POR defaults
+//    // Impedance
+////    CH2_INPUT_50_DISABLE();
+////    textArea_CH2_InputZ.setTypedText(TypedText(T_ONE_MEG_OHM));
+////    ArbPwrBooster.CH2.InputImpedance = ONE_MEG_OHM;
+//    // Output Switch
+//    CH1_OUTPUT_DISABLE();
+//    box_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_BOX_COLOR));
+//    box_CH2_Enable.setAlpha(ALPHA_50_VISIBLE);
+//    textArea_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_TXT_COLOR));
+//    ArbPwrBooster.CH2.OutputSwitch = OFF;
+//
+//    this->invalidate();
+//}
