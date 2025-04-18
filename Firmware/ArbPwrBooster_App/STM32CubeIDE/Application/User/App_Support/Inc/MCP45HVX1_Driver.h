@@ -65,7 +65,7 @@ extern"C" {
 #define MCP45HVX1_DISABLE_CH1()         HAL_GPIO_WritePin(R_SHDN_1_GPIO_Port, R_SHDN_1_Pin, GPIO_PIN_RESET)
 #define MCP45HVX1_STATUS_CH1()          HAL_GPIO_ReadPin(R_SHDN_1_GPIO_Port, R_SHDN_1_Pin)
 // I2C WIPER LATCH
-#define USING_WIPER_I2C_LATCH           // Comment out if not using latch in firmware - latch pulled down in hardware
+//#define USING_WIPER_I2C_LATCH           // Comment out if not using latch in firmware - latch pulled down in hardware
 #ifdef USING_WIPER_I2C_LATCH
 #define MCP45HVX1_I2C_LATCH_CH1()       HAL_GPIO_WritePin(R_WLAT_1_GPIO_Port, R_WLAT_1_Pin, GPIO_PIN_SET)
 #define MCP45HVX1_I2C_PASS_CH1()        HAL_GPIO_WritePin(R_WLAT_1_GPIO_Port, R_WLAT_1_Pin, GPIO_PIN_RESET)

@@ -74,8 +74,8 @@ void Error_Handler(void);
 #define ADC1_CRATE_GPIO_Port GPIOI
 #define LCD_DISP_Pin GPIO_PIN_12
 #define LCD_DISP_GPIO_Port GPIOI
-#define R_WLAT_1_Pin GPIO_PIN_8
-#define R_WLAT_1_GPIO_Port GPIOA
+#define EN_CH_1_Pin GPIO_PIN_8
+#define EN_CH_1_GPIO_Port GPIOA
 #define EN_VO_2_Pin GPIO_PIN_7
 #define EN_VO_2_GPIO_Port GPIOG
 #define MAIN_PWR_EN_Pin GPIO_PIN_6
@@ -86,6 +86,8 @@ void Error_Handler(void);
 #define POS_20V_MON_GPIO_Port GPIOF
 #define NEG_20V_MON_Pin GPIO_PIN_8
 #define NEG_20V_MON_GPIO_Port GPIOF
+#define EN_CH_2_Pin GPIO_PIN_6
+#define EN_CH_2_GPIO_Port GPIOH
 #define ADC3_CRATE_Pin GPIO_PIN_14
 #define ADC3_CRATE_GPIO_Port GPIOB
 #define EN_50_Z_1_Pin GPIO_PIN_15

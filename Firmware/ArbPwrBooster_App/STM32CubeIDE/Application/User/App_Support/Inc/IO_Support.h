@@ -68,6 +68,15 @@ extern"C" {
 #define ADC3_C_RATE_TOGGLE()   HAL_GPIO_TogglePin(ADC3_CRATE_GPIO_Port, ADC3_CRATE_Pin)
 #define ADC3_C_RATE_STATUS()   HAL_GPIO_ReadPin(ADC3_CRATE_GPIO_Port, ADC3_CRATE_Pin)
 
+#define CH1_INPUT_ENABLE()     HAL_GPIO_WritePin(EN_CH_1_GPIO_Port, EN_CH_1_Pin, GPIO_PIN_SET)
+#define CH1_INPUT_DISABLE()    HAL_GPIO_WritePin(EN_CH_1_GPIO_Port, EN_CH_1_Pin, GPIO_PIN_RESET)
+#define CH1_INPUT_TOGGLE()     HAL_GPIO_TogglePin(EN_CH_1_GPIO_Port, EN_CH_1_Pin)
+#define CH1_INPUT_STATUS()     HAL_GPIO_ReadPin(EN_CH_1_GPIO_Port, EN_CH_1_Pin)
+
+#define CH2_INPUT_ENABLE()     HAL_GPIO_WritePin(EN_CH_2_GPIO_Port, EN_CH_2_Pin, GPIO_PIN_SET)
+#define CH2_INPUT_DISABLE()    HAL_GPIO_WritePin(EN_CH_2_GPIO_Port, EN_CH_2_Pin, GPIO_PIN_RESET)
+#define CH2_INPUT_TOGGLE()     HAL_GPIO_TogglePin(EN_CH_2_GPIO_Port, EN_CH_2_Pin)
+#define CH2_INPUT_STATUS()     HAL_GPIO_ReadPin(EN_CH_2_GPIO_Port, EN_CH_2_Pin)
 
 // FUNCTION PROTOTYPES
 void Init_GPIO_Hardware(void);
