@@ -84,7 +84,8 @@ void Init_ArbPwrBoosterClass(void)
     ArbPwrBooster.CH1.InputImpedance = ONE_MEG_OHM;
     ArbPwrBooster.CH1.OutputSwitch = OFF;
     ArbPwrBooster.CH1.Limit.Enable = true;
-    ArbPwrBooster.CH1.Limit.Current = 3.125;
+    ArbPwrBooster.CH1.Limit.Current = 0.300;
+    ArbPwrBooster.CH1.Measure.ResetCurrentMinMax = true;
     ArbPwrBooster.CH1.Measure.MaxCurrent = 0;
     ArbPwrBooster.CH1.Measure.MinCurrent = 0;
     ArbPwrBooster.CH1.Measure.RMS_UpdateFunctionPointer = update_CH1_RMS;
@@ -94,7 +95,8 @@ void Init_ArbPwrBoosterClass(void)
     ArbPwrBooster.CH2.InputImpedance = ONE_MEG_OHM;
     ArbPwrBooster.CH2.OutputSwitch = OFF;
     ArbPwrBooster.CH2.Limit.Enable = true;
-    ArbPwrBooster.CH2.Limit.Current = -2.250;
+    ArbPwrBooster.CH2.Limit.Current = 1.250;
+    ArbPwrBooster.CH2.Measure.ResetCurrentMinMax = true;
     ArbPwrBooster.CH2.Measure.MaxCurrent = 0;
     ArbPwrBooster.CH2.Measure.MinCurrent = 0;
     ArbPwrBooster.CH2.Measure.RMS_UpdateFunctionPointer = update_CH2_RMS;

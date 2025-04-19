@@ -106,7 +106,7 @@
             "Name": "flexButton_Config",
             "X": 198,
             "Y": 192,
-            "Width": 84,
+            "Width": 83,
             "Height": 80,
             "Alpha": 0,
             "ButtonTrigger": {
@@ -115,7 +115,7 @@
             "ButtonStyles": [
               {
                 "Type": "BoxWithBorderButtonStyle",
-                "Width": 84,
+                "Width": 83,
                 "Height": 80,
                 "LockToFlexButtonSize": true,
                 "ColorReleased": {
@@ -1169,7 +1169,7 @@
             "Name": "textArea_NegSupply",
             "X": 15,
             "Y": 108,
-            "Width": 169,
+            "Width": 156,
             "Height": 24,
             "TextId": "__SingleUse_62QI",
             "TextRotation": "0",
@@ -1222,7 +1222,7 @@
             "Name": "textArea_PosSupply",
             "X": 15,
             "Y": 84,
-            "Width": 167,
+            "Width": 155,
             "Height": 24,
             "TextId": "__SingleUse_GKDW",
             "TextRotation": "0",

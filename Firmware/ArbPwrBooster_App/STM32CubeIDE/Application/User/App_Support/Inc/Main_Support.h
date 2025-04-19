@@ -135,6 +135,7 @@ typedef struct
 typedef double (*Type_RMS_Calculate)(double);
 typedef struct
 {
+    bool                    ResetCurrentMinMax;
     double                  MinCurrent;
     double                  MaxCurrent;
     double                  MeanCurrent;

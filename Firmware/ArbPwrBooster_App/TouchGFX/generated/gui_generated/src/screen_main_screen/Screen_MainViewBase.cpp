@@ -20,12 +20,12 @@ Screen_MainViewBase::Screen_MainViewBase() :
     image_Background.setBitmap(touchgfx::Bitmap(BITMAP_DARK_THEME_IMAGES_BACKGROUNDS_480X272_WAVY_LINES_ID));
     add(image_Background);
 
-    flexButton_Config.setBoxWithBorderPosition(0, 0, 84, 80);
+    flexButton_Config.setBoxWithBorderPosition(0, 0, 83, 80);
     flexButton_Config.setBorderSize(0);
     flexButton_Config.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
     flexButton_Config.setAlpha(0);
     flexButton_Config.setAction(flexButtonCallback);
-    flexButton_Config.setPosition(198, 192, 84, 80);
+    flexButton_Config.setPosition(198, 192, 83, 80);
     add(flexButton_Config);
 
     scalableImage_Config.setBitmap(touchgfx::Bitmap(BITMAP_ICON_THEME_IMAGES_ACTION_SETTINGS_50_50_5BAD2F_SVG_ID));

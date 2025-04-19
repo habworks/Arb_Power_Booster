@@ -110,10 +110,10 @@
         <Translation Language="GB">+&lt;value&gt;V</Translation>
       </Text>
       <Text Id="__SingleUse_GKDW" Alignment="Left" TypographyId="CenturyGothic_Units">
-        <Translation Language="GB">Power +20V Rail: </Translation>
+        <Translation Language="GB">Power +VS Rail: </Translation>
       </Text>
       <Text Id="__SingleUse_62QI" Alignment="Left" TypographyId="CenturyGothic_Units">
-        <Translation Language="GB">Power --20V Rail: </Translation>
+        <Translation Language="GB">Power  -VS Rail: </Translation>
       </Text>
       <Text Id="__SingleUse_C9E9" Alignment="Left" TypographyId="CenturyGothic_Units">
         <Translation Language="GB">Enable Limit</Translation>

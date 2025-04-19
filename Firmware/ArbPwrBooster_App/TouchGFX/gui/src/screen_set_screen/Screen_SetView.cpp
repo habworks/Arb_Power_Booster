@@ -542,7 +542,8 @@ void Screen_SetView::incrementDigitDown(void)
 
 
 /********************************************************************************************************
-* @brief Reset min and max for the active channel.
+* @brief Reset min and max for the active channel.  This is called within  the TouchGFX with a return to
+* the main screen.
 *
 * @author original: Hab Collector \n
 *
@@ -556,15 +557,9 @@ void Screen_SetView::resetMinMaxCurrentLimits(void)
 {
     // STEP 1: Reset the active channel min max limit
     if (ArbPwrBooster.ActiveChannel == CHANNEL_1)
-    {
-        ArbPwrBooster.CH1.Measure.MinCurrent = 0;
-        ArbPwrBooster.CH1.Measure.MaxCurrent = 0;
-    }
+        ArbPwrBooster.CH1.Measure.ResetCurrentMinMax = true;
     else
-    {
-        ArbPwrBooster.CH2.Measure.MinCurrent = 0;
-        ArbPwrBooster.CH2.Measure.MaxCurrent = 0;
-    }
+        ArbPwrBooster.CH2.Measure.ResetCurrentMinMax = true;
 
     // STEP 2: Save config file
     saveConfigParameters();

@@ -407,9 +407,9 @@ static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail)
 *
 * STEP 1: Calculate the mean of the Current Monitor
 * STEP 2: Calculate the instantaneous current
-* STEP 3: Update Min current - If Min set to zero overwrite with present value
-* STEP 4: Update Max current - if Max set to zero overwrite with present value
-* STEP 5: Calculate the RMS current
+* STEP 3: Update Min current or reset min if so desired
+* STEP 4: Update Max current or reset max if so desired
+* STEP 5: Calculate the RMS current and clear min max flag
 ********************************************************************************************************/
 static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *FIFO_AmpMon, Type_ChannelMeasure *CurrentMeasure)
 {
@@ -422,20 +422,21 @@ static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *F
     // STEP 2: Calculate the instantaneous current
     double AmpMonitorCurrent = ((ADC_AmpMonitorCount * LSB_12BIT_VALUE * System_ADC_Reference) / AMP_MONITOR_GAIN) / AMP_SENSE_RESISTOR;
 
-    // STEP 3: Update Min current - If Min set to zero overwrite with present value
-    if (CurrentMeasure->MinCurrent == 0)
+    // STEP 3: Update Min current or reset min if so desired
+    if (CurrentMeasure->ResetCurrentMinMax)
         CurrentMeasure->MinCurrent = AmpMonitorCurrent;
     else if (AmpMonitorCurrent < CurrentMeasure->MinCurrent)
         CurrentMeasure->MinCurrent = AmpMonitorCurrent;
 
-    // STEP 4: Update Max current - if Max set to zero overwrite with present value
-    if (CurrentMeasure->MaxCurrent == 0)
+    // STEP 4: Update Max current or reset max if so desired
+    if (CurrentMeasure->ResetCurrentMinMax)
         CurrentMeasure->MaxCurrent = AmpMonitorCurrent;
     else if (AmpMonitorCurrent > CurrentMeasure->MaxCurrent)
         CurrentMeasure->MaxCurrent = AmpMonitorCurrent;
 
-    // STEP 5: Calculate the RMS current
+    // STEP 5: Calculate the RMS current and clear min max flag
     CurrentMeasure->RMS_Current = CurrentMeasure->RMS_UpdateFunctionPointer(AmpMonitorCurrent);
+    CurrentMeasure->ResetCurrentMinMax = false;
 
 } // END OF calculateChannelCurrent
 
