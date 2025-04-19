@@ -41,7 +41,7 @@ extern"C" {
 #define ADC_12BIT_FULL_COUNT    4096
 #define LSB_12BIT_VALUE         244.14E-6
 #define ADC_REFERENCE_VOLTAGE   3.300
-#define DIVIDER_VS_CONVERSION  9.091   // External divider ratio = 0.110 with an equivalence of 3.3V to 30V
+#define DIVIDER_VS_CONVERSION   9.091   // External divider ratio = 0.110 with an equivalence of 3.3V to 30V
 #define AMP_MONITOR_GAIN        1.0 //50.0    // Value in V/V this is the Gain of the current sense Amplifier
 #define AMP_SENSE_RESISTOR      1.0 //0.0033  // Value in ohms
 #define DIVIDER_VOLT_MON_CONVERSION 1.0
@@ -88,11 +88,6 @@ extern"C" {
 #define RMS_WINDOW_SIZE         1024
 // MISC
 #define MONITOR_UPDATE_RATE         10U
-// SYSTEM SUPPLY LIMITS
-#define POS_SUPPLY_UPPER_LIMIT     17.0
-#define POS_SUPPLY_LOWER_LIMIT     15.0
-#define NEG_SUPPLY_UPPER_LIMIT     -15.0
-#define NEG_SUPPLY_LOWER_LIMIT     -17.0
 
 
 // TYPEDEFS AND ENUMS

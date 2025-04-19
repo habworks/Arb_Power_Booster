@@ -12,7 +12,7 @@ public:
     virtual void setupScreen();
     virtual void tearDownScreen();
     // ADDED FUNCTIONS
-    virtual void update_Screen_Main(void);
+    virtual void updateScreenMainOnEntry(void);
     virtual void outputToggle_CH1(void);
     virtual void outputSwitch_CH1(void);
     virtual void inputImpedanceToggle_CH1(void);

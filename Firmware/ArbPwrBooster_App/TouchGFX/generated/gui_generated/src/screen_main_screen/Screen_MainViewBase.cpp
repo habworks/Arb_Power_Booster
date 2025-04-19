@@ -333,6 +333,6 @@ void Screen_MainViewBase::transitionBegins()
 {
     //Interaction_UpdateMainScreen
     //When screen transition begins call virtual function
-    //Call update_Screen_Main
-    update_Screen_Main();
+    //Call updateScreenMainOnEntry
+    updateScreenMainOnEntry();
 }

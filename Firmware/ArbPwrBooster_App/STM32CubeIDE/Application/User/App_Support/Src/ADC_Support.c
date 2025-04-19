@@ -158,7 +158,9 @@ void ADC13_StartConversion(void)
 *
 * @note: This is redefinition - this function is define weak in the HAL but implemented here
 * @note: The Rate toggle output are used to verify ADC conversion rate.  Conversion rate is calculated as:
-* PCLK2 / ADC_Clock_Presclar * TotalConversionCyclesForAll_ADC_Channels * NumberOfChannels
+* PCLK2 / ADC_Clock_Presclar * Total Conversion Cycles For All ADC_Channels
+* @note: ADC3 conversion time = 46.81us or 21.36KHz (This is the sampling frequency)
+* @note: ADC1 conversion time = 71.11us but the sample rate is governed by mainUpdateTaskActions() / GUI_UPDATE_RATE
 *
 * @param hadc: Pointer to the ADC handler
 *
@@ -179,7 +181,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
         ArbPwrBooster.SystemMeasure.VDD_VDREF = System_ADC_Reference;
         // Stop the one shot ADC - it must be started
         HAL_ADC_Stop_DMA(&hadc1);
-        // Toggle at the end of conversion - for testing: ADC1 actual conversion rate VS calculated
+        // Toggle at the end of conversion - for testing: ADC1 actual conversion rate versus calculated
         ADC1_C_RATE_TOGGLE();
     }
 
@@ -204,7 +206,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
         // Voltage Monitor CH2
         writeTo_FIFO_Buffer(FIFO_CH2_VoltMon, ADC3_CountValue[RANK_6]);
         calculateChannelVoltage(ADC3_CountValue[RANK_6], FIFO_CH2_VoltMon, &ArbPwrBooster.CH2.Measure);
-        // Toggle at the end of conversion - for testing: ADC3 actual conversion rate VS calculated
+        // Toggle at the end of conversion - for testing: ADC3 actual conversion rate versus calculated
         ADC3_C_RATE_TOGGLE();
     }
 

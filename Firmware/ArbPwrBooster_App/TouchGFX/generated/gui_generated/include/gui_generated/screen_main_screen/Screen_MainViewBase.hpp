@@ -31,7 +31,7 @@ public:
     {
         // Override and implement this function in Screen_Main
     }
-    virtual void update_Screen_Main()
+    virtual void updateScreenMainOnEntry()
     {
         // Override and implement this function in Screen_Main
     }

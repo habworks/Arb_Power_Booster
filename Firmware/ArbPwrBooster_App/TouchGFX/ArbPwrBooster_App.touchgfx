@@ -857,7 +857,7 @@
             },
             "Action": {
               "Type": "ActionCustom",
-              "FunctionName": "update_Screen_Main"
+              "FunctionName": "updateScreenMainOnEntry"
             }
           },
           {

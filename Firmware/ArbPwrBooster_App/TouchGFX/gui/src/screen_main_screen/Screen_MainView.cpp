@@ -27,7 +27,9 @@ void Screen_MainView::tearDownScreen()
 // ADDED FUNCTIONS
 /********************************************************************************************************
 * @brief Update the screen on entry.  It is called by the end of the Main Screen transition interaction.
-* Update the display for all fixed items
+* Update the display for all fixed items.  It is called only once when the screen becomes active.  See
+* function updateMainScreen_View() as the function that handles the repeated update of the screen while
+* it is active.
 *
 * @author original: Hab Collector \n
 *
@@ -38,7 +40,7 @@ void Screen_MainView::tearDownScreen()
 * STEP 2: Update Channel 1
 * STEP 3: Update Channel 2
 ********************************************************************************************************/
-void Screen_MainView::update_Screen_Main(void)
+void Screen_MainView::updateScreenMainOnEntry(void)
 {
     // STEP 1: Set the active screen
     ArbPwrBooster.Screen = MAIN_SCREEN;
@@ -47,19 +49,33 @@ void Screen_MainView::update_Screen_Main(void)
     inputImpedanceSet_CH1();
     outputSwitch_CH1();
     // Update Current Set Values for channel1
-    Unicode::snprintfFloat(textArea_CH1_CurrentSetBuffer, TEXTAREA_CH1_CURRENTSET_SIZE, "%05.3f", ArbPwrBooster.CH1.Limit.Current);
-    textArea_CH1_CurrentSet.setWildcard(textArea_CH1_CurrentSetBuffer);
+    if (ArbPwrBooster.CH1.Limit.Enable)
+    {
+        Unicode::snprintfFloat(textArea_CH1_CurrentSetBuffer, TEXTAREA_CH1_CURRENTSET_SIZE, "%05.3f", ArbPwrBooster.CH1.Limit.Current);
+        textArea_CH1_CurrentSet.setWildcard(textArea_CH1_CurrentSetBuffer);
+    }
+    else
+    {
+        textArea_CH1_CurrentSet.setVisible(false);
+    }
     textArea_CH1_CurrentSet.invalidate();
 
     // STEP 3: Update Channel 2
     inputImpedanceSet_CH2();
     outputSwitch_CH2();
     // Update Current Set Values for channel2
-    Unicode::snprintfFloat(textArea_CH2_CurrentSetBuffer, TEXTAREA_CH2_CURRENTSET_SIZE, "%06.3f", ArbPwrBooster.CH2.Limit.Current);
-    textArea_CH2_CurrentSet.setWildcard(textArea_CH2_CurrentSetBuffer);
+    if (ArbPwrBooster.CH2.Limit.Enable)
+    {
+        Unicode::snprintfFloat(textArea_CH2_CurrentSetBuffer, TEXTAREA_CH2_CURRENTSET_SIZE, "%06.3f", ArbPwrBooster.CH2.Limit.Current);
+        textArea_CH2_CurrentSet.setWildcard(textArea_CH2_CurrentSetBuffer);
+    }
+    else
+    {
+        textArea_CH2_CurrentSet.setVisible(false);
+    }
     textArea_CH2_CurrentSet.invalidate();
 
-} // END OF update_Screen_Main
+} // END OF updateScreenMainOnEntry
 
 
 
@@ -376,9 +392,11 @@ void Screen_MainView::setActiveLimit_CH2(void)
 
 /********************************************************************************************************
 * @brief Live update of the main screen.  All parameters for CH1 and CH are updated.  The Config Icon background
-* a flexbutton is also updated if there is a config related error condition
+* a flex-button is also updated if there is a config related error condition
 *
 * @author original: Hab Collector \n
+*
+* @note: The function updateScreenMainOnEntry is responsible for the screen setup
 *
 * STEP 1: Update Channel 1
 * STEP 2: Update Channel 2
@@ -425,32 +443,4 @@ void Screen_MainView::updateMainScreen_View(void)
 
 } // END OF updateMainScreen_View
 
-//// HAB TODO: Not sure if and how I plan to use this TBD
-//void Screen_MainView::POR_setControlDefaults(void)
-//{
-//    // STEP 1: Set controls for POR defaults
-//    // Impedance
-////    CH1_INPUT_50_DISABLE();
-////    textArea_CH1_InputZ.setTypedText(TypedText(T_ONE_MEG_OHM));
-////    ArbPwrBooster.CH1.InputImpedance = ONE_MEG_OHM;
-//    // Output Switch
-//    CH1_OUTPUT_DISABLE();
-//    box_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_BOX_COLOR));
-//    box_CH1_Enable.setAlpha(ALPHA_50_VISIBLE);
-//    textArea_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_TXT_COLOR));
-//    ArbPwrBooster.CH1.OutputSwitch = OFF;
-//
-//    // STEP 1: Set controls for POR defaults
-//    // Impedance
-////    CH2_INPUT_50_DISABLE();
-////    textArea_CH2_InputZ.setTypedText(TypedText(T_ONE_MEG_OHM));
-////    ArbPwrBooster.CH2.InputImpedance = ONE_MEG_OHM;
-//    // Output Switch
-//    CH1_OUTPUT_DISABLE();
-//    box_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_BOX_COLOR));
-//    box_CH2_Enable.setAlpha(ALPHA_50_VISIBLE);
-//    textArea_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_TXT_COLOR));
-//    ArbPwrBooster.CH2.OutputSwitch = OFF;
-//
-//    this->invalidate();
-//}
+
