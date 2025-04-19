@@ -148,8 +148,8 @@ typedef struct
 
 typedef struct
 {
-    double                  Positive_20V;
-    double                  Negative_20V;
+    double                  Positive_VS;
+    double                  Negative_VS;
     double                  VDD_VDREF;
     double                  TempDegreeC;
 }Type_SystemMeasure;

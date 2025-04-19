@@ -63,12 +63,12 @@ static Type_16b_FIFO *FIFO_CH1_AmpMon;
 // CH2 Current Monitor
 static uint16_t Buffer_CH2_AmpMon[CH2_AMP_MON_BUFFER_SIZE] = {0x0000};
 static Type_16b_FIFO *FIFO_CH2_AmpMon;
-// Positive 20V Supply Rail Monitor
-static uint16_t Buffer_P20V_Supply[SYSTEM_P20V_BUFFER_SIZE] = {0x0000};
-static Type_16b_FIFO *FIFO_P20V_Supply;
-// Negative 20V Supply Rail Monitor
-static uint16_t Buffer_N20V_Supply[SYSTEM_N20V_BUFFER_SIZE] = {0x0000};
-static Type_16b_FIFO *FIFO_N20V_Supply;
+// Positive VS Supply Rail Monitor
+static uint16_t Buffer_PVS_Supply[SYSTEM_PVS_BUFFER_SIZE] = {0x0000};
+static Type_16b_FIFO *FIFO_PVS_Supply;
+// Negative VS Supply Rail Monitor
+static uint16_t Buffer_NVS_Supply[SYSTEM_NVS_BUFFER_SIZE] = {0x0000};
+static Type_16b_FIFO *FIFO_NVS_Supply;
 // CH1 Current Monitor
 static uint16_t Buffer_CH1_VoltMon[CH1_VOLT_MON_BUFFER_SIZE] = {0x0000};
 static Type_16b_FIFO *FIFO_CH1_VoltMon;
@@ -80,10 +80,10 @@ static Type_16b_FIFO *FIFO_CH2_VoltMon;
 /********************************************************************************************************
 * @brief Init the ADC for ADC1 (2 channels) and ADC3 (3 channels).  ADC1 handles:
 *    Temperature
-*    3.3V measurment
+*    3.3V measurement
 * ADC2 handles:
-*    -20V Supply Rail
-*    +20V Supply Rail
+*    -VS Supply Rail
+*    +VS Supply Rail
 *    CH1 Current Monitor
 *    CH2 Current Monitor
 *
@@ -98,7 +98,7 @@ static Type_16b_FIFO *FIFO_CH2_VoltMon;
 *
 * STEP 1: Enable Internal reference and temperature measure
 * STEP 2: Init FIFO Buffers for use with ADC1: Micro-Temp Sensor, System 3.3V
-* STEP 3: Init FIFO Buffers for use with ADC3: ±20V rail, CH1 & CH2 Amp Monitor
+* STEP 3: Init FIFO Buffers for use with ADC3: ±VS rail, CH1 & CH2 Amp Monitor
 ********************************************************************************************************/
 void Init_ADC_Hardware(void)
 {
@@ -109,9 +109,9 @@ void Init_ADC_Hardware(void)
     FIFO_SystemTemp = Init_FIFO_Buffer(BufferSystemTemp, SYSTEM_TEMP_BUFFER_SIZE);
     FIFO_System_3V3 = Init_FIFO_Buffer(BufferSystem_3V3, SYSTEM_3V3_BUFFER_SIZE);
 
-    // STEP 3: Init FIFO Buffers for use with ADC3: ±20V rail, CH1 & CH2 Amp Monitor
-    FIFO_N20V_Supply = Init_FIFO_Buffer(Buffer_N20V_Supply, SYSTEM_N20V_BUFFER_SIZE);
-    FIFO_P20V_Supply = Init_FIFO_Buffer(Buffer_P20V_Supply, SYSTEM_P20V_BUFFER_SIZE);
+    // STEP 3: Init FIFO Buffers for use with ADC3: ±VS rail, CH1 & CH2 Amp Monitor
+    FIFO_NVS_Supply = Init_FIFO_Buffer(Buffer_NVS_Supply, SYSTEM_NVS_BUFFER_SIZE);
+    FIFO_PVS_Supply = Init_FIFO_Buffer(Buffer_PVS_Supply, SYSTEM_PVS_BUFFER_SIZE);
     FIFO_CH1_AmpMon = Init_FIFO_Buffer(Buffer_CH1_AmpMon, CH1_AMP_MON_BUFFER_SIZE);
     FIFO_CH2_AmpMon = Init_FIFO_Buffer(Buffer_CH2_AmpMon, CH2_AMP_MON_BUFFER_SIZE);
     FIFO_CH1_VoltMon = Init_FIFO_Buffer(Buffer_CH1_VoltMon, CH1_VOLT_MON_BUFFER_SIZE);
@@ -163,7 +163,7 @@ void ADC13_StartConversion(void)
 * @param hadc: Pointer to the ADC handler
 *
 * STEP 1: ADC1 Conversions: Micro-Temp Sensor, System 3.3V
-* STEP 2: ADC3 Conversions: ±20V rail, CH1 & CH2 Amp Monitor
+* STEP 2: ADC3 Conversions: ±VS rail, CH1 & CH2 Amp Monitor
 ********************************************************************************************************/
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
@@ -183,15 +183,15 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
         ADC1_C_RATE_TOGGLE();
     }
 
-    // STEP 2: ADC3 Conversions: ±20V rail, CH1 & CH2 Amp Monitor
+    // STEP 2: ADC3 Conversions: ±VS rail, CH1 & CH2 Amp Monitor
     if (hadc == &hadc3)
     {
-        // -20V Supply Rail
-        writeTo_FIFO_Buffer(FIFO_N20V_Supply, ADC3_CountValue[RANK_1]);
-        ArbPwrBooster.SystemMeasure.Negative_20V = calculateSystemSupply(FIFO_N20V_Supply) * -1.0;
-        // +20V Supply Rail
-        writeTo_FIFO_Buffer(FIFO_P20V_Supply, ADC3_CountValue[RANK_2]);
-        ArbPwrBooster.SystemMeasure.Positive_20V = calculateSystemSupply(FIFO_P20V_Supply);
+        // -VS Supply Rail
+        writeTo_FIFO_Buffer(FIFO_NVS_Supply, ADC3_CountValue[RANK_1]);
+        ArbPwrBooster.SystemMeasure.Negative_VS = calculateSystemSupply(FIFO_NVS_Supply) * -1.0;
+        // +VS Supply Rail
+        writeTo_FIFO_Buffer(FIFO_PVS_Supply, ADC3_CountValue[RANK_2]);
+        ArbPwrBooster.SystemMeasure.Positive_VS = calculateSystemSupply(FIFO_PVS_Supply);
         // Current Monitor CH1
         writeTo_FIFO_Buffer(FIFO_CH1_AmpMon, ADC3_CountValue[RANK_3]);
         calculateChannelCurrent(ADC3_CountValue[RANK_3], FIFO_CH1_AmpMon, &ArbPwrBooster.CH1.Measure);
@@ -367,8 +367,8 @@ static double calculateSystemTemp(void)
 * @author original: Hab Collector \n
 *
 * @note: External divider ratio of .110 (30V to 3.3V)
-* @note: Divider ratio for ±20V is the same
-* @note: Nominal supply voltage is 20V
+* @note: Divider ratio for ±VS is the same
+* @note: Nominal supply voltage is 15V
 * @note: SYSTEM refers to quantities that impact the entire device - CHANNEL impacts on CH1 or CH2
 *
 * @return As a positive number only the supply rail voltage
@@ -383,7 +383,7 @@ static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail)
     MeanSupplyRailCount = (double)((double)FIFO_SupplyRail->Sum / FIFO_SupplyRail->Depth);
 
     // STEP 2: Using the mean value calculate supply rail according to input divider ratio
-    double SupplyRailVoltage = MeanSupplyRailCount * LSB_12BIT_VALUE * System_ADC_Reference * DIVIDER_20V_CONVERSION;
+    double SupplyRailVoltage = MeanSupplyRailCount * LSB_12BIT_VALUE * System_ADC_Reference * DIVIDER_VS_CONVERSION;
     return(SupplyRailVoltage);
 
 } // END OF calculateSystemSupply
@@ -498,8 +498,8 @@ void monitorTaskActions(void)
         return;
 
 //    // STEP 1: Verify input supply voltages are valid
-//    if ((ArbPwrBooster.SystemMeasure.Positive_20V >= POS_SUPPLY_LOWER_LIMIT) && (ArbPwrBooster.SystemMeasure.Positive_20V <= POS_SUPPLY_UPPER_LIMIT) && \
-//        (ArbPwrBooster.SystemMeasure.Negative_20V >= NEG_SUPPLY_LOWER_LIMIT) && (ArbPwrBooster.SystemMeasure.Negative_20V <= NEG_SUPPLY_UPPER_LIMIT))
+//    if ((ArbPwrBooster.SystemMeasure.Positive_VS >= POS_SUPPLY_LOWER_LIMIT) && (ArbPwrBooster.SystemMeasure.Positive_VS <= POS_SUPPLY_UPPER_LIMIT) && \
+//        (ArbPwrBooster.SystemMeasure.Negative_VS >= NEG_SUPPLY_LOWER_LIMIT) && (ArbPwrBooster.SystemMeasure.Negative_VS <= NEG_SUPPLY_UPPER_LIMIT))
 //    {
 //        MAIN_PWR_ON();
 //    }
@@ -543,7 +543,7 @@ void ADC1_StartConversion(void)
 
 
 /********************************************************************************************************
-* @brief Checks the system values of +20V, -20V, Temperature and Vref to see if they are within the specified
+* @brief Checks the system values of +VS, -VS, Temperature and Vref to see if they are within the specified
 * limits of operation.  All errors are OR together to the error variable, but only the first error description
 * is returned.
 *
@@ -551,8 +551,8 @@ void ADC1_StartConversion(void)
 *
 * @note: SYSTEM refers to quantities that impact the entire device - CHANNEL impacts on CH1 or CH2
 *
-* STEP 1: Check System +20V
-* STEP 2: Check System -20V
+* STEP 1: Check System +VS
+* STEP 2: Check System -VS
 * STEP 3: Check System Vref
 * STEP 4: Check System Temperature
 * STEP 5: For no error
@@ -562,24 +562,24 @@ bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber)
     bool FirstErrorFound = false;
     *ErrorNumber = CONFIG_NO_ERROR;
 
-    // STEP 1: Check System +20V
-    if ((ArbPwrBooster.SystemMeasure.Positive_20V > POS_20V_UPPER_LIMIT) || (ArbPwrBooster.SystemMeasure.Positive_20V < POS_20V_LOWER_LIMIT))
+    // STEP 1: Check System +VS
+    if ((ArbPwrBooster.SystemMeasure.Positive_VS > POS_VS_UPPER_LIMIT) || (ArbPwrBooster.SystemMeasure.Positive_VS < POS_VS_LOWER_LIMIT))
     {
-        *ErrorNumber |= (1 << CONFIG_POS_20V_MASK);
+        *ErrorNumber |= (1 << CONFIG_POS_VS_MASK);
         if (!FirstErrorFound)
         {
-            sprintf(ErrorDescription, "+20V: %3.1fV to %3.1fV", POS_20V_LOWER_LIMIT, POS_20V_UPPER_LIMIT);
+            sprintf(ErrorDescription, "+20V: %3.1fV to %3.1fV", POS_VS_LOWER_LIMIT, POS_VS_UPPER_LIMIT);
             FirstErrorFound = true;
         }
     }
 
-    // STEP 2: Check System -20V
-    if ((ArbPwrBooster.SystemMeasure.Negative_20V > NEG_20V_UPPER_LIMIT) || (ArbPwrBooster.SystemMeasure.Negative_20V < NEG_20V_LOWER_LIMIT))
+    // STEP 2: Check System -VS
+    if ((ArbPwrBooster.SystemMeasure.Negative_VS > NEG_VS_UPPER_LIMIT) || (ArbPwrBooster.SystemMeasure.Negative_VS < NEG_VS_LOWER_LIMIT))
     {
-        *ErrorNumber |= (uint8_t)(1 << CONFIG_NEG_20V_MASK);
+        *ErrorNumber |= (uint8_t)(1 << CONFIG_NEG_VS_MASK);
         if (!FirstErrorFound)
         {
-            sprintf(ErrorDescription, "-20V: %3.1fV to %3.1fV", NEG_20V_LOWER_LIMIT, NEG_20V_UPPER_LIMIT);
+            sprintf(ErrorDescription, "-20V: %3.1fV to %3.1fV", NEG_VS_LOWER_LIMIT, NEG_VS_UPPER_LIMIT);
             FirstErrorFound = true;
         }
     }
