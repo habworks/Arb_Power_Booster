@@ -140,11 +140,13 @@ typedef struct
     double                  MaxCurrent;
     double                  MeanCurrent;
     double                  RMS_Current;
-    Type_RMS_Calculate      RMS_UpdateFunctionPointer;
+    Type_RMS_Calculate      RMS_CurrentFunction;
+    bool                    ResetVoltageMinMax;
     double                  MinVoltage;
     double                  MaxVoltage;
     double                  MeanVoltage;
     double                  RMS_Voltage;
+    Type_RMS_Calculate      RMS_VoltageFunction;
 }Type_ChannelMeasure;
 
 typedef struct
