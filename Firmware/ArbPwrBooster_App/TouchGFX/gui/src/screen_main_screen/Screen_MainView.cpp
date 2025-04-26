@@ -427,7 +427,7 @@ void Screen_MainView::updateMainScreen_View(void)
     textArea_CH2_Amin.setWildcard(textArea_CH2_AminBuffer);
 
     // STEP 3: Config Icon Color
-    char NotUsedStatusText[50];
+    char NotUsedStatusText[25];
     uint8_t NotUsedErrorNumber;
     if (systemMeasureWithinLimits(NotUsedStatusText, &NotUsedErrorNumber))
     {

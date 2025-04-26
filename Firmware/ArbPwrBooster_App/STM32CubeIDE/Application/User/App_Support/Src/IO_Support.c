@@ -37,10 +37,15 @@ void Init_GPIO_Hardware(void)
 {
     // STEP 1: Set all outputs to the default POR state - Everything off
     MAIN_PWR_OFF();
+    // Channel 1
+    CH1_INPUT_DISABLE();
+    CH1_INPUT_50_DISABLE();
     CH1_OUTPUT_DISABLE();
+    // Channel 2
+    CH2_INPUT_DISABLE();
     CH2_INPUT_50_DISABLE();
     CH2_OUTPUT_DISABLE();
-    CH1_INPUT_50_DISABLE();
+    // ADC Conversion rate
     ADC1_C_RATE_DISABLE();
     ADC3_C_RATE_DISABLE();
 

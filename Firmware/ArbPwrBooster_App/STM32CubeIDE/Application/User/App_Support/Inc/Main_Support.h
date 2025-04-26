@@ -37,7 +37,7 @@ extern"C" {
 // Revisions
 #define FW_MAJOR_REV            0U
 #define FW_MINOR_REV            0U
-#define FW_TEST_REV             2U
+#define FW_TEST_REV             3U
 #define HW_REVISION             2U
 // BASE COLOR CH1
 #define CH1_BASE_COLOR          0xD4, 0xC7, 0x19

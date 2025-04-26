@@ -271,28 +271,41 @@ void mainUpdateTaskInit(void)
 
 /********************************************************************************************************
 * @brief These are the actions taken by thread mainUpdateTask().  Actions are primarily related to live
-* updates of the Main and Config screens.  A secondary function of re-staring the non-contineous DMA ADC1
-* is also performed.  These actions should only be performed when the ArbPwrStatus is Ready.
+* updates of the Main and Config screens.  The main power is turned on here but monitored elsewhere. A secondary
+* function of re-staring the non-contineous DMA ADC1 is also performed.  These actions should only be performed
+* when the ArbPwrStatus is Ready.
 *
 * @author original: Hab Collector \n
 *
-* STEP 1: Restart ADC1 DMA conversion
-* STEP 2: Set semaphore to update the active display
-* STEP 3: Make task inactive for a period of time - based on desired GUI update speed
+* STEP 1: Do nothing until introduction splash screen completed
+* STEP 2: Turn on Main Power
+* STEP 3: Restart ADC1 DMA conversion
+* STEP 4: Set semaphore to update the active display
+* STEP 5: Make task inactive for a period of time - based on desired GUI update speed
 ********************************************************************************************************/
 void mainUpdateTaskActions(void)
 {
-    if (!ArbPwrBooster.Ready)
-        return;
+    static bool FirstTimeReady = true;
 
-    // STEP 1: Restart ADC1 DMA conversion
-    ADC1_StartConversion();
+    // STEP 1: Do nothing until introduction splash screen completed
+    if (ArbPwrBooster.Ready)
+    {
+        // STEP 2: Turn on Main Power
+        if (FirstTimeReady)
+        {
+            MAIN_PWR_ON();
+            FirstTimeReady = false;
+        }
 
-    // STEP 2: Set semaphore to update the active display
-    if ((ArbPwrBooster.Screen == MAIN_SCREEN) || (ArbPwrBooster.Screen == CONFIG_SCREEN))
-        osSemaphoreRelease(DisplayUpdateSemaphoreHandle);
+        // STEP 3: Restart ADC1 DMA conversion
+        ADC1_StartConversion();
 
-    // STEP 3: Make task inactive for a period of time - based on desired GUI update speed
+        // STEP 4: Set semaphore to update the active display
+        if ((ArbPwrBooster.Screen == MAIN_SCREEN) || (ArbPwrBooster.Screen == CONFIG_SCREEN))
+            osSemaphoreRelease(DisplayUpdateSemaphoreHandle);
+    }
+
+    // STEP 5: Make task inactive for a period of time - based on desired GUI update speed
     osDelay(GUI_UPDATE_RATE);
 
 } // END OF mainUpdateTaskActions
@@ -474,7 +487,7 @@ Type_ConfigParameterStatus saveConfigParameters(void)
         CurrentLimit.Value = ArbPwrBooster.CH2.Limit.Current;
         f_write(&ConfigFileObject, &CurrentLimit.Byte0, sizeof(double), &BytesWritten);
         TotalBytesWritten += BytesWritten;
-        printf("Bytes Written to create config file = %d\r\n", (int)TotalBytesWritten);
+        printf("Bytes Written to config file = %d\r\n", (int)TotalBytesWritten);
         ConfigSaveStatus = (TotalBytesWritten == ConfigParameterTotalBytes)? CONFIG_SAVE_OK : CONFIG_FILE_ERROR;
     }
 

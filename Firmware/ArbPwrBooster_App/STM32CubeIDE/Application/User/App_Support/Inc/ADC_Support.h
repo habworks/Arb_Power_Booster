@@ -41,7 +41,8 @@ extern"C" {
 #define ADC_12BIT_FULL_COUNT    4096
 #define LSB_12BIT_VALUE         244.14E-6
 #define ADC_REFERENCE_VOLTAGE   3.300
-#define DIVIDER_VS_CONVERSION   9.091   // External divider ratio = 0.110 with an equivalence of 3.3V to 30V
+#define ADC_REF_VOLTAGE_COUNT   1500        // This value is approximated it will be slightly different for each uC IC based on internal factory calibration value of VREFINT_CAL_ADDR
+#define DIVIDER_VS_CONVERSION   9.0645      // External divider ratio = 0.110 with an equivalence of 3.3V to 30V
 #define AMP_MONITOR_GAIN        1.0 //50.0    // Value in V/V this is the Gain of the current sense Amplifier
 #define AMP_SENSE_RESISTOR      1.0 //0.0033  // Value in ohms
 #define DIVIDER_VOLT_MON_CONVERSION 1.0
@@ -52,10 +53,12 @@ extern"C" {
 #define AVG_TEMP_SLOPE          2.50
 #define TEMP_25C                25.0
 // ACCEPTABLE CONVERSION LIMITS
-#define POS_VS_UPPER_LIMIT     21.0
-#define POS_VS_LOWER_LIMIT     19.0
-#define NEG_VS_UPPER_LIMIT     -19.0
-#define NEG_VS_LOWER_LIMIT     -21.0
+#define SYSTEM_POS_VS_LIMIT     15.5
+#define SYSTEM_POS_VS_HIGH      15.3
+#define SYSTEM_POS_VS_LOW       14.5
+#define SYSTEM_NEG_VS_LIMIT     -15.5
+#define SYSTEM_NEG_VS_HIGH      -14.5
+#define SYSTEM_NEG_VS_LOW       -15.3
 #define SYSTEM_3V3_UPPER_LIMIT  3.350
 #define SYSTEM_3V3_LOWER_LIMIT  3.250
 #define SYSTEM_TEMP_UPPER_LIMIT 38
@@ -102,8 +105,8 @@ typedef enum
 typedef enum
 {
     CONFIG_NO_ERROR = 0,
-    CONFIG_POS_20V_ERROR = (1 << CONFIG_POS_VS_MASK),
-    CONFIG_NEG_20V_ERROR = (1 << CONFIG_NEG_VS_MASK),
+    CONFIG_POS_VS_ERROR = (1 << CONFIG_POS_VS_MASK),
+    CONFIG_NEG_VS_ERROR = (1 << CONFIG_NEG_VS_MASK),
     CONFIG_TEMP_ERROR = (1 << CONFIG_TEMP_MASK),
     CONFIG_VREF_ERROR = (1 << CONFIG_VREF_MASK)
 }Type_ConfigError;

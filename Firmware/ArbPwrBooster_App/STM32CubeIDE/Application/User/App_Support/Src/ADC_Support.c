@@ -27,7 +27,9 @@
 #include "ADC_Support.h"
 #include "Main_Support.h"
 #include "IO_Support.h"
+#include "Terminal_Emulator_Support.h"
 #include "stm32f7xx_hal_adc.h"
+#include "cmsis_os2.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -42,7 +44,7 @@ uint16_t ADC3_CountValue[ADC3_NUMBER_OF_CHANNELS];
 static double System_ADC_Reference = ADC_REFERENCE_VOLTAGE;     // Init condition - it will be updated later in calculation of ADC1 3V3
 
 // Static Function Declarations
-static Type_16b_FIFO *Init_FIFO_Buffer(uint16_t *Buffer, uint8_t BufferLength);
+static Type_16b_FIFO *Init_FIFO_Buffer(uint16_t *Buffer, uint8_t BufferLength, uint16_t InitLoadValue);
 static void writeTo_FIFO_Buffer(Type_16b_FIFO *Buffer, uint16_t Value);
 static double calculateSystem_3V3(void);
 static double calculateSystemTemp(void);
@@ -106,16 +108,16 @@ void Init_ADC_Hardware(void)
     ADC->CCR |= ADC_CCR_TSVREFE_Msk;
 
     // STEP 2: Init FIFO Buffers for use with ADC1: Micro-Temp Sensor, System 3.3V
-    FIFO_SystemTemp = Init_FIFO_Buffer(BufferSystemTemp, SYSTEM_TEMP_BUFFER_SIZE);
-    FIFO_System_3V3 = Init_FIFO_Buffer(BufferSystem_3V3, SYSTEM_3V3_BUFFER_SIZE);
+    FIFO_SystemTemp = Init_FIFO_Buffer(BufferSystemTemp, SYSTEM_TEMP_BUFFER_SIZE, 0);
+    FIFO_System_3V3 = Init_FIFO_Buffer(BufferSystem_3V3, SYSTEM_3V3_BUFFER_SIZE, ADC_REF_VOLTAGE_COUNT);
 
     // STEP 3: Init FIFO Buffers for use with ADC3: ±VS rail, CH1 & CH2 Amp Monitor
-    FIFO_NVS_Supply = Init_FIFO_Buffer(Buffer_NVS_Supply, SYSTEM_NVS_BUFFER_SIZE);
-    FIFO_PVS_Supply = Init_FIFO_Buffer(Buffer_PVS_Supply, SYSTEM_PVS_BUFFER_SIZE);
-    FIFO_CH1_AmpMon = Init_FIFO_Buffer(Buffer_CH1_AmpMon, CH1_AMP_MON_BUFFER_SIZE);
-    FIFO_CH2_AmpMon = Init_FIFO_Buffer(Buffer_CH2_AmpMon, CH2_AMP_MON_BUFFER_SIZE);
-    FIFO_CH1_VoltMon = Init_FIFO_Buffer(Buffer_CH1_VoltMon, CH1_VOLT_MON_BUFFER_SIZE);
-    FIFO_CH2_VoltMon = Init_FIFO_Buffer(Buffer_CH2_VoltMon, CH2_VOLT_MON_BUFFER_SIZE);
+    FIFO_NVS_Supply = Init_FIFO_Buffer(Buffer_NVS_Supply, SYSTEM_NVS_BUFFER_SIZE, 0);
+    FIFO_PVS_Supply = Init_FIFO_Buffer(Buffer_PVS_Supply, SYSTEM_PVS_BUFFER_SIZE, 0);
+    FIFO_CH1_AmpMon = Init_FIFO_Buffer(Buffer_CH1_AmpMon, CH1_AMP_MON_BUFFER_SIZE, 0);
+    FIFO_CH2_AmpMon = Init_FIFO_Buffer(Buffer_CH2_AmpMon, CH2_AMP_MON_BUFFER_SIZE, 0);
+    FIFO_CH1_VoltMon = Init_FIFO_Buffer(Buffer_CH1_VoltMon, CH1_VOLT_MON_BUFFER_SIZE, 0);
+    FIFO_CH2_VoltMon = Init_FIFO_Buffer(Buffer_CH2_VoltMon, CH2_VOLT_MON_BUFFER_SIZE, 0);
 
 } // END OF Init_ADC_Hardware
 
@@ -131,7 +133,6 @@ void Init_ADC_Hardware(void)
 *
 * @note: ADC1 is configured in single shot mode and its conversion rate is based on the rate at which it is called
 * @note: ADC3 is configured in circular mode and will automatically restart the conversions
-*
 *
 * STEP 1: Start ADC 1 & ADC 3 conversion all channels
 ********************************************************************************************************/
@@ -225,13 +226,15 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 *
 * @param Buffer: Pointer to memory that will hold the buffer
 * @param BufferLength: The total number of uint16_t
+* @param InitLoadValue: Init value of the buffer
 *
 * @return: Pointer to the FIFO buffer structure
 *
 * STEP 1: Set the buffer values to 0 and allocate memory for the struct pointer
 * STEP 2: Assign buffer pointer, length and set write location to buffer index
+* STEP 3: Load the buffer with the init value
 ********************************************************************************************************/
-static Type_16b_FIFO *Init_FIFO_Buffer(uint16_t *Buffer, uint8_t BufferLength)
+static Type_16b_FIFO *Init_FIFO_Buffer(uint16_t *Buffer, uint8_t BufferLength, uint16_t InitLoadValue)
 {
     // STEP 1: Set the buffer values to 0 and allocate memory for the struct pointer
     memset(Buffer, 0x00, (sizeof(uint16_t) * BufferLength));
@@ -245,6 +248,12 @@ static Type_16b_FIFO *Init_FIFO_Buffer(uint16_t *Buffer, uint8_t BufferLength)
     FIFO_16Bit->WritePointer = &Buffer[0];
     FIFO_16Bit->Sum = 0;
     FIFO_16Bit->FirstOverFlow = false;
+
+    // STEP 3: Load the buffer with the init value
+    for (uint8_t Index = 0; Index < BufferLength; Index++)
+    {
+        writeTo_FIFO_Buffer(FIFO_16Bit, InitLoadValue);
+    }
 
     return(FIFO_16Bit);
 
@@ -413,7 +422,6 @@ static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail)
 ********************************************************************************************************/
 static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *FIFO_AmpMon, Type_ChannelMeasure *CurrentMeasure)
 {
-    // TODO Hab Min Max needs work - think about setting a flag
     // STEP 1: Calculate the mean of the Current Monitor
     double MeanCurrentCount = 0.0;
     MeanCurrentCount = FIFO_AmpMon->Sum / FIFO_AmpMon->Depth;
@@ -497,28 +505,53 @@ void monitorTaskInit(void)
 
 void monitorTaskActions(void)
 {
-    if (!ArbPwrBooster.Ready)
-        return;
+    static bool CriticalSystemError = false;
+    // STEP 1: Do nothing until introduction splash screen completed
+    if (ArbPwrBooster.Ready)
+    {
+        // STEP 2: Do nothing if a system error has occurred
+        if (!CriticalSystemError)
+        {
+            // STEP 3: Check that VS supply within limits - if not disable input
+            char NotUsedStatusMsg[25] = {0x00};
+            uint8_t ConfigError = 0;
+            systemMeasureWithinLimits(NotUsedStatusMsg, &ConfigError);
+            if ((ConfigError & CONFIG_POS_VS_ERROR) || (ConfigError & CONFIG_NEG_VS_ERROR))
+            {
+                CH1_INPUT_DISABLE();
+                CH2_INPUT_DISABLE();
+            }
+            else
+            {
+                CH1_INPUT_ENABLE();
+                CH2_INPUT_ENABLE();
+            }
 
-//    // STEP 1: Verify input supply voltages are valid
-//    if ((ArbPwrBooster.SystemMeasure.Positive_VS >= POS_SUPPLY_LOWER_LIMIT) && (ArbPwrBooster.SystemMeasure.Positive_VS <= POS_SUPPLY_UPPER_LIMIT) && \
-//        (ArbPwrBooster.SystemMeasure.Negative_VS >= NEG_SUPPLY_LOWER_LIMIT) && (ArbPwrBooster.SystemMeasure.Negative_VS <= NEG_SUPPLY_UPPER_LIMIT))
-//    {
-//        MAIN_PWR_ON();
-//    }
-//    else
-//    {
-//        CH1_OUTPUT_DISABLE();
-//        CH2_OUTPUT_DISABLE();
-//        MAIN_PWR_OFF();
-//        return;
-//    }
+            // STEP 4: Check for short circuit conditions
 
-    // STEP 2: Check for short circuit conditions
+            // STEP 5: Check for current limit conditions
 
-    // STEP 3: Check for current limit conditions
+            // STEP 6: Check for critical system error conditions
+            // Over Voltage on ±VS supply
+            if ((ArbPwrBooster.SystemMeasure.Positive_VS >= SYSTEM_POS_VS_LIMIT) || (ArbPwrBooster.SystemMeasure.Negative_VS <= SYSTEM_NEG_VS_LIMIT))
+            {
+                CriticalSystemError = true;
+                MAIN_PWR_OFF();
+                printBrightRed("\r\nERROR: Critical on VS supply rail\r\n");
+                printBrightRed("Correct supply rail then reset\r\n");
+            }
+            // Over Temperature
+            if (ArbPwrBooster.SystemMeasure.TempDegreeC >= SYSTEM_TEMP_UPPER_LIMIT)
+            {
+                CriticalSystemError = true;
+                MAIN_PWR_OFF();
+                printBrightRed("\r\nERROR: Critical over temperature\r\n");
+                printBrightRed("Cool device then reset\r\n");
+            }
+        }
+    }
 
-    // STEP 3: Make task inactive for a period of time
+    // STEP 7: Make task inactive for a period of time
     osDelay(MONITOR_UPDATE_RATE);
 }
 
@@ -566,23 +599,23 @@ bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber)
     *ErrorNumber = CONFIG_NO_ERROR;
 
     // STEP 1: Check System +VS
-    if ((ArbPwrBooster.SystemMeasure.Positive_VS > POS_VS_UPPER_LIMIT) || (ArbPwrBooster.SystemMeasure.Positive_VS < POS_VS_LOWER_LIMIT))
+    if ((ArbPwrBooster.SystemMeasure.Positive_VS > SYSTEM_POS_VS_HIGH) || (ArbPwrBooster.SystemMeasure.Positive_VS < SYSTEM_POS_VS_LOW))
     {
         *ErrorNumber |= (1 << CONFIG_POS_VS_MASK);
         if (!FirstErrorFound)
         {
-            sprintf(ErrorDescription, "+20V: %3.1fV to %3.1fV", POS_VS_LOWER_LIMIT, POS_VS_UPPER_LIMIT);
+            sprintf(ErrorDescription, "+VS: %3.1fV to %3.1fV", SYSTEM_POS_VS_LOW, SYSTEM_POS_VS_HIGH);
             FirstErrorFound = true;
         }
     }
 
     // STEP 2: Check System -VS
-    if ((ArbPwrBooster.SystemMeasure.Negative_VS > NEG_VS_UPPER_LIMIT) || (ArbPwrBooster.SystemMeasure.Negative_VS < NEG_VS_LOWER_LIMIT))
+    if ((ArbPwrBooster.SystemMeasure.Negative_VS > SYSTEM_NEG_VS_HIGH) || (ArbPwrBooster.SystemMeasure.Negative_VS < SYSTEM_NEG_VS_LOW))
     {
         *ErrorNumber |= (uint8_t)(1 << CONFIG_NEG_VS_MASK);
         if (!FirstErrorFound)
         {
-            sprintf(ErrorDescription, "-20V: %3.1fV to %3.1fV", NEG_VS_LOWER_LIMIT, NEG_VS_UPPER_LIMIT);
+            sprintf(ErrorDescription, "-VS: %3.1fV to %3.1fV", SYSTEM_NEG_VS_LOW, SYSTEM_NEG_VS_HIGH);
             FirstErrorFound = true;
         }
     }
@@ -599,7 +632,7 @@ bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber)
     }
 
     // STEP 4: Check System Temperature
-    if ((ArbPwrBooster.SystemMeasure.TempDegreeC > SYSTEM_TEMP_UPPER_LIMIT) || (ArbPwrBooster.SystemMeasure.TempDegreeC < SYSTEM_TEMP_LOWER_LIMIT))
+    if ((ArbPwrBooster.SystemMeasure.TempDegreeC >= SYSTEM_TEMP_UPPER_LIMIT) || (ArbPwrBooster.SystemMeasure.TempDegreeC <= SYSTEM_TEMP_LOWER_LIMIT))
     {
         *ErrorNumber |= (uint8_t)(1 << CONFIG_TEMP_MASK);
         if (!FirstErrorFound)

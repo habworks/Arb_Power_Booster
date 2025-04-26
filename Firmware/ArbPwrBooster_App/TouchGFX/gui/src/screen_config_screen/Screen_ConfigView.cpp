@@ -78,16 +78,16 @@ void Screen_ConfigView::updateConfigScreen_View(void)
 
     // STEP 2: Update displayed values: +VS, -VS, Vref, and Temp
     // Power +VS
-    Unicode::snprintfFloat(textArea_PosSupplyMonitorBuffer, TEXTAREA_POSSUPPLYMONITOR_SIZE, "%3.1f", ArbPwrBooster.SystemMeasure.Positive_VS);
+    Unicode::snprintfFloat(textArea_PosSupplyMonitorBuffer, TEXTAREA_POSSUPPLYMONITOR_SIZE, "%3.2f", ArbPwrBooster.SystemMeasure.Positive_VS);
     textArea_PosSupplyMonitor.setWildcard(textArea_PosSupplyMonitorBuffer);
-    if (ConfigError & CONFIG_POS_20V_ERROR)
+    if (ConfigError & CONFIG_POS_VS_ERROR)
         textArea_PosSupplyMonitor.setColor(touchgfx::Color::getColorFromRGB(STATUS_MSG_ERROR_COLOR));
     else
         textArea_PosSupplyMonitor.setColor(touchgfx::Color::getColorFromRGB(STATUS_MSG_OK_COLOR));
     // Power -VS
-    Unicode::snprintfFloat(textArea_NegSupplyMonitorBuffer, TEXTAREA_NEGSUPPLYMONITOR_SIZE, "%3.1f", ArbPwrBooster.SystemMeasure.Negative_VS);
+    Unicode::snprintfFloat(textArea_NegSupplyMonitorBuffer, TEXTAREA_NEGSUPPLYMONITOR_SIZE, "%3.2f", ArbPwrBooster.SystemMeasure.Negative_VS);
     textArea_NegSupplyMonitor.setWildcard(textArea_NegSupplyMonitorBuffer);
-    if (ConfigError & CONFIG_NEG_20V_ERROR)
+    if (ConfigError & CONFIG_NEG_VS_ERROR)
         textArea_NegSupplyMonitor.setColor(touchgfx::Color::getColorFromRGB(STATUS_MSG_ERROR_COLOR));
    else
        textArea_NegSupplyMonitor.setColor(touchgfx::Color::getColorFromRGB(STATUS_MSG_OK_COLOR));

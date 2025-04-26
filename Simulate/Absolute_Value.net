@@ -1,0 +1,22 @@
+* C:\IMR_Projects\IMR\Arb_Power_Booster\Simulate\Absolute_Value.asc
+XU1 0 N002 VDD VEE N004 tlv9352
+V1 VDD 0 15
+V2 VEE 0 -15
+XU2 0 N001 VDD VEE VO tlv9352
+D1 N004 N002 1N4148
+D2 N003 N004 1N4148
+R1 N001 N003 5K
+R2 VO N001 10K
+R3 N003 N002 10K
+R4 N002 VIN 10K
+R5 N001 VIN 10K
+V3 VIN 0 PULSE(-5 1 0 .00001 .00001 .0005 .001 3)
+R6 VO VO/2 10K
+R7 VO/2 0 3K
+R8 NC_01 0 1e6
+.model D D
+.lib C:\Users\habco\Documents\LTspiceXVII\lib\cmp\standard.dio
+.tran .003
+.lib tlv9352.lib
+.backanno
+.end
