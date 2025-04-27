@@ -37,8 +37,8 @@ extern"C" {
 
 // DEFINES
 // PART NUMBER IN USE
-#define USING_MCP45HV31
-//#define USING_MCP45HV51
+//#define USING_MCP45HV31                 // POT TAPS 127
+#define USING_MCP45HV51                 // POT TAPS 255
 #ifdef USING_MCP45HV31
 #define MCP45HVX1_POT_FULL_RESOLUTION   ((uint8_t)0x7F)
 #else
@@ -71,6 +71,10 @@ extern"C" {
 #define MCP45HVX1_I2C_PASS_CH1()        HAL_GPIO_WritePin(R_WLAT_1_GPIO_Port, R_WLAT_1_Pin, GPIO_PIN_RESET)
 #define MCP45HVX1_I2C_STATUS()          HAL_GPIO_ReadPin(R_WLAT_1_GPIO_Port, R_WLAT_1_Pin)
 #endif
+
+
+// EXTERNS
+extern I2C_HandleTypeDef hi2c1;
 
 
 // FUNCTION PROTOTYPES

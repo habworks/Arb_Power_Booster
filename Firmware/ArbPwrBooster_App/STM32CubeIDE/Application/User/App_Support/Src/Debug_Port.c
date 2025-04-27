@@ -33,8 +33,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-extern I2C_HandleTypeDef hi2c1;
-
 // Static Function Declarations
 static void callDebugFunction(char *CommandToProcess);
 static void resetDebugCommandSearch(void);

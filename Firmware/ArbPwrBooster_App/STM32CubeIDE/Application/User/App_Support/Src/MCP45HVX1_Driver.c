@@ -29,13 +29,13 @@
 
 // TODO: I want to add pot control to Type_ChannelConfig
 /********************************************************************************************************
-* @brief Init of the MCP45HVX1 for use on the board.  Note there are two channels to be init
+* @brief Init of the MCP45HVX1 for use on the board.  Note there are two channels to be init.  Enable the
+* device and set the output to max span on the POT
 *
 * @author original: Hab Collector \n
 *
 * STEP 1: Init Channel 1
 * STEP 2: Init Channel 2
-* STEP 3: Delay based on how fast a person can type
 ********************************************************************************************************/
 void Init_MCP45HVX1(void)
 {
@@ -44,6 +44,7 @@ void Init_MCP45HVX1(void)
 #ifdef USING_WIPER_I2C_LATCH
     MCP45HVX1_I2C_PASS_CH1();
 #endif
+    MCP45HVX1_WriteWiperVerify(&hi2c1, A1A0_EXTERNAL_ADDR_CH1, MCP45HVX1_POT_FULL_RESOLUTION);
 
     // STEP 2: Init Channel 2
 
