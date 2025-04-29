@@ -1,6 +1,6 @@
 /** ****************************************************************************************************
- * @file 			ADC_Support.h
- * @brief			This is the Header file used to support ADC_Support.c
+ * @file            ADC_Support.h
+ * @brief           This is the Header file used to support ADC_Support.c
  * ****************************************************************************************************
  * @author original Hab Collector (habco)\n
  *
@@ -43,8 +43,8 @@ extern"C" {
 #define ADC_REFERENCE_VOLTAGE   3.300
 #define ADC_REF_VOLTAGE_COUNT   1500        // This value is approximated it will be slightly different for each uC IC based on internal factory calibration value of VREFINT_CAL_ADDR
 #define SYSTEM_VS_DIVIDER       9.0645      // External divider ratio = 0.1103 with an equivalence of 3.3V (reference) to 30V external
-#define AMP_MONITOR_GAIN        1.0 //50.0    // Value in V/V this is the Gain of the current sense Amplifier
-#define AMP_SENSE_RESISTOR      1.0 //0.0033  // Value in ohms
+#define AMP_MONITOR_GAIN        50          // Value in V/V this is the Gain of the current sense Amplifier
+#define AMP_SENSE_RESISTOR      6.5E-3      // Value in ohms
 #define VOLT_MON_DIVIDER        4.333       // External divider ration = .2308 with an equivlence of 3.3V (reference) to 14.3V external
 // VREFINT RELATED (SYSTEM 3.3V)
 #define VREFINT_CAL_ADDR        ((uint16_t*) ((uint32_t) 0x1FF0F44A)) //0x1FFF75AA)

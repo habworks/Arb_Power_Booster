@@ -1,6 +1,6 @@
  /*****************************************************************************************************
- * @file 			MCP45HVX1_Driver.h
- * @brief			This is the Header file used to support MCP45HVX1_Driver.h.c
+ * @file            MCP45HVX1_Driver.h
+ * @brief           This is the Header file used to support MCP45HVX1_Driver.h.c
  * ****************************************************************************************************
  * @author original Hab Collector (habco)\n
  *
@@ -18,7 +18,7 @@
  *                  It will be necessary to consult the reference documents to fully understand the code
  *                  It is suggested that the documents be reviewed in the order shown.
  *                    Schematic: <Schematic PN>
- *				      STM32F746G_DISCO
+ *                    STM32F746G_DISCO
  *                    IMR
  *
  * @copyright       IMR Engineering, LLC
@@ -36,7 +36,7 @@ extern"C" {
 
 
 // DEFINES
-// PART NUMBER IN USE
+// PART NUMBER IN USE DEFINE ONLY ONE
 //#define USING_MCP45HV31                 // POT TAPS 127
 #define USING_MCP45HV51                 // POT TAPS 255
 #ifdef USING_MCP45HV31
@@ -57,6 +57,8 @@ extern"C" {
 // COMMANDS
 #define MCP45HVX1_WRITE_COMMAND         ((uint8_t)0x00)
 #define MCP45HVX1_READ_COMMAND          ((uint8_t)0x03)
+// HARDWARE DEFINE ZERO OFFSET
+#define MCP45HVX1_ZERO_OFFSET           1.650
 
 
 // MACROS
@@ -65,11 +67,14 @@ extern"C" {
 #define MCP45HVX1_DISABLE_CH1()         HAL_GPIO_WritePin(R_SHDN_1_GPIO_Port, R_SHDN_1_Pin, GPIO_PIN_RESET)
 #define MCP45HVX1_STATUS_CH1()          HAL_GPIO_ReadPin(R_SHDN_1_GPIO_Port, R_SHDN_1_Pin)
 // I2C WIPER LATCH
-//#define USING_WIPER_I2C_LATCH           // Comment out if not using latch in firmware - latch pulled down in hardware
+//#define USING_WIPER_I2C_LATCH           // Comment out if not using latch in firmware - latch pulled down in hardware - USER MUST DEFINE IO
 #ifdef USING_WIPER_I2C_LATCH
 #define MCP45HVX1_I2C_LATCH_CH1()       HAL_GPIO_WritePin(R_WLAT_1_GPIO_Port, R_WLAT_1_Pin, GPIO_PIN_SET)
 #define MCP45HVX1_I2C_PASS_CH1()        HAL_GPIO_WritePin(R_WLAT_1_GPIO_Port, R_WLAT_1_Pin, GPIO_PIN_RESET)
-#define MCP45HVX1_I2C_STATUS()          HAL_GPIO_ReadPin(R_WLAT_1_GPIO_Port, R_WLAT_1_Pin)
+#define MCP45HVX1_I2C_STATUS_CH1()      HAL_GPIO_ReadPin(R_WLAT_1_GPIO_Port, R_WLAT_1_Pin)
+#define MCP45HVX1_I2C_LATCH_CH2()       HAL_GPIO_WritePin(R_WLAT_2_GPIO_Port, R_WLAT_2_Pin, GPIO_PIN_SET)
+#define MCP45HVX1_I2C_PASS_CH2()        HAL_GPIO_WritePin(R_WLAT_2_GPIO_Port, R_WLAT_2_Pin, GPIO_PIN_RESET)
+#define MCP45HVX1_I2C_STATUS_CH2()      HAL_GPIO_ReadPin(R_WLAT_2_GPIO_Port, R_WLAT_2_Pin)
 #endif
 
 
@@ -82,7 +87,6 @@ void Init_MCP45HVX1(void);
 bool MCP45HVX1_WriteWiperValue(I2C_HandleTypeDef *I2C_Handle, uint8_t A1A0_ExternalAddress, uint8_t Value);
 bool MCP45HVX1_ReadWiperValue(I2C_HandleTypeDef *I2C_Handle, uint8_t A1A0_ExternalAddress, uint8_t *Value);
 bool MCP45HVX1_WriteWiperVerify(I2C_HandleTypeDef *I2C_Handle, uint8_t A1A0_ExternalAddress, uint8_t Value);
-
 
 #ifdef __cplusplus
 }
