@@ -201,27 +201,6 @@
           },
           {
             "Type": "TextArea",
-            "Name": "textArea_CH2_CurrentSet",
-            "X": 262,
-            "Y": 165,
-            "Width": 128,
-            "Height": 24,
-            "TextId": "__SingleUse_6SWA",
-            "TextRotation": "0",
-            "Color": {
-              "Red": 255,
-              "Green": 51,
-              "Blue": 255
-            },
-            "AutoSize": true,
-            "Wildcard1": {
-              "TextId": "__SingleUse_UN4D",
-              "UseBuffer": true,
-              "BufferSize": 15
-            }
-          },
-          {
-            "Type": "TextArea",
             "Name": "textArea_CH2_Enable",
             "X": 433,
             "Y": 228,
@@ -343,6 +322,48 @@
                 }
               }
             ]
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_CH2_Vrms",
+            "X": 262,
+            "Y": 175,
+            "Width": 108,
+            "Height": 24,
+            "TextId": "__SingleUse_5HPX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 51,
+              "Blue": 255
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_R38G",
+              "UseBuffer": true,
+              "BufferSize": 15
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_CH2_CurrentSet",
+            "X": 262,
+            "Y": 150,
+            "Width": 128,
+            "Height": 24,
+            "TextId": "__SingleUse_6SWA",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 51,
+              "Blue": 255
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_UN4D",
+              "UseBuffer": true,
+              "BufferSize": 15
+            }
           },
           {
             "Type": "TextArea",
@@ -490,9 +511,30 @@
           },
           {
             "Type": "TextArea",
+            "Name": "textArea_CH1_Vrms",
+            "X": 22,
+            "Y": 175,
+            "Width": 108,
+            "Height": 24,
+            "TextId": "__SingleUse_D5SA",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 199,
+              "Blue": 25
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_KPU0",
+              "UseBuffer": true,
+              "BufferSize": 15
+            }
+          },
+          {
+            "Type": "TextArea",
             "Name": "textArea_CH1_CurrentSet",
             "X": 22,
-            "Y": 165,
+            "Y": 150,
             "Width": 128,
             "Height": 24,
             "TextId": "__SingleUse_FFBY",
@@ -760,7 +802,7 @@
           },
           {
             "Type": "TextArea",
-            "Name": "textArea_CH1_UnitsRMS",
+            "Name": "textArea_CH1_UnitsAmpRMS",
             "X": 125,
             "Y": 46,
             "Width": 85,

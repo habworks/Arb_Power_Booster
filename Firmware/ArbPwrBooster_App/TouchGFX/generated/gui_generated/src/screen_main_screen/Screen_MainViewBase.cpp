@@ -45,15 +45,6 @@ Screen_MainViewBase::Screen_MainViewBase() :
     flexButton_CH2_Enable.setPosition(414, 206, 66, 66);
     add(flexButton_CH2_Enable);
 
-    textArea_CH2_CurrentSet.setXY(262, 165);
-    textArea_CH2_CurrentSet.setColor(touchgfx::Color::getColorFromRGB(255, 51, 255));
-    textArea_CH2_CurrentSet.setLinespacing(0);
-    Unicode::snprintf(textArea_CH2_CurrentSetBuffer, TEXTAREA_CH2_CURRENTSET_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_UN4D).getText());
-    textArea_CH2_CurrentSet.setWildcard(textArea_CH2_CurrentSetBuffer);
-    textArea_CH2_CurrentSet.resizeToCurrentText();
-    textArea_CH2_CurrentSet.setTypedText(touchgfx::TypedText(T___SINGLEUSE_6SWA));
-    add(textArea_CH2_CurrentSet);
-
     textArea_CH2_Enable.setXY(433, 228);
     textArea_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     textArea_CH2_Enable.setLinespacing(0);
@@ -87,6 +78,24 @@ Screen_MainViewBase::Screen_MainViewBase() :
     flexButton_CH2_InputZ.setAction(flexButtonCallback);
     flexButton_CH2_InputZ.setPosition(282, 206, 66, 66);
     add(flexButton_CH2_InputZ);
+
+    textArea_CH2_Vrms.setXY(262, 175);
+    textArea_CH2_Vrms.setColor(touchgfx::Color::getColorFromRGB(255, 51, 255));
+    textArea_CH2_Vrms.setLinespacing(0);
+    Unicode::snprintf(textArea_CH2_VrmsBuffer, TEXTAREA_CH2_VRMS_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_R38G).getText());
+    textArea_CH2_Vrms.setWildcard(textArea_CH2_VrmsBuffer);
+    textArea_CH2_Vrms.resizeToCurrentText();
+    textArea_CH2_Vrms.setTypedText(touchgfx::TypedText(T___SINGLEUSE_5HPX));
+    add(textArea_CH2_Vrms);
+
+    textArea_CH2_CurrentSet.setXY(262, 150);
+    textArea_CH2_CurrentSet.setColor(touchgfx::Color::getColorFromRGB(255, 51, 255));
+    textArea_CH2_CurrentSet.setLinespacing(0);
+    Unicode::snprintf(textArea_CH2_CurrentSetBuffer, TEXTAREA_CH2_CURRENTSET_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_UN4D).getText());
+    textArea_CH2_CurrentSet.setWildcard(textArea_CH2_CurrentSetBuffer);
+    textArea_CH2_CurrentSet.resizeToCurrentText();
+    textArea_CH2_CurrentSet.setTypedText(touchgfx::TypedText(T___SINGLEUSE_6SWA));
+    add(textArea_CH2_CurrentSet);
 
     textArea_CH2_UnitsMin.setXY(365, 106);
     textArea_CH2_UnitsMin.setColor(touchgfx::Color::getColorFromRGB(255, 51, 255));
@@ -148,7 +157,16 @@ Screen_MainViewBase::Screen_MainViewBase() :
     line1.setLineEndingStyle(touchgfx::Line::ROUND_CAP_ENDING);
     add(line1);
 
-    textArea_CH1_CurrentSet.setXY(22, 165);
+    textArea_CH1_Vrms.setXY(22, 175);
+    textArea_CH1_Vrms.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
+    textArea_CH1_Vrms.setLinespacing(0);
+    Unicode::snprintf(textArea_CH1_VrmsBuffer, TEXTAREA_CH1_VRMS_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_KPU0).getText());
+    textArea_CH1_Vrms.setWildcard(textArea_CH1_VrmsBuffer);
+    textArea_CH1_Vrms.resizeToCurrentText();
+    textArea_CH1_Vrms.setTypedText(touchgfx::TypedText(T___SINGLEUSE_D5SA));
+    add(textArea_CH1_Vrms);
+
+    textArea_CH1_CurrentSet.setXY(22, 150);
     textArea_CH1_CurrentSet.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
     textArea_CH1_CurrentSet.setLinespacing(0);
     Unicode::snprintf(textArea_CH1_CurrentSetBuffer, TEXTAREA_CH1_CURRENTSET_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_NVNE).getText());
@@ -234,11 +252,11 @@ Screen_MainViewBase::Screen_MainViewBase() :
     textArea_CH1_Amax.setTypedText(touchgfx::TypedText(T___SINGLEUSE_UYVU));
     add(textArea_CH1_Amax);
 
-    textArea_CH1_UnitsRMS.setXY(125, 46);
-    textArea_CH1_UnitsRMS.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
-    textArea_CH1_UnitsRMS.setLinespacing(0);
-    textArea_CH1_UnitsRMS.setTypedText(touchgfx::TypedText(T___SINGLEUSE_B4B8));
-    add(textArea_CH1_UnitsRMS);
+    textArea_CH1_UnitsAmpRMS.setXY(125, 46);
+    textArea_CH1_UnitsAmpRMS.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));
+    textArea_CH1_UnitsAmpRMS.setLinespacing(0);
+    textArea_CH1_UnitsAmpRMS.setTypedText(touchgfx::TypedText(T___SINGLEUSE_B4B8));
+    add(textArea_CH1_UnitsAmpRMS);
 
     textArea_CH1_Arms.setXY(22, 46);
     textArea_CH1_Arms.setColor(touchgfx::Color::getColorFromRGB(212, 199, 25));

@@ -405,26 +405,32 @@ void Screen_MainView::setActiveLimit_CH2(void)
 void Screen_MainView::updateMainScreen_View(void)
 {
     // STEP 1: Update Channel 1
-    // RMS current
+    // RMS output current
     Unicode::snprintfFloat(textArea_CH1_ArmsBuffer, TEXTAREA_CH1_ARMS_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.RMS_Current);
     textArea_CH1_Arms.setWildcard(textArea_CH1_ArmsBuffer);
     // Max Current
-    Unicode::snprintfFloat(textArea_CH1_AmaxBuffer, TEXTAREA_CH1_AMAX_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.MaxCurrent);
+    Unicode::snprintfFloat(textArea_CH1_AmaxBuffer, TEXTAREA_CH1_AMAX_SIZE, "%05.2f", ArbPwrBooster.CH1.Measure.MaxCurrent);
     textArea_CH1_Amax.setWildcard(textArea_CH1_AmaxBuffer);
     // Min Current
-    Unicode::snprintfFloat(textArea_CH1_AminBuffer, TEXTAREA_CH1_AMIN_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.MinCurrent);
+    Unicode::snprintfFloat(textArea_CH1_AminBuffer, TEXTAREA_CH1_AMIN_SIZE, "%05.2f", ArbPwrBooster.CH1.Measure.MinCurrent);
     textArea_CH1_Amin.setWildcard(textArea_CH1_AminBuffer);
+    // RMS input voltage
+    Unicode::snprintfFloat(textArea_CH1_VrmsBuffer, TEXTAREA_CH1_VRMS_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.RMS_Voltage);
+    textArea_CH1_Vrms.setWildcard(textArea_CH1_VrmsBuffer);
 
     // STEP 2: Update Channel 2
-    // RMS current
+    // RMS output current
     Unicode::snprintfFloat(textArea_CH2_ArmsBuffer, TEXTAREA_CH2_ARMS_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.RMS_Current);
     textArea_CH2_Arms.setWildcard(textArea_CH2_ArmsBuffer);
     // Max Current
-    Unicode::snprintfFloat(textArea_CH2_AmaxBuffer, TEXTAREA_CH2_AMAX_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.MaxCurrent);
+    Unicode::snprintfFloat(textArea_CH2_AmaxBuffer, TEXTAREA_CH2_AMAX_SIZE, "%05.2f", ArbPwrBooster.CH2.Measure.MaxCurrent);
     textArea_CH2_Amax.setWildcard(textArea_CH2_AmaxBuffer);
     // Min Current
-    Unicode::snprintfFloat(textArea_CH2_AminBuffer, TEXTAREA_CH2_AMIN_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.MinCurrent);
+    Unicode::snprintfFloat(textArea_CH2_AminBuffer, TEXTAREA_CH2_AMIN_SIZE, "%05.2f", ArbPwrBooster.CH2.Measure.MinCurrent);
     textArea_CH2_Amin.setWildcard(textArea_CH2_AminBuffer);
+    // RMS input voltage
+    Unicode::snprintfFloat(textArea_CH2_VrmsBuffer, TEXTAREA_CH2_VRMS_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.RMS_Voltage);
+    textArea_CH2_Vrms.setWildcard(textArea_CH2_VrmsBuffer);
 
     // STEP 3: Config Icon Color
     char NotUsedStatusText[25];

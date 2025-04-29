@@ -57,8 +57,6 @@ extern"C" {
 // COMMANDS
 #define MCP45HVX1_WRITE_COMMAND         ((uint8_t)0x00)
 #define MCP45HVX1_READ_COMMAND          ((uint8_t)0x03)
-// HARDWARE DEFINE ZERO OFFSET
-#define MCP45HVX1_ZERO_OFFSET           1.650
 
 
 // MACROS

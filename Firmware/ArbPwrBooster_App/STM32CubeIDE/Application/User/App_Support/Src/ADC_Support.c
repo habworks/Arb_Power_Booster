@@ -81,14 +81,17 @@ static Type_16b_FIFO *FIFO_CH2_VoltMon;
 
 
 /********************************************************************************************************
-* @brief Init the ADC for ADC1 (2 channels) and ADC3 (3 channels).  ADC1 handles:
+* @brief Init the ADC for ADC1 (2 channels) and ADC3 (3 channels).
+* ADC1 handles:
 *    Temperature
 *    3.3V measurement
-* ADC2 handles:
+* ADC3 handles:
 *    -VS Supply Rail
 *    +VS Supply Rail
 *    CH1 Current Monitor
 *    CH2 Current Monitor
+*    CH1 Voltage Monitor
+*    CH2 Voltage Monitor
 *
 * @author original: Hab Collector \n
 *
@@ -155,6 +158,33 @@ void ADC13_StartConversion(void)
 * @brief Redefinition of the weak callback function for ADC conversion complete.  ADC1 and ADC3 values
 * have been acquired this function updates the corresponding FIFO buffers and calls a unique function that
 * performs the channel conversion.
+*
+* ADC1 handles:
+*    Temperature
+*    3.3V measurement
+* ADC3 handles:
+*    -VS Supply Rail
+*    +VS Supply Rail
+*    CH1 Current Monitor
+*    CH2 Current Monitor
+*    CH1 Voltage Monitor
+*    CH2 Voltage Monitor
+*
+* ADC1 Configuration
+* RANK  ADC_CH  Port    Cycles  Net Name
+* 1     Temp    NA      480     NA - Internal to IC
+* 2     Vref    NA      480     NA - Internal to IC
+*
+* ADC3 Configuration:
+* RANK  ADC_CH  Port    Cycles  Net Name
+* 1     6       PF8     28      -VS_MON
+* 2     7       PF9     28      +VS-MON
+* 3     0       PA0     144     IO_MON_2
+* 4     8       PF10    144     IO_MON_1
+* 5     4       PF6     144     VI_MON_2
+* 6     5       PF7     144     VI_MON_1
+*
+* ADC uses PCLK2 (108MHz) with a divisor of 8
 *
 * @author original: Hab Collector \n
 *
@@ -425,16 +455,21 @@ static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *F
 {
     double AmpMonitorCurrent = 0;
     ChannelMeasure->Measure.MeanCurrent = 0;
+    ChannelMeasure->Measure.RMS_Current = 0;
     if (ChannelMeasure->OutputSwitch == ON)
     {
         // STEP 1: Calculate the mean of the Current Monitor
         double MeanCount_ADC = (double)FIFO_AmpMon->Sum / FIFO_AmpMon->Depth;
-        double MeanDiffVolt = ((MeanCount_ADC * LSB_12BIT_VALUE * System_ADC_Reference) - MCP45HVX1_ZERO_OFFSET) / AMP_MONITOR_GAIN;
+        double MeanDiffVolt = ((MeanCount_ADC * LSB_12BIT_VALUE * System_ADC_Reference) - (System_ADC_Reference / 2.0)) / AMP_MONITOR_GAIN;
         ChannelMeasure->Measure.MeanCurrent = MeanDiffVolt / AMP_SENSE_RESISTOR;
 
         // STEP 2: Calculate the instantaneous current
-        double DiffVolt = ((ADC_AmpMonitorCount * LSB_12BIT_VALUE * System_ADC_Reference) - MCP45HVX1_ZERO_OFFSET) / AMP_MONITOR_GAIN;
+        double DiffVolt = ((ADC_AmpMonitorCount * LSB_12BIT_VALUE * System_ADC_Reference) - (System_ADC_Reference / 2.0)) / AMP_MONITOR_GAIN;
         AmpMonitorCurrent = DiffVolt / AMP_SENSE_RESISTOR;
+    }
+    else
+    {
+        return;
     }
 
     // STEP 3: Update Min current or reset min if so desired

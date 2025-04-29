@@ -11,8 +11,8 @@
 #include <touchgfx/widgets/Image.hpp>
 #include <touchgfx/containers/buttons/Buttons.hpp>
 #include <touchgfx/widgets/ScalableImage.hpp>
-#include <touchgfx/widgets/TextAreaWithWildcard.hpp>
 #include <touchgfx/widgets/TextArea.hpp>
+#include <touchgfx/widgets/TextAreaWithWildcard.hpp>
 #include <touchgfx/widgets/canvas/Line.hpp>
 #include <touchgfx/widgets/canvas/PainterRGB565.hpp>
 
@@ -70,12 +70,13 @@ protected:
     touchgfx::ScalableImage scalableImage_Config;
     touchgfx::Box box_CH2_Enable;
     touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_CH2_Enable;
-    touchgfx::TextAreaWithOneWildcard textArea_CH2_CurrentSet;
     touchgfx::TextArea textArea_CH2_Enable;
     touchgfx::TextArea textArea_CH2_Set;
     touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_CH2_Set;
     touchgfx::TextArea textArea_CH2_InputZ;
     touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_CH2_InputZ;
+    touchgfx::TextAreaWithOneWildcard textArea_CH2_Vrms;
+    touchgfx::TextAreaWithOneWildcard textArea_CH2_CurrentSet;
     touchgfx::TextArea textArea_CH2_UnitsMin;
     touchgfx::TextAreaWithOneWildcard textArea_CH2_Amin;
     touchgfx::TextArea textArea_CH2_UnitsMax;
@@ -85,6 +86,7 @@ protected:
     touchgfx::TextArea textArea_CH2;
     touchgfx::Line line1;
     touchgfx::PainterRGB565 line1Painter;
+    touchgfx::TextAreaWithOneWildcard textArea_CH1_Vrms;
     touchgfx::TextAreaWithOneWildcard textArea_CH1_CurrentSet;
     touchgfx::Box box_CH1_Enable;
     touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_CH1_Enable;
@@ -97,13 +99,15 @@ protected:
     touchgfx::TextAreaWithOneWildcard textArea_CH1_Amin;
     touchgfx::TextArea textArea_CH1_UnitsMax;
     touchgfx::TextAreaWithOneWildcard textArea_CH1_Amax;
-    touchgfx::TextArea textArea_CH1_UnitsRMS;
+    touchgfx::TextArea textArea_CH1_UnitsAmpRMS;
     touchgfx::TextAreaWithOneWildcard textArea_CH1_Arms;
     touchgfx::TextArea textArea_CH1;
 
     /*
      * Wildcard Buffers
      */
+    static const uint16_t TEXTAREA_CH2_VRMS_SIZE = 15;
+    touchgfx::Unicode::UnicodeChar textArea_CH2_VrmsBuffer[TEXTAREA_CH2_VRMS_SIZE];
     static const uint16_t TEXTAREA_CH2_CURRENTSET_SIZE = 15;
     touchgfx::Unicode::UnicodeChar textArea_CH2_CurrentSetBuffer[TEXTAREA_CH2_CURRENTSET_SIZE];
     static const uint16_t TEXTAREA_CH2_AMIN_SIZE = 10;
@@ -112,6 +116,8 @@ protected:
     touchgfx::Unicode::UnicodeChar textArea_CH2_AmaxBuffer[TEXTAREA_CH2_AMAX_SIZE];
     static const uint16_t TEXTAREA_CH2_ARMS_SIZE = 10;
     touchgfx::Unicode::UnicodeChar textArea_CH2_ArmsBuffer[TEXTAREA_CH2_ARMS_SIZE];
+    static const uint16_t TEXTAREA_CH1_VRMS_SIZE = 15;
+    touchgfx::Unicode::UnicodeChar textArea_CH1_VrmsBuffer[TEXTAREA_CH1_VRMS_SIZE];
     static const uint16_t TEXTAREA_CH1_CURRENTSET_SIZE = 15;
     touchgfx::Unicode::UnicodeChar textArea_CH1_CurrentSetBuffer[TEXTAREA_CH1_CURRENTSET_SIZE];
     static const uint16_t TEXTAREA_CH1_AMIN_SIZE = 10;
