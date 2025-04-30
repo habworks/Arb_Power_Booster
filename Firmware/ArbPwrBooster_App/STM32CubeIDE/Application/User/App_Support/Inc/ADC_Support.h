@@ -90,7 +90,9 @@ extern"C" {
 // RMS SPECIFIC
 #define RMS_WINDOW_SIZE         1024
 // MISC
-#define MONITOR_UPDATE_RATE         10U
+#define MONITOR_UPDATE_RATE     10U
+// PRE-PROCESSOR
+//#define CAL_MIN_MAX_VOLTAGE
 
 
 // TYPEDEFS AND ENUMS
@@ -130,6 +132,15 @@ typedef struct
     uint8_t         Depth;
 }Type_16b_FIFO;
 
+typedef struct
+{
+    uint16_t    Index;
+    uint16_t    Count;
+    uint16_t    WindowSize;
+    double      SumOfSquares;
+    float *     BufferWindow;
+}Type_RMS;
+
 
 // FUNCTION PROTOTYPES
 void Init_ADC_Hardware(void);
@@ -140,6 +151,7 @@ double update_CH1_RMS_Current(double NewSampleValue);
 double update_CH2_RMS_Current(double NewSampleValue);
 double update_CH1_RMS_Voltage(double NewSampleValue);
 double update_CH2_RMS_Voltage(double NewSampleValue);
+double update_RMS_Value(Type_RMS *RMS_Object, double NewSampleValue);
 void monitorTaskInit(void);
 void monitorTaskActions(void);
 

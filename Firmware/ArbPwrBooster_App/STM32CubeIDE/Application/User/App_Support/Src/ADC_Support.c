@@ -46,12 +46,13 @@ static double System_ADC_Reference = ADC_REFERENCE_VOLTAGE;     // Init conditio
 
 // Static Function Declarations
 static Type_16b_FIFO *Init_FIFO_Buffer(uint16_t *Buffer, uint8_t BufferLength, uint16_t InitLoadValue);
+static Type_RMS *Init_RMS_Class(float *Buffer, uint16_t BufferLength);
 static void writeTo_FIFO_Buffer(Type_16b_FIFO *Buffer, uint16_t Value);
 static double calculateSystem_3V3(void);
 static double calculateSystemTemp(void);
 static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail);
-static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *FIFO_AmpMon, Type_ChannelConfig *ChannelMeasure);
-static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *FIFO_VoltMon, Type_ChannelMeasure *VoltageMeasure);
+static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *FIFO_AmpMon, Type_ChannelConfig *ChannelMeasure, Type_RMS *RMS_AmpMon);
+static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *FIFO_VoltMon, Type_ChannelMeasure *VoltageMeasure, Type_RMS *RMS_VoltMon);
 
 // Static FIFO Declarations
 // System 3V3
@@ -60,12 +61,6 @@ static Type_16b_FIFO *FIFO_System_3V3;
 // System Temperature
 static uint16_t BufferSystemTemp[SYSTEM_TEMP_BUFFER_SIZE] = {0x0000};
 static Type_16b_FIFO *FIFO_SystemTemp;
-// CH1 Current Monitor
-static uint16_t Buffer_CH1_AmpMon[CH1_AMP_MON_BUFFER_SIZE] = {0x0000};
-static Type_16b_FIFO *FIFO_CH1_AmpMon;
-// CH2 Current Monitor
-static uint16_t Buffer_CH2_AmpMon[CH2_AMP_MON_BUFFER_SIZE] = {0x0000};
-static Type_16b_FIFO *FIFO_CH2_AmpMon;
 // Positive VS Supply Rail Monitor
 static uint16_t Buffer_PVS_Supply[SYSTEM_PVS_BUFFER_SIZE] = {0x0000};
 static Type_16b_FIFO *FIFO_PVS_Supply;
@@ -73,11 +68,27 @@ static Type_16b_FIFO *FIFO_PVS_Supply;
 static uint16_t Buffer_NVS_Supply[SYSTEM_NVS_BUFFER_SIZE] = {0x0000};
 static Type_16b_FIFO *FIFO_NVS_Supply;
 // CH1 Current Monitor
+static uint16_t Buffer_CH1_AmpMon[CH1_AMP_MON_BUFFER_SIZE] = {0x0000};
+static Type_16b_FIFO *FIFO_CH1_AmpMon;
+// CH2 Current Monitor
+static uint16_t Buffer_CH2_AmpMon[CH2_AMP_MON_BUFFER_SIZE] = {0x0000};
+static Type_16b_FIFO *FIFO_CH2_AmpMon;
+// CH1 Current Monitor
 static uint16_t Buffer_CH1_VoltMon[CH1_VOLT_MON_BUFFER_SIZE] = {0x0000};
 static Type_16b_FIFO *FIFO_CH1_VoltMon;
 // CH2 Current Monitor
 static uint16_t Buffer_CH2_VoltMon[CH2_VOLT_MON_BUFFER_SIZE] = {0x0000};
 static Type_16b_FIFO *FIFO_CH2_VoltMon;
+
+// Static RMS Struct Declarations
+static float CH1_AmpMonBuffer[RMS_WINDOW_SIZE];
+static Type_RMS *RMS_CH1_AmpMon;
+static float CH2_AmpMonBuffer[RMS_WINDOW_SIZE];
+static Type_RMS *RMS_CH2_AmpMon;
+static float CH1_VoltMonBuffer[RMS_WINDOW_SIZE];
+static Type_RMS *RMS_CH1_VoltMon;
+static float CH2_VoltMonBuffer[RMS_WINDOW_SIZE];
+static Type_RMS *RMS_CH2_VoltMon;
 
 
 /********************************************************************************************************
@@ -105,6 +116,7 @@ static Type_16b_FIFO *FIFO_CH2_VoltMon;
 * STEP 1: Enable Internal reference and temperature measure
 * STEP 2: Init FIFO Buffers for use with ADC1: Micro-Temp Sensor, System 3.3V
 * STEP 3: Init FIFO Buffers for use with ADC3: ±VS rail, CH1 & CH2 Amp Monitor
+* STEP 4: Init RMS structures
 ********************************************************************************************************/
 void Init_ADC_Hardware(void)
 {
@@ -122,6 +134,12 @@ void Init_ADC_Hardware(void)
     FIFO_CH2_AmpMon = Init_FIFO_Buffer(Buffer_CH2_AmpMon, CH2_AMP_MON_BUFFER_SIZE, 0);
     FIFO_CH1_VoltMon = Init_FIFO_Buffer(Buffer_CH1_VoltMon, CH1_VOLT_MON_BUFFER_SIZE, 0);
     FIFO_CH2_VoltMon = Init_FIFO_Buffer(Buffer_CH2_VoltMon, CH2_VOLT_MON_BUFFER_SIZE, 0);
+
+    // STEP 4: Init RMS structures
+    RMS_CH1_AmpMon = Init_RMS_Class(CH1_AmpMonBuffer, RMS_WINDOW_SIZE);
+    RMS_CH2_AmpMon = Init_RMS_Class(CH2_AmpMonBuffer, RMS_WINDOW_SIZE);
+    RMS_CH1_VoltMon = Init_RMS_Class(CH1_VoltMonBuffer, RMS_WINDOW_SIZE);
+    RMS_CH2_VoltMon = Init_RMS_Class(CH2_VoltMonBuffer, RMS_WINDOW_SIZE);
 
 } // END OF Init_ADC_Hardware
 
@@ -177,8 +195,8 @@ void ADC13_StartConversion(void)
 *
 * ADC3 Configuration:
 * RANK  ADC_CH  Port    Cycles  Net Name
-* 1     6       PF8     28      -VS_MON
-* 2     7       PF9     28      +VS-MON
+* 1     6       PF8     144      -VS_MON
+* 2     7       PF9     144      +VS-MON
 * 3     0       PA0     144     IO_MON_2
 * 4     8       PF10    144     IO_MON_1
 * 5     4       PF6     144     VI_MON_2
@@ -189,10 +207,16 @@ void ADC13_StartConversion(void)
 * @author original: Hab Collector \n
 *
 * @note: This is redefinition - this function is define weak in the HAL but implemented here
-* @note: The Rate toggle output are used to verify ADC conversion rate.  Conversion rate is calculated as:
+* @note: The Rate toggle outputs are used to verify ADC conversion rate.  Conversion rate is calculated as:
 * PCLK2 / ADC_Clock_Presclar * Total Conversion Cycles For All ADC_Channels
-* @note: ADC3 conversion time = 46.81us or 21.36KHz (This is the sampling frequency)
+* @note: ADC3 conversion time = 64.00us or 15.63KHz (This is the sampling frequency)
 * @note: ADC1 conversion time = 71.11us but the sample rate is governed by mainUpdateTaskActions() / GUI_UPDATE_RATE
+* @note: As the sampling frequency is 15.63KHz the max frequency of the input signal (nyquist) 7.813KHz
+* @note: The sampling frequency was limited by the Touch GFX - As this computation must take place periodically and
+* outside of a task, faster sampling frequencies (for example 20KHz) could not be sustained without crashing the TouchGFX
+* That said there is some room to possibly tweak this a little higher.  If only the channel current is being
+* calculated for RMS you can definitely run at 20KHz sampling.  However the 15.63KHz sample is adjusted for
+* both channels current and voltage monitoring RMS.
 *
 * @param hadc: Pointer to the ADC handler
 *
@@ -228,16 +252,16 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
         ArbPwrBooster.SystemMeasure.Positive_VS = calculateSystemSupply(FIFO_PVS_Supply);
         // Current Monitor CH1
         writeTo_FIFO_Buffer(FIFO_CH1_AmpMon, ADC3_CountValue[RANK_4]);
-        calculateChannelCurrent(ADC3_CountValue[RANK_4], FIFO_CH1_AmpMon, &ArbPwrBooster.CH1);
+        calculateChannelCurrent(ADC3_CountValue[RANK_4], FIFO_CH1_AmpMon, &ArbPwrBooster.CH1, RMS_CH1_AmpMon);
         // Current Monitor CH2
         writeTo_FIFO_Buffer(FIFO_CH2_AmpMon, ADC3_CountValue[RANK_3]);
-        calculateChannelCurrent(ADC3_CountValue[RANK_3], FIFO_CH2_AmpMon, &ArbPwrBooster.CH2);
+        calculateChannelCurrent(ADC3_CountValue[RANK_3], FIFO_CH2_AmpMon, &ArbPwrBooster.CH2, RMS_CH2_AmpMon);
         // Voltage Monitor CH1
         writeTo_FIFO_Buffer(FIFO_CH1_VoltMon, ADC3_CountValue[RANK_6]);
-        calculateChannelVoltage(ADC3_CountValue[RANK_6], FIFO_CH1_VoltMon, &ArbPwrBooster.CH1.Measure);
+        calculateChannelVoltage(ADC3_CountValue[RANK_6], FIFO_CH1_VoltMon, &ArbPwrBooster.CH1.Measure, RMS_CH1_VoltMon);
         // Voltage Monitor CH2
         writeTo_FIFO_Buffer(FIFO_CH2_VoltMon, ADC3_CountValue[RANK_5]);
-        calculateChannelVoltage(ADC3_CountValue[RANK_5], FIFO_CH2_VoltMon, &ArbPwrBooster.CH2.Measure);
+        calculateChannelVoltage(ADC3_CountValue[RANK_5], FIFO_CH2_VoltMon, &ArbPwrBooster.CH2.Measure, RMS_CH2_VoltMon);
         // Toggle at the end of conversion - for testing: ADC3 actual conversion rate versus calculated
         ADC3_C_RATE_TOGGLE();
     }
@@ -289,6 +313,42 @@ static Type_16b_FIFO *Init_FIFO_Buffer(uint16_t *Buffer, uint8_t BufferLength, u
     return(FIFO_16Bit);
 
 } // END OF Init_FIFO_Buffer
+
+
+
+/********************************************************************************************************
+* @brief Init of a RMS struct for use.  The base memory location for the buffer is cleared and memory for
+* type is allocated.  The buffer is init with 0 values on count and index
+*
+* @author original: Hab Collector \n
+*
+* @note: This memory is allocated and should never be freed
+*
+* @param Buffer: Pointer to memory that will hold the buffer
+* @param BufferLength: The total number of uint16_t
+*
+* @return: Pointer to the FIFO buffer structure
+*
+* STEP 1: Set the buffer values to 0 and allocate memory for the struct pointer
+* STEP 2: Assign reset values
+********************************************************************************************************/
+static Type_RMS *Init_RMS_Class(float *Buffer, uint16_t BufferLength)
+{
+    // STEP 1: Set the buffer values to 0 and allocate memory for the struct pointer
+    memset(Buffer, 0x00, (sizeof(float) * BufferLength));
+    Type_RMS *RMS_Object = (Type_RMS *)malloc(sizeof(Type_RMS));
+    if (RMS_Object == NULL)
+        systemErrorHandler(__FILE__, __LINE__, 0, "Failed to allocate memory for RMS");
+
+    // STEP 2 Assign reset values
+    RMS_Object->Index = 0;
+    RMS_Object->Count = 0;
+    RMS_Object->WindowSize = BufferLength;
+    RMS_Object->BufferWindow = Buffer;
+
+    return(RMS_Object);
+
+} // END OF Init_RMS_Class
 
 
 
@@ -444,14 +504,15 @@ static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail)
 * @param ADC_AmpMonitorCount: ADC Count from ADC channel for the specific current monitor
 * @param FIFO_AmpMon: FIFO structure associated with the specific Amp Monitor channel
 * @param ChannelMeasure: ArbPwrBooster current measure struct associated with the specific channel
+* @param RMS_AmpMon: Associated RMS structure
 *
 * STEP 1: Calculate the mean of the Current Monitor
 * STEP 2: Calculate the instantaneous current
 * STEP 3: Update Min current or reset min if so desired
 * STEP 4: Update Max current or reset max if so desired
-* STEP 5: Calculate the RMS current and clear min max flag
+* STEP 5: Calculate the RMS current
 ********************************************************************************************************/
-static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *FIFO_AmpMon, Type_ChannelConfig *ChannelMeasure)
+static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *FIFO_AmpMon, Type_ChannelConfig *ChannelMeasure, Type_RMS *RMS_AmpMon)
 {
     double AmpMonitorCurrent = 0;
     ChannelMeasure->Measure.MeanCurrent = 0;
@@ -480,13 +541,17 @@ static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *F
 
     // STEP 4: Update Max current or reset max if so desired
     if (ChannelMeasure->Measure.ResetCurrentMinMax)
+    {
         ChannelMeasure->Measure.MaxCurrent = AmpMonitorCurrent;
+        ChannelMeasure->Measure.ResetCurrentMinMax = false;
+    }
     else if (AmpMonitorCurrent > ChannelMeasure->Measure.MaxCurrent)
+    {
         ChannelMeasure->Measure.MaxCurrent = AmpMonitorCurrent;
+    }
 
-    // STEP 5: Calculate the RMS current and clear min max flag
-    ChannelMeasure->Measure.RMS_Current = ChannelMeasure->Measure.RMS_CurrentFunction(AmpMonitorCurrent);
-    ChannelMeasure->Measure.ResetCurrentMinMax = false;
+    // STEP 5: Calculate the RMS current
+    ChannelMeasure->Measure.RMS_Current = ChannelMeasure->Measure.RMS_CurrentFunction(RMS_AmpMon, AmpMonitorCurrent);
 
 } // END OF calculateChannelCurrent
 
@@ -504,14 +569,15 @@ static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *F
 * @param ADC_VoltMonitorCount: ADC Count from ADC channel for the specific voltage monitor
 * @param FIFO_VoltMon: FIFO structure associated with the specific Volt Monitor channel
 * @param Measure: ArbPwrBooster measure struct associated with the specific channel
+* @param RMS_VoltMon: Associated RMS structure
 *
 * STEP 1: Calculate the mean of the Voltage Monitor
 * STEP 2: Calculate the instantaneous voltage
 * STEP 3: Update Min voltage or reset min if so desired
 * STEP 4: Update Max voltage or reset max if so desired
-* STEP 5: Calculate the RMS voltage and reset min max flag
+* STEP 5: Calculate the RMS voltage
 ********************************************************************************************************/
-static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *FIFO_VoltMon, Type_ChannelMeasure *Measure)
+static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *FIFO_VoltMon, Type_ChannelMeasure *Measure, Type_RMS *RMS_VoltMon)
 {
     // TODO Think about a periodic min max reset
     // STEP 1: Calculate the mean of the Voltage Monitor
@@ -522,6 +588,7 @@ static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *
     double VoltMonitorVoltage = ADC_VoltMonitorCount * LSB_12BIT_VALUE * System_ADC_Reference * VOLT_MON_DIVIDER;
 
     // STEP 3: Update Min voltage or reset min if so desired
+#ifdef CAL_MIN_MAX_VOLTAGE
     if (Measure->ResetVoltageMinMax)
         Measure->MinVoltage = VoltMonitorVoltage;
     else if (VoltMonitorVoltage < Measure->MinVoltage)
@@ -529,13 +596,18 @@ static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *
 
     // STEP 4: Update Max voltage or reset max if so desired
     if (Measure->ResetVoltageMinMax)
+    {
         Measure->MaxVoltage = VoltMonitorVoltage;
+        Measure->ResetVoltageMinMax = false;
+    }
     else if (VoltMonitorVoltage > Measure->MaxVoltage)
+    {
         Measure->MaxVoltage = VoltMonitorVoltage;
+    }
+#endif
 
-    // STEP 5: Calculate the RMS voltage and reset min max flag
-    Measure->RMS_Voltage = Measure->RMS_VoltageFunction(VoltMonitorVoltage);
-    Measure->ResetVoltageMinMax = false;
+    // STEP 5: Calculate the RMS voltage
+    Measure->RMS_Voltage = Measure->RMS_VoltageFunction(RMS_VoltMon, VoltMonitorVoltage);
 
 } // END OF calculateChannelVoltage
 
@@ -543,7 +615,7 @@ static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *
 
 void monitorTaskInit(void)
 {
-
+    DO_NOTHING();
 }
 
 
@@ -702,117 +774,161 @@ bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber)
 
 
 
-// RMS STUFF
-// TODO: Hab make a single RMS function
-// Circular buffer for storing recent ADC values
-static float BufferWindow_CH1[RMS_WINDOW_SIZE] = {0};
-// Function to update RMS in real-time
-double update_CH1_RMS_Current(double NewSampleValue)
+/********************************************************************************************************
+* @brief RMS calculate function.  This function refers to updating as the RMS value is based on a buffer
+* window.  As the buffer is updated with new sample values the RMS output will be updated.  This is a true
+* RMS calculation as it computes the square root of the mean sum of squares.
+*
+* @author original: Hab Collector \n
+*
+* @note: True RMS calculation
+*
+* @param RMS_Object: The RMS Object to be operated on
+* @param NewSampleValue: New sample for which to update the RMS value
+*
+* @return: The RMS updated value
+*
+* STEP 1: Remove the oldest value from sum_squares if buffer is full
+* STEP 2: Store new value and update sum of squares
+* STEP 3: Calculate the updated RMS
+* STEP 4: Move buffer index (circular)
+********************************************************************************************************/
+double update_RMS_Value(Type_RMS *RMS_Object, double NewSampleValue)
 {
-    static int Index = 0;
-    static int Count = 0;
-    static double SumOfSquares = 0.0;
-
-    double RMS_CurrentValue;
-    // Remove the oldest value from sum_squares if buffer is full
-    if (Count >= RMS_WINDOW_SIZE)
-        SumOfSquares -= BufferWindow_CH1[Index] * BufferWindow_CH1[Index];  // Remove old squared value
+    // STEP 1: Remove the oldest value from sum_squares if buffer is full
+    if (RMS_Object->Count >= RMS_Object->WindowSize)
+        RMS_Object->SumOfSquares = RMS_Object->SumOfSquares - (RMS_Object->BufferWindow[RMS_Object->Index] * RMS_Object->BufferWindow[RMS_Object->Index]);  // Remove old squared value
     else
-        Count++;
+        RMS_Object->Count = RMS_Object->Count + 1;
 
-    // Store new value and update sum of squares
-    BufferWindow_CH1[Index] = NewSampleValue;
-    SumOfSquares += NewSampleValue * NewSampleValue;
+    // STEP 2: Store new value and update sum of squares
+    RMS_Object->BufferWindow[RMS_Object->Index] = NewSampleValue;
+    RMS_Object->SumOfSquares = RMS_Object->SumOfSquares + (NewSampleValue * NewSampleValue);
 
-    // Update RMS
-    RMS_CurrentValue = sqrt(SumOfSquares / Count);
+    // STEP 3: Calculate the updated RMS
+    double RMS_CurrentValue = sqrt(RMS_Object->SumOfSquares / RMS_Object->Count);
 
-    // Move buffer index (circular)
-    Index = (Index + 1) % RMS_WINDOW_SIZE;
+    // STEP 4: Move buffer index (circular)
+    RMS_Object->Index = (RMS_Object->Index + 1) % RMS_Object->WindowSize;
 
     return(RMS_CurrentValue);
-}
+
+} // END OF update_RMS_Value
 
 
-static float BufferWindow_CH2[RMS_WINDOW_SIZE] = {0};
-double update_CH2_RMS_Current(double NewSampleValue)
-{
-    static int Index = 0;
-    static int Count = 0;
-    static double SumOfSquares = 0.0;
-
-    double RMS_CurrentValue;
-    // Remove the oldest value from sum_squares if buffer is full
-    if (Count >= RMS_WINDOW_SIZE)
-        SumOfSquares -= BufferWindow_CH2[Index] * BufferWindow_CH2[Index];  // Remove old squared value
-    else
-        Count++;
-
-    // Store new value and update sum of squares
-    BufferWindow_CH2[Index] = NewSampleValue;
-    SumOfSquares += NewSampleValue * NewSampleValue;
-
-    // Update RMS
-    RMS_CurrentValue = sqrt(SumOfSquares / Count);
-
-    // Move buffer index (circular)
-    Index = (Index + 1) % RMS_WINDOW_SIZE;
-
-    return(RMS_CurrentValue);
-}
-
-
-static float BufferWindowVoltage_CH1[RMS_WINDOW_SIZE] = {0};
-double update_CH1_RMS_Voltage(double NewSampleValue)
-{
-    static int Index = 0;
-    static int Count = 0;
-    static double SumOfSquares = 0.0;
-
-    double RMS_CurrentValue;
-    // Remove the oldest value from sum_squares if buffer is full
-    if (Count >= RMS_WINDOW_SIZE)
-        SumOfSquares -= BufferWindowVoltage_CH1[Index] * BufferWindowVoltage_CH1[Index];  // Remove old squared value
-    else
-        Count++;
-
-    // Store new value and update sum of squares
-    BufferWindowVoltage_CH1[Index] = NewSampleValue;
-    SumOfSquares += NewSampleValue * NewSampleValue;
-
-    // Update RMS
-    RMS_CurrentValue = sqrt(SumOfSquares / Count);
-
-    // Move buffer index (circular)
-    Index = (Index + 1) % RMS_WINDOW_SIZE;
-
-    return(RMS_CurrentValue);
-}
-
-
-static float BufferWindowVoltage_CH2[RMS_WINDOW_SIZE] = {0};
-double update_CH2_RMS_Voltage(double NewSampleValue)
-{
-    static int Index = 0;
-    static int Count = 0;
-    static double SumOfSquares = 0.0;
-
-    double RMS_CurrentValue;
-    // Remove the oldest value from sum_squares if buffer is full
-    if (Count >= RMS_WINDOW_SIZE)
-        SumOfSquares -= BufferWindowVoltage_CH2[Index] * BufferWindowVoltage_CH2[Index];  // Remove old squared value
-    else
-        Count++;
-
-    // Store new value and update sum of squares
-    BufferWindowVoltage_CH2[Index] = NewSampleValue;
-    SumOfSquares += NewSampleValue * NewSampleValue;
-
-    // Update RMS
-    RMS_CurrentValue = sqrt(SumOfSquares / Count);
-
-    // Move buffer index (circular)
-    Index = (Index + 1) % RMS_WINDOW_SIZE;
-
-    return(RMS_CurrentValue);
-}
+//// OLD RMS STUFF TO BE DELETED
+//// Circular buffer for storing recent ADC values
+//static float BufferWindow_CH1[RMS_WINDOW_SIZE] = {0};
+//// Function to update RMS in real-time
+//double update_CH1_RMS_Current(double NewSampleValue)
+//{
+//    static int Index = 0;
+//    static int Count = 0;
+//    static double SumOfSquares = 0.0;
+//
+//    double RMS_CurrentValue;
+//    // Remove the oldest value from sum_squares if buffer is full
+//    if (Count >= RMS_WINDOW_SIZE)
+//        SumOfSquares -= BufferWindow_CH1[Index] * BufferWindow_CH1[Index];  // Remove old squared value
+//    else
+//        Count++;
+//
+//    // Store new value and update sum of squares
+//    BufferWindow_CH1[Index] = NewSampleValue;
+//    SumOfSquares += NewSampleValue * NewSampleValue;
+//
+//    // Update RMS
+//    RMS_CurrentValue = sqrt(SumOfSquares / Count);
+//
+//    // Move buffer index (circular)
+//    Index = (Index + 1) % RMS_WINDOW_SIZE;
+//
+//    return(RMS_CurrentValue);
+//}
+//
+//
+//static float BufferWindow_CH2[RMS_WINDOW_SIZE] = {0};
+//double update_CH2_RMS_Current(double NewSampleValue)
+//{
+//    static int Index = 0;
+//    static int Count = 0;
+//    static double SumOfSquares = 0.0;
+//
+//    double RMS_CurrentValue;
+//    // Remove the oldest value from sum_squares if buffer is full
+//    if (Count >= RMS_WINDOW_SIZE)
+//        SumOfSquares -= BufferWindow_CH2[Index] * BufferWindow_CH2[Index];  // Remove old squared value
+//    else
+//        Count++;
+//
+//    // Store new value and update sum of squares
+//    BufferWindow_CH2[Index] = NewSampleValue;
+//    SumOfSquares += NewSampleValue * NewSampleValue;
+//
+//    // Update RMS
+//    RMS_CurrentValue = sqrt(SumOfSquares / Count);
+//
+//    // Move buffer index (circular)
+//    Index = (Index + 1) % RMS_WINDOW_SIZE;
+//
+//    return(RMS_CurrentValue);
+//}
+//
+//
+//static float BufferWindowVoltage_CH1[RMS_WINDOW_SIZE] = {0};
+//double update_CH1_RMS_Voltage(double NewSampleValue)
+//{
+//    static int Index = 0;
+//    static int Count = 0;
+//    static double SumOfSquares = 0.0;
+//
+//    double RMS_CurrentValue;
+//    // Remove the oldest value from sum_squares if buffer is full
+//    if (Count >= RMS_WINDOW_SIZE)
+//        SumOfSquares -= BufferWindowVoltage_CH1[Index] * BufferWindowVoltage_CH1[Index];  // Remove old squared value
+//    else
+//        Count++;
+//
+//    // Store new value and update sum of squares
+//    BufferWindowVoltage_CH1[Index] = NewSampleValue;
+//    SumOfSquares += NewSampleValue * NewSampleValue;
+//
+//    // Update RMS
+//    RMS_CurrentValue = sqrt(SumOfSquares / Count);
+//
+//    // Move buffer index (circular)
+//    Index = (Index + 1) % RMS_WINDOW_SIZE;
+//
+//    return(RMS_CurrentValue);
+//}
+//
+//
+//static float BufferWindowVoltage_CH2[RMS_WINDOW_SIZE] = {0};
+//double update_CH2_RMS_Voltage(double NewSampleValue)
+//{
+//    static int Index = 0;
+//    static int Count = 0;
+//    static double SumOfSquares = 0.0;
+//
+//    double RMS_CurrentValue;
+//    // Remove the oldest value from sum_squares if buffer is full
+//    if (Count >= RMS_WINDOW_SIZE)
+//        SumOfSquares -= BufferWindowVoltage_CH2[Index] * BufferWindowVoltage_CH2[Index];  // Remove old squared value
+//    else
+//        Count++;
+//
+//    // Store new value and update sum of squares
+//    BufferWindowVoltage_CH2[Index] = NewSampleValue;
+//    SumOfSquares += NewSampleValue * NewSampleValue;
+//
+//    // Update RMS
+//    RMS_CurrentValue = sqrt(SumOfSquares / Count);
+//
+//    // Move buffer index (circular)
+//    Index = (Index + 1) % RMS_WINDOW_SIZE;
+//
+//    return(RMS_CurrentValue);
+//}
+//
+//
+//

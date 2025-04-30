@@ -31,6 +31,7 @@ extern"C" {
 #endif
 
 #include "Hab_Types.h"
+#include "ADC_Support.h"
 #include "stm32f7xx_hal.h"
 
 // DEFINES
@@ -132,7 +133,7 @@ typedef struct
     double                  Current;
 }Type_SetLimits;
 
-typedef double (*Type_RMS_Calculate)(double);
+typedef double (*Type_RMS_Calculate)(Type_RMS *, double);
 typedef struct
 {
     bool                    ResetCurrentMinMax;

@@ -88,11 +88,11 @@ void Init_ArbPwrBoosterClass(void)
     ArbPwrBooster.CH1.Measure.ResetCurrentMinMax = true;
     ArbPwrBooster.CH1.Measure.MaxCurrent = 0;
     ArbPwrBooster.CH1.Measure.MinCurrent = 0;
-    ArbPwrBooster.CH1.Measure.RMS_CurrentFunction = update_CH1_RMS_Current;
+    ArbPwrBooster.CH1.Measure.RMS_CurrentFunction = update_RMS_Value;
     ArbPwrBooster.CH1.Measure.ResetVoltageMinMax = true;
     ArbPwrBooster.CH1.Measure.MinVoltage = 0;
     ArbPwrBooster.CH1.Measure.MaxVoltage = 0;
-    ArbPwrBooster.CH1.Measure.RMS_VoltageFunction = update_CH1_RMS_Voltage;
+    ArbPwrBooster.CH1.Measure.RMS_VoltageFunction = update_RMS_Value;
     // Channel 2 Init
     ArbPwrBooster.CH2.InputImpedance = ONE_MEG_OHM;
     ArbPwrBooster.CH2.OutputSwitch = OFF;
@@ -101,11 +101,11 @@ void Init_ArbPwrBoosterClass(void)
     ArbPwrBooster.CH2.Measure.ResetCurrentMinMax = true;
     ArbPwrBooster.CH2.Measure.MaxCurrent = 0;
     ArbPwrBooster.CH2.Measure.MinCurrent = 0;
-    ArbPwrBooster.CH2.Measure.RMS_CurrentFunction = update_CH2_RMS_Current;
+    ArbPwrBooster.CH2.Measure.RMS_CurrentFunction = update_RMS_Value;
     ArbPwrBooster.CH2.Measure.ResetVoltageMinMax = true;
     ArbPwrBooster.CH2.Measure.MinVoltage = 0;
     ArbPwrBooster.CH2.Measure.MaxVoltage = 0;
-    ArbPwrBooster.CH2.Measure.RMS_VoltageFunction = update_CH2_RMS_Voltage;
+    ArbPwrBooster.CH2.Measure.RMS_VoltageFunction = update_RMS_Value;
 
 } // END OF Init_ArbPwrBoosterClass
 
