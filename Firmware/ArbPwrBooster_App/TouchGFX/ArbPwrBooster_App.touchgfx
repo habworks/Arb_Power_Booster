@@ -367,6 +367,22 @@
           },
           {
             "Type": "TextArea",
+            "Name": "textArea_CH2_CC",
+            "X": 400,
+            "Y": 150,
+            "Width": 32,
+            "Height": 24,
+            "TextId": "__SingleUse_VSGZ",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 51,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
             "Name": "textArea_CH2_UnitsMin",
             "X": 365,
             "Y": 106,
@@ -534,7 +550,7 @@
             "Type": "TextArea",
             "Name": "textArea_CH1_CurrentSet",
             "X": 22,
-            "Y": 150,
+            "Y": 151,
             "Width": 128,
             "Height": 24,
             "TextId": "__SingleUse_FFBY",
@@ -550,6 +566,22 @@
               "UseBuffer": true,
               "BufferSize": 15
             }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea_CH1_CC",
+            "X": 160,
+            "Y": 150,
+            "Width": 32,
+            "Height": 24,
+            "TextId": "__SingleUse_HV1P",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 199,
+              "Blue": 25
+            },
+            "AutoSize": true
           },
           {
             "Type": "Box",

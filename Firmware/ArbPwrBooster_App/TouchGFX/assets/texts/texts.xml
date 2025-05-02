@@ -19,6 +19,12 @@
       </Text>
     </TextGroup>
     <TextGroup Id="Unsorted">
+      <Text Id="__SingleUse_VSGZ" Alignment="Left" TypographyId="CenturyGothic_Units">
+        <Translation Language="GB">CC</Translation>
+      </Text>
+      <Text Id="__SingleUse_HV1P" Alignment="Left" TypographyId="CenturyGothic_Units">
+        <Translation Language="GB">CC</Translation>
+      </Text>
       <Text Id="__SingleUse_R38G" Alignment="Left" TypographyId="Default">
         <Translation Language="GB">00.000</Translation>
       </Text>

@@ -77,6 +77,7 @@ protected:
     touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_CH2_InputZ;
     touchgfx::TextAreaWithOneWildcard textArea_CH2_Vrms;
     touchgfx::TextAreaWithOneWildcard textArea_CH2_CurrentSet;
+    touchgfx::TextArea textArea_CH2_CC;
     touchgfx::TextArea textArea_CH2_UnitsMin;
     touchgfx::TextAreaWithOneWildcard textArea_CH2_Amin;
     touchgfx::TextArea textArea_CH2_UnitsMax;
@@ -88,6 +89,7 @@ protected:
     touchgfx::PainterRGB565 line1Painter;
     touchgfx::TextAreaWithOneWildcard textArea_CH1_Vrms;
     touchgfx::TextAreaWithOneWildcard textArea_CH1_CurrentSet;
+    touchgfx::TextArea textArea_CH1_CC;
     touchgfx::Box box_CH1_Enable;
     touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger >  flexButton_CH1_Enable;
     touchgfx::TextArea textArea_CH1_Enable;

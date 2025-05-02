@@ -31,7 +31,7 @@ extern"C" {
 #endif
 
 #include "Hab_Types.h"
-#include "ADC_Support.h"
+#include "RMS_Calculate.h"
 #include "stm32f7xx_hal.h"
 
 // DEFINES

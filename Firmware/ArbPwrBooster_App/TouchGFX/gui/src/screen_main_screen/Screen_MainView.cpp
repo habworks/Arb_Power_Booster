@@ -29,7 +29,7 @@ void Screen_MainView::tearDownScreen()
 * @brief Update the screen on entry.  It is called by the end of the Main Screen transition interaction.
 * Update the display for all fixed items.  It is called only once when the screen becomes active.  See
 * function updateMainScreen_View() as the function that handles the repeated update of the screen while
-* it is active.
+* it is active.  By default set the CC icon to off - it will be toggled by updateMainScreen_View() as needed.
 *
 * @author original: Hab Collector \n
 *
@@ -59,6 +59,8 @@ void Screen_MainView::updateScreenMainOnEntry(void)
         textArea_CH1_CurrentSet.setVisible(false);
     }
     textArea_CH1_CurrentSet.invalidate();
+    textArea_CH1_CC.setVisible(false);
+    textArea_CH1_CC.invalidate();
 
     // STEP 3: Update Channel 2
     inputImpedanceSet_CH2();
@@ -74,6 +76,8 @@ void Screen_MainView::updateScreenMainOnEntry(void)
         textArea_CH2_CurrentSet.setVisible(false);
     }
     textArea_CH2_CurrentSet.invalidate();
+    textArea_CH2_CC.setVisible(false);
+    textArea_CH2_CC.invalidate();
 
 } // END OF updateScreenMainOnEntry
 
@@ -404,6 +408,9 @@ void Screen_MainView::setActiveLimit_CH2(void)
 ********************************************************************************************************/
 void Screen_MainView::updateMainScreen_View(void)
 {
+    static uint8_t CC_ToggleRate = 0;
+    static bool CC_On = true;
+
     // STEP 1: Update Channel 1
     // RMS output current
     Unicode::snprintfFloat(textArea_CH1_ArmsBuffer, TEXTAREA_CH1_ARMS_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.RMS_Current);
@@ -417,6 +424,21 @@ void Screen_MainView::updateMainScreen_View(void)
     // RMS input voltage
     Unicode::snprintfFloat(textArea_CH1_VrmsBuffer, TEXTAREA_CH1_VRMS_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.RMS_Voltage);
     textArea_CH1_Vrms.setWildcard(textArea_CH1_VrmsBuffer);
+    // Constant Current Mode
+    // TODO: Hab basic test code just to see CC blinking - fix and incorporate at this blink rate
+    if (ArbPwrBooster.CH1.Limit.Enable)
+    {
+        CC_ToggleRate++;
+        if (CC_ToggleRate == 1)
+        {
+            if (CC_On)
+                textArea_CH1_CC.setVisible(true);
+            else
+                textArea_CH1_CC.setVisible(false);
+            CC_On = !CC_On;
+            CC_ToggleRate = 0;
+        }
+    }
 
     // STEP 2: Update Channel 2
     // RMS output current
@@ -431,6 +453,8 @@ void Screen_MainView::updateMainScreen_View(void)
     // RMS input voltage
     Unicode::snprintfFloat(textArea_CH2_VrmsBuffer, TEXTAREA_CH2_VRMS_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.RMS_Voltage);
     textArea_CH2_Vrms.setWildcard(textArea_CH2_VrmsBuffer);
+    // Constant Current Mode
+
 
     // STEP 3: Config Icon Color
     char NotUsedStatusText[25];

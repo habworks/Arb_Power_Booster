@@ -132,26 +132,16 @@ typedef struct
     uint8_t         Depth;
 }Type_16b_FIFO;
 
-typedef struct
-{
-    uint16_t    Index;
-    uint16_t    Count;
-    uint16_t    WindowSize;
-    double      SumOfSquares;
-    float *     BufferWindow;
-}Type_RMS;
-
 
 // FUNCTION PROTOTYPES
 void Init_ADC_Hardware(void);
 void ADC13_StartConversion(void);
 void ADC1_StartConversion(void);
 bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber);
-double update_CH1_RMS_Current(double NewSampleValue);
-double update_CH2_RMS_Current(double NewSampleValue);
-double update_CH1_RMS_Voltage(double NewSampleValue);
-double update_CH2_RMS_Voltage(double NewSampleValue);
-double update_RMS_Value(Type_RMS *RMS_Object, double NewSampleValue);
+//double update_CH1_RMS_Current(double NewSampleValue);
+//double update_CH2_RMS_Current(double NewSampleValue);
+//double update_CH1_RMS_Voltage(double NewSampleValue);
+//double update_CH2_RMS_Voltage(double NewSampleValue);
 void monitorTaskInit(void);
 void monitorTaskActions(void);
 

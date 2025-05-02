@@ -29,12 +29,14 @@
 #include "IO_Support.h"
 #include "Terminal_Emulator_Support.h"
 #include "MCP45HVX1_Driver.h"
+#include "RMS_Calculate.h"
+#include "PID_Controller.h"
 #include "stm32f7xx_hal_adc.h"
 #include "cmsis_os2.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
+
 
 extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc3;
@@ -46,7 +48,6 @@ static double System_ADC_Reference = ADC_REFERENCE_VOLTAGE;     // Init conditio
 
 // Static Function Declarations
 static Type_16b_FIFO *Init_FIFO_Buffer(uint16_t *Buffer, uint8_t BufferLength, uint16_t InitLoadValue);
-static Type_RMS *Init_RMS_Class(float *Buffer, uint16_t BufferLength);
 static void writeTo_FIFO_Buffer(Type_16b_FIFO *Buffer, uint16_t Value);
 static double calculateSystem_3V3(void);
 static double calculateSystemTemp(void);
@@ -89,6 +90,9 @@ static float CH1_VoltMonBuffer[RMS_WINDOW_SIZE];
 static Type_RMS *RMS_CH1_VoltMon;
 static float CH2_VoltMonBuffer[RMS_WINDOW_SIZE];
 static Type_RMS *RMS_CH2_VoltMon;
+
+// Static PID Controller Declarations
+static Type_PID_Controller *PID_CH1_DigitalPot;
 
 
 /********************************************************************************************************
@@ -140,6 +144,9 @@ void Init_ADC_Hardware(void)
     RMS_CH2_AmpMon = Init_RMS_Class(CH2_AmpMonBuffer, RMS_WINDOW_SIZE);
     RMS_CH1_VoltMon = Init_RMS_Class(CH1_VoltMonBuffer, RMS_WINDOW_SIZE);
     RMS_CH2_VoltMon = Init_RMS_Class(CH2_VoltMonBuffer, RMS_WINDOW_SIZE);
+
+    // STEP 5: Init PID structures
+    PID_CH1_DigitalPot = Init_PID_Controller(100, 100, 0);
 
 } // END OF Init_ADC_Hardware
 
@@ -313,42 +320,6 @@ static Type_16b_FIFO *Init_FIFO_Buffer(uint16_t *Buffer, uint8_t BufferLength, u
     return(FIFO_16Bit);
 
 } // END OF Init_FIFO_Buffer
-
-
-
-/********************************************************************************************************
-* @brief Init of a RMS struct for use.  The base memory location for the buffer is cleared and memory for
-* type is allocated.  The buffer is init with 0 values on count and index
-*
-* @author original: Hab Collector \n
-*
-* @note: This memory is allocated and should never be freed
-*
-* @param Buffer: Pointer to memory that will hold the buffer
-* @param BufferLength: The total number of uint16_t
-*
-* @return: Pointer to the FIFO buffer structure
-*
-* STEP 1: Set the buffer values to 0 and allocate memory for the struct pointer
-* STEP 2: Assign reset values
-********************************************************************************************************/
-static Type_RMS *Init_RMS_Class(float *Buffer, uint16_t BufferLength)
-{
-    // STEP 1: Set the buffer values to 0 and allocate memory for the struct pointer
-    memset(Buffer, 0x00, (sizeof(float) * BufferLength));
-    Type_RMS *RMS_Object = (Type_RMS *)malloc(sizeof(Type_RMS));
-    if (RMS_Object == NULL)
-        systemErrorHandler(__FILE__, __LINE__, 0, "Failed to allocate memory for RMS");
-
-    // STEP 2 Assign reset values
-    RMS_Object->Index = 0;
-    RMS_Object->Count = 0;
-    RMS_Object->WindowSize = BufferLength;
-    RMS_Object->BufferWindow = Buffer;
-
-    return(RMS_Object);
-
-} // END OF Init_RMS_Class
 
 
 
@@ -643,9 +614,25 @@ void monitorTaskActions(void)
                 CH2_INPUT_ENABLE();
             }
 
-            // STEP 4: Check for short circuit conditions
+            // STEP 4: Check for current limit conditions CH 1
+//            if ((ArbPwrBooster.CH1.OutputSwitch = ON) && (ArbPwrBooster.CH1.Limit.Enable))
+//            {
+//                uint8_t DigitalPotValue_CH1 = PID_updateDigitalPot(PID_CH1_DigitalPot, ArbPwrBooster.CH1.Measure.RMS_Current, ArbPwrBooster.CH1.Limit.Current, (MONITOR_UPDATE_RATE * 1E-3), MCP45HVX1_POT_FULL_RESOLUTION);
+//                if (DigitalPotValue_CH1 != 0)
+//                {
+//                    if (!MCP45HVX1_WriteWiperVerify(&hi2c1, A1A0_EXTERNAL_ADDR_CH1, DigitalPotValue_CH1))
+//                        printYellow("WARNING: Failed to adjust digital pot control\r\n");
+//                    else
+//                    {
+//                        char PrintMsg[100];
+//                        sprintf(PrintMsg, "CH1 Pot: %d\r\n", DigitalPotValue_CH1);
+//                        printGreen(PrintMsg);
+//                    }
+//                }
+//            }
 
-            // STEP 5: Check for current limit conditions
+            // STEP 5: Check for current limit conditions CH 2
+
 
             // STEP 6: Check for critical system error conditions
             // Over Voltage on ±VS supply
@@ -773,47 +760,6 @@ bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber)
 
 
 
-
-/********************************************************************************************************
-* @brief RMS calculate function.  This function refers to updating as the RMS value is based on a buffer
-* window.  As the buffer is updated with new sample values the RMS output will be updated.  This is a true
-* RMS calculation as it computes the square root of the mean sum of squares.
-*
-* @author original: Hab Collector \n
-*
-* @note: True RMS calculation
-*
-* @param RMS_Object: The RMS Object to be operated on
-* @param NewSampleValue: New sample for which to update the RMS value
-*
-* @return: The RMS updated value
-*
-* STEP 1: Remove the oldest value from sum_squares if buffer is full
-* STEP 2: Store new value and update sum of squares
-* STEP 3: Calculate the updated RMS
-* STEP 4: Move buffer index (circular)
-********************************************************************************************************/
-double update_RMS_Value(Type_RMS *RMS_Object, double NewSampleValue)
-{
-    // STEP 1: Remove the oldest value from sum_squares if buffer is full
-    if (RMS_Object->Count >= RMS_Object->WindowSize)
-        RMS_Object->SumOfSquares = RMS_Object->SumOfSquares - (RMS_Object->BufferWindow[RMS_Object->Index] * RMS_Object->BufferWindow[RMS_Object->Index]);  // Remove old squared value
-    else
-        RMS_Object->Count = RMS_Object->Count + 1;
-
-    // STEP 2: Store new value and update sum of squares
-    RMS_Object->BufferWindow[RMS_Object->Index] = NewSampleValue;
-    RMS_Object->SumOfSquares = RMS_Object->SumOfSquares + (NewSampleValue * NewSampleValue);
-
-    // STEP 3: Calculate the updated RMS
-    double RMS_CurrentValue = sqrt(RMS_Object->SumOfSquares / RMS_Object->Count);
-
-    // STEP 4: Move buffer index (circular)
-    RMS_Object->Index = (RMS_Object->Index + 1) % RMS_Object->WindowSize;
-
-    return(RMS_CurrentValue);
-
-} // END OF update_RMS_Value
 
 
 //// OLD RMS STUFF TO BE DELETED
