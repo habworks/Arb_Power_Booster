@@ -38,6 +38,8 @@ extern"C" {
 #define DEBUG_CONSOLE_HELP          "Help"
 #define WRITE_DIGITAL_POT_ATTEN     "Write Pot"
 #define READ_DIGITAL_POT_ATTEN      "Read Pot"
+#define CHANNEL_OUTPUT_ON           "Output On"
+#define CHANNEL_OUTPUT_OFF          "Output Off"
 
 // FUNCTION PROTOTYPES
 void debugConsoleTaskInit(void);

@@ -28,10 +28,12 @@
 #include "UART_Support.h"
 #include "Terminal_Emulator_Support.h"
 #include "MCP45HVX1_Driver.h"
+#include "IO_Support.h"
 #include "cmsis_os2.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+
 
 // Static Function Declarations
 static void callDebugFunction(char *CommandToProcess);
@@ -40,6 +42,8 @@ static void resetDebugCommandSearch(void);
 static void printDebugConsoleHelp(void);
 static void writeDigitalPotAttenuation(char *CommandLine);
 static void readDigitalPotAttenuation(char *CommandLine);
+static void channelOutputEnable(char *CommandLine);
+static void channelOutputDisable(char *CommandLine);
 // Global
 static char CharsToProcessBuffer[10] = {0};
 static char DebugCommand[100] = {0};
@@ -208,6 +212,14 @@ static void callDebugFunction(char *CommandToProcess)
     {
         readDigitalPotAttenuation(CommandToProcess);
     }
+    else if (strstr(CommandToProcess, CHANNEL_OUTPUT_ON) != NULL)
+    {
+        channelOutputEnable(CommandToProcess);
+    }
+    else if (strstr(CommandToProcess, CHANNEL_OUTPUT_OFF) != NULL)
+    {
+        channelOutputDisable(CommandToProcess);
+    }
     else
     {
         CommandFound = false;
@@ -314,5 +326,17 @@ static void readDigitalPotAttenuation(char *CommandLine)
         printf("Error: Reading pot wiper value\r\n");
 
 } // END OF readDigitalPotAttenuation
+
+
+static void channelOutputEnable(char *CommandLine)
+{
+    CH1_OUTPUT_ENABLE();
+}
+
+
+static void channelOutputDisable(char *CommandLine)
+{
+    CH1_OUTPUT_DISABLE();
+}
 
 

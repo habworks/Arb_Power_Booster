@@ -1,0 +1,66 @@
+Circuit: * C:\IMR_Projects\IMR\Arb_Power_Booster\Simulate\Current Amp-IC-Form.asc
+
+WARNING: Less than two connections to node VIN.  This node is used by V3.
+Early termination of direct N-R iteration.
+Direct Newton iteration failed to find .op point.  (Use ".option noopiter" to skip.)
+Starting Gmin stepping
+Gmin = 10
+Gmin = 1.07374
+Gmin = 0.115292
+Gmin = 0.0123794
+Gmin = 0.00132923
+Gmin = 0.000142725
+Gmin = 1.5325e-005
+vernier = 0.5
+Gmin = 2.5711e-006
+vernier = 0.25
+vernier = 0.125
+vernier = 0.0625
+vernier = 0.03125
+Gmin = 2.47386e-006
+vernier = 0.015625
+vernier = 0.0078125
+vernier = 0.00390625
+vernier = 0.00195313
+vernier = 0.000976563
+Gmin = 2.49197e-006
+vernier = 0.00130208
+Gmin = 2.48489e-006
+vernier = 0.00173611
+vernier = 0.00231481
+Gmin = 2.47332e-006
+vernier = 0.00308642
+vernier = 0.00154321
+vernier = 0.000771604
+vernier = 0.000578703
+vernier = 0.000434027
+Gmin = 2.46523e-006
+Gmin = 0
+Gmin stepping failed
+
+Starting source stepping with srcstepmethod=0
+Source Step = 3.0303%
+Source Step = 33.3333%
+Source Step = 63.6364%
+Source Step = 93.9394%
+Source stepping succeeded in finding the operating point.
+
+
+Date: Mon May 05 08:41:39 2025
+Total elapsed time: 1.219 seconds.
+
+tnom = 27
+temp = 27
+method = modified trap
+totiter = 5123
+traniter = 2092
+tranpoints = 1047
+accept = 1047
+rejected = 0
+matrix size = 207
+fillins = 1058
+solver = Normal
+Thread vector: 30.9/4.9[5] 6.1/1.9[5] 2.2/2.0[1] 1.2/1.5[1]  2592/500
+Matrix Compiler1:    7068 opcodes  14.8/[7.8]/9.4
+Matrix Compiler2: 36.32 KB object code size  2.8/3.0/[1.8]
+

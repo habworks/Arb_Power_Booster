@@ -603,9 +603,10 @@ void monitorTaskActions(void)
             char NotUsedStatusMsg[25] = {0x00};
             uint8_t ConfigError = 0;
             systemMeasureWithinLimits(NotUsedStatusMsg, &ConfigError);
+            // TODO: Hab needs work - IR losses on VS input lines causes this to fail - adjust VS limit error
             if ((ConfigError & CONFIG_POS_VS_ERROR) || (ConfigError & CONFIG_NEG_VS_ERROR))
             {
-                CH1_INPUT_DISABLE();
+//                CH1_INPUT_DISABLE();  TODO: Hab this is temporary patch - allows max output power on channel 1
                 CH2_INPUT_DISABLE();
             }
             else
