@@ -1,42 +1,22 @@
-Missing ".ends" statement in file "MMSZ5239BS.MOD"
 Circuit: * C:\IMR_Projects\IMR\Arb_Power_Booster\Simulate\Draft3.asc
 
-WARNING: Less than two connections to node NC_01.  This node is used by V2.
-Direct Newton iteration failed to find .op point.  (Use ".option noopiter" to skip.)
-Starting Gmin stepping
-Gmin = 10
-Gmin = 1.07374
-Gmin = 0.115292
-Gmin = 0.0123794
-Gmin = 0.00132923
-Gmin = 0.000142725
-Gmin = 1.5325e-005
-Gmin = 1.6455e-006
-Gmin = 1.76685e-007
-Gmin = 1.89714e-008
-Gmin = 2.03704e-009
-Gmin = 2.18725e-010
-Gmin = 2.34854e-011
-Gmin = 2.52173e-012
-Gmin = 2.70769e-013
-Gmin = 0
-Gmin stepping succeeded in finding the operating point.
+Instance "m:u2:1": Width narrower than recommended for a level 3 MOSFET.
+Direct Newton iteration for .op point succeeded.
 
-
-Date: Mon Mar 24 14:45:27 2025
-Total elapsed time: 0.157 seconds.
+Date: Wed May 07 11:52:39 2025
+Total elapsed time: 0.169 seconds.
 
 tnom = 27
 temp = 27
 method = modified trap
-totiter = 2508
-traniter = 2088
-tranpoints = 1045
-accept = 1045
-rejected = 0
-matrix size = 30
-fillins = 4
+totiter = 5070
+traniter = 5046
+tranpoints = 2045
+accept = 1755
+rejected = 290
+matrix size = 16
+fillins = 5
 solver = Normal
-Matrix Compiler1: 1.68 KB object code size  0.3/0.5/[0.1]
-Matrix Compiler2: off  [0.1]/0.2/0.7
+Matrix Compiler1: 970 bytes object code size  0.1/0.1/[0.1]
+Matrix Compiler2: off  [0.1]/0.1/0.1
 
