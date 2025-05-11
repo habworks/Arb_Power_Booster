@@ -43,7 +43,7 @@ PrefsRevisionGUID=
 DocumentPath=..\SCH\ArbPwrBoost_P1.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
+AnnotationIndexControlEnabled=1
 AnnotateSuffix=
 AnnotateScope=All
 AnnotateOrder=0
@@ -60,7 +60,7 @@ DocumentUniqueId=NPGYETIQ
 DocumentPath=..\SCH\ArbPwrBoost_P2.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
+AnnotationIndexControlEnabled=1
 AnnotateSuffix=
 AnnotateScope=All
 AnnotateOrder=1
@@ -77,7 +77,7 @@ DocumentUniqueId=VPHGWPFC
 DocumentPath=..\SCH\ArbPwrBoost_P3.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
+AnnotationIndexControlEnabled=1
 AnnotateSuffix=
 AnnotateScope=All
 AnnotateOrder=2
@@ -94,7 +94,7 @@ DocumentUniqueId=QIVOWRWU
 DocumentPath=..\SCH\ArbPwrBoost_P4.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
+AnnotationIndexControlEnabled=1
 AnnotateSuffix=
 AnnotateScope=All
 AnnotateOrder=3
@@ -128,7 +128,7 @@ DocumentUniqueId=WTIKOPUA
 DocumentPath=..\SCH\ArbPwrBoost_P5.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
+AnnotationIndexControlEnabled=1
 AnnotateSuffix=
 AnnotateScope=All
 AnnotateOrder=4
@@ -179,7 +179,7 @@ DocumentUniqueId=BDJOLWRN
 DocumentPath=..\SCH\ArbPwrBoost_P6.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
+AnnotationIndexControlEnabled=1
 AnnotateSuffix=
 AnnotateScope=All
 AnnotateOrder=5
@@ -196,7 +196,7 @@ DocumentUniqueId=OMGMHWFN
 DocumentPath=..\SCH\ArbPwrBoost_P7.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
+AnnotationIndexControlEnabled=1
 AnnotateSuffix=
 AnnotateScope=All
 AnnotateOrder=6
@@ -213,7 +213,7 @@ DocumentUniqueId=RPFCNWCB
 DocumentPath=..\SCH\ArbPwrBoost_P8.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
+AnnotationIndexControlEnabled=1
 AnnotateSuffix=
 AnnotateScope=All
 AnnotateOrder=7
@@ -248,24 +248,24 @@ DocumentPath=Outputs\Design Rule Check - ArbPwrBoost.html
 DItemRevisionGUID=
 
 [Parameter1]
-Name=ProjectTitle
-Value=Arbitrary Power Booster
+Name=ProjectDate
+Value=05/12/25
 
 [Parameter2]
-Name=ProjectTime
-Value=08:00
+Name=ProjectDocumentNumber
+Value=IMR-005-SCH
 
 [Parameter3]
 Name=ProjectRevision
 Value=3
 
 [Parameter4]
-Name=ProjectDocumentNumber
-Value=IMR-005-SCH
+Name=ProjectTime
+Value=08:00
 
 [Parameter5]
-Name=ProjectDate
-Value=05/12/25
+Name=ProjectTitle
+Value=Arbitrary Power Booster
 
 [Configuration1]
 Name=Default Configuration
