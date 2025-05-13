@@ -5,7 +5,7 @@ Address:
   Snellville, GA 30039
 Board:
   PN: 	IMR-005-PCB
-  REV:	2
+  REV:	3
 
 FOR ASSISTANCE:
 ENGINEER: 	Hab Collector
