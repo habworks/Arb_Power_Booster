@@ -25,6 +25,7 @@
  ******************************************************************************************************/
 
 #include "Debug_Port.h"
+#include "Main_Support.h"
 #include "UART_Support.h"
 #include "Terminal_Emulator_Support.h"
 #include "MCP45HVX1_Driver.h"
@@ -33,6 +34,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+
 
 
 // Static Function Declarations
@@ -44,6 +46,7 @@ static void writeDigitalPotAttenuation(char *CommandLine);
 static void readDigitalPotAttenuation(char *CommandLine);
 static void channelOutputEnable(char *CommandLine);
 static void channelOutputDisable(char *CommandLine);
+static void deviceStatus(char *CommandLine);
 // Global
 static char CharsToProcessBuffer[10] = {0};
 static char DebugCommand[100] = {0};
@@ -220,6 +223,10 @@ static void callDebugFunction(char *CommandToProcess)
     {
         channelOutputDisable(CommandToProcess);
     }
+    else if (strstr(CommandToProcess, DEVICE_STATUS) != NULL)
+    {
+        deviceStatus(CommandToProcess);
+    }
     else
     {
         CommandFound = false;
@@ -271,8 +278,11 @@ static void printDebugConsoleHelp(void)
 {
     // STEP 1: Print debug command help
     printf("\r\nDEBUG COMMANDS: \r\n");
-    printf("  Write Pot X: Where X is value 0 to 255 of wiper\r\n");
-    printf("  Read Pot X:  Returns value of pot wiper 0 - 255\r\n");
+    printf("  Write Pot X #:   Where X is value 0 to 255 of wiper (255 = full resistance)\r\n");
+    printf("  Read Pot #:      Returns value of pot wiper 0 - 255\r\n");
+    printf("  Output On/Off #: Turns the Output On/Off\r\n");
+    printf("  Status:          Show device status\r\n");
+    printf("\r\nWhere # is Channel Number (1 or 2)\r\n");
 
 } // END OF printDebugConsoleHelp
 
@@ -338,5 +348,29 @@ static void channelOutputDisable(char *CommandLine)
 {
     CH1_OUTPUT_DISABLE();
 }
+
+
+static void deviceStatus(char *CommandLine)
+{
+    NOT_USED(CommandLine);
+    printBrightYellow("CH1:\r\n");
+    printf("  Output Switch:   %d\r\n", ArbPwrBooster.CH1.OutputSwitch);
+    printf("  Input Loading:   %d\r\n", ArbPwrBooster.CH1.InputImpedance);
+    printf("  CC Limit Enable: %d\r\n", ArbPwrBooster.CH1.Limit.Enable);
+    printf("  Current Limit:   %2.3f\r\n", ArbPwrBooster.CH1.Limit.Current);
+    printf("  Input Volt RMS:  %2.3f\r\n", ArbPwrBooster.CH1.Measure.RMS_Voltage);
+    printf("  Current RMS:     %2.3f\r\n", ArbPwrBooster.CH1.Measure.RMS_Current);
+    printf("  Pot Divider:     %2.1f%%\r\n\n", (float)((float)ArbPwrBooster.CH1.PID->PotStep / ArbPwrBooster.CH1.PID->MaxStepValue * 100.0);
+
+    printBrightMagenta("CH2:\r\n");
+    printf("  Output Switch:   %d\r\n", ArbPwrBooster.CH2.OutputSwitch);
+    printf("  Input Loading:   %d\r\n", ArbPwrBooster.CH2.InputImpedance);
+    printf("  CC Limit Enable: %d\r\n", ArbPwrBooster.CH2.Limit.Enable);
+    printf("  Current Limit:   %2.3f\r\n", ArbPwrBooster.CH2.Limit.Current);
+    printf("  Input Volt RMS:  %2.3f\r\n", ArbPwrBooster.CH2.Measure.RMS_Voltage);
+    printf("  Current RMS:     %2.3f\r\n", ArbPwrBooster.CH2.Measure.RMS_Current);
+    printf("  Pot Divider:     %2.1f%%\r\n\n", (float)((float)ArbPwrBooster.CH2.PID->PotStep / ArbPwrBooster.CH2.PID->MaxStepValue) * 100.0);
+}
+
 
 

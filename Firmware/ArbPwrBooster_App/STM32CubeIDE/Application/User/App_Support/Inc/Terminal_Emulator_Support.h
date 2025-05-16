@@ -47,6 +47,8 @@ extern"C" {
 #define SET_BRIGHT_YELLOW_FOREGROUND	"\033[1;33m"
 #define SET_BLUE_FOREGROUND				"\033[0;34m"
 #define SET_BRIGHT_BLUE_FOREGROUND		"\033[1;34m"
+#define SET_MAGENTA_FOREGROUND          "\033[0;95m"
+#define SET_BRIGHT_MAGENTA_FOREGROUND   "\033[1;95m"
 // BACKGROUND COLORS
 #define SET_GREEN_BACKGROUND			"\033[0;42m"
 #define SET_BRIGHT_GREEN_BACKGROUND		"\033[1;42m"
@@ -94,6 +96,8 @@ void terminal_SetYellowForeground(void);
 void terminal_SetBrightYellowForeground(void);
 void terminal_SetBlueForeground(void);
 void terminal_SetBrightBlueForeground(void);
+void terminal_SetMagentaForeground(void);
+void terminal_SetBrightMagentaForeground(void);
 // Background Colors: Color results may vary consider printColor()
 void terminal_SetGreenBrackground(void);
 void terminal_SetGreenBrackground(void);
@@ -106,6 +110,8 @@ void printYellow(const char *String);
 void printBrightYellow(const char *String);
 void printBlue(const char *String);
 void printBrightBlue(const char *String);
+void printMagenta(const char *String);
+void printBrightMagenta(const char *String);
 #endif
 
 #ifdef __cplusplus

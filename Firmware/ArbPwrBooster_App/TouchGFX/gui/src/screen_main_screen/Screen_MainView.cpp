@@ -68,7 +68,7 @@ void Screen_MainView::updateScreenMainOnEntry(void)
     // Update Current Set Values for channel2
     if (ArbPwrBooster.CH2.Limit.Enable)
     {
-        Unicode::snprintfFloat(textArea_CH2_CurrentSetBuffer, TEXTAREA_CH2_CURRENTSET_SIZE, "%06.3f", ArbPwrBooster.CH2.Limit.Current);
+        Unicode::snprintfFloat(textArea_CH2_CurrentSetBuffer, TEXTAREA_CH2_CURRENTSET_SIZE, "%05.3f", ArbPwrBooster.CH2.Limit.Current);
         textArea_CH2_CurrentSet.setWildcard(textArea_CH2_CurrentSetBuffer);
     }
     else
@@ -416,17 +416,19 @@ void Screen_MainView::updateMainScreen_View(void)
     Unicode::snprintfFloat(textArea_CH1_ArmsBuffer, TEXTAREA_CH1_ARMS_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.RMS_Current);
     textArea_CH1_Arms.setWildcard(textArea_CH1_ArmsBuffer);
     // Max Current
-    Unicode::snprintfFloat(textArea_CH1_AmaxBuffer, TEXTAREA_CH1_AMAX_SIZE, "%05.2f", ArbPwrBooster.CH1.Measure.MaxCurrent);
+    Unicode::snprintfFloat(textArea_CH1_AmaxBuffer, TEXTAREA_CH1_AMAX_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.MaxCurrent);
     textArea_CH1_Amax.setWildcard(textArea_CH1_AmaxBuffer);
     // Min Current
-    Unicode::snprintfFloat(textArea_CH1_AminBuffer, TEXTAREA_CH1_AMIN_SIZE, "%05.2f", ArbPwrBooster.CH1.Measure.MinCurrent);
+    if (ArbPwrBooster.CH1.Measure.MinCurrent >= 0)
+        Unicode::snprintfFloat(textArea_CH1_AminBuffer, TEXTAREA_CH1_AMIN_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.MinCurrent);
+    else
+        Unicode::snprintfFloat(textArea_CH1_AminBuffer, TEXTAREA_CH1_AMIN_SIZE, "%05.2f", ArbPwrBooster.CH1.Measure.MinCurrent);
     textArea_CH1_Amin.setWildcard(textArea_CH1_AminBuffer);
     // RMS input voltage
     Unicode::snprintfFloat(textArea_CH1_VrmsBuffer, TEXTAREA_CH1_VRMS_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.RMS_Voltage);
     textArea_CH1_Vrms.setWildcard(textArea_CH1_VrmsBuffer);
     // Constant Current Mode
-    // TODO: Hab basic test code just to see CC blinking - fix and incorporate at this blink rate
-    if (ArbPwrBooster.CH1.Limit.Enable)
+    if ((ArbPwrBooster.CH1.OutputSwitch == ON) && (ArbPwrBooster.CH1.Limit.Enable) && (ArbPwrBooster.CH1.PID->Enable))
     {
         CC_ToggleRate++;
         if (CC_ToggleRate == 1)
@@ -445,16 +447,19 @@ void Screen_MainView::updateMainScreen_View(void)
     Unicode::snprintfFloat(textArea_CH2_ArmsBuffer, TEXTAREA_CH2_ARMS_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.RMS_Current);
     textArea_CH2_Arms.setWildcard(textArea_CH2_ArmsBuffer);
     // Max Current
-    Unicode::snprintfFloat(textArea_CH2_AmaxBuffer, TEXTAREA_CH2_AMAX_SIZE, "%05.2f", ArbPwrBooster.CH2.Measure.MaxCurrent);
+    Unicode::snprintfFloat(textArea_CH2_AmaxBuffer, TEXTAREA_CH2_AMAX_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.MaxCurrent);
     textArea_CH2_Amax.setWildcard(textArea_CH2_AmaxBuffer);
     // Min Current
-    Unicode::snprintfFloat(textArea_CH2_AminBuffer, TEXTAREA_CH2_AMIN_SIZE, "%05.2f", ArbPwrBooster.CH2.Measure.MinCurrent);
+    if (ArbPwrBooster.CH2.Measure.MinCurrent >= 0)
+        Unicode::snprintfFloat(textArea_CH2_AminBuffer, TEXTAREA_CH2_AMIN_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.MinCurrent);
+    else
+        Unicode::snprintfFloat(textArea_CH2_AminBuffer, TEXTAREA_CH2_AMIN_SIZE, "%05.2f", ArbPwrBooster.CH2.Measure.MinCurrent);
     textArea_CH2_Amin.setWildcard(textArea_CH2_AminBuffer);
     // RMS input voltage
     Unicode::snprintfFloat(textArea_CH2_VrmsBuffer, TEXTAREA_CH2_VRMS_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.RMS_Voltage);
     textArea_CH2_Vrms.setWildcard(textArea_CH2_VrmsBuffer);
     // Constant Current Mode
-
+    // TODO: Hab copy and adjust the working code for channel 2
 
     // STEP 3: Config Icon Color
     char NotUsedStatusText[25];

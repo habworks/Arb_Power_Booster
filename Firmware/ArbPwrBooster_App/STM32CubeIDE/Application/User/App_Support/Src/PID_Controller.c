@@ -40,13 +40,14 @@
 * @param Kp: Proportional Gain
 * @param Ki: Integral Gain
 * @param Kd: Derivative Gain
+* @param MaxStepValue: Digital Pot reset value in steps see MCP45HVX1 driver
 *
 * @return: Pointer to the PID Controller structure
 *
 * STEP 1: Allocate the memory
 * STEP 2: Assign gain constants and init conditions
 ********************************************************************************************************/
-Type_PID_Controller * Init_PID_Controller(float Kp, float Ki, float Kd)
+Type_PID_Controller * Init_PID_Controller(float Kp, float Ki, float Kd, uint8_t MaxStepValue)
 {
     // STEP 1: Allocate the memory
     Type_PID_Controller *PID = (Type_PID_Controller *)malloc(sizeof(Type_PID_Controller));
@@ -54,12 +55,15 @@ Type_PID_Controller * Init_PID_Controller(float Kp, float Ki, float Kd)
         systemErrorHandler(__FILE__, __LINE__, 0, "Failed to allocate memory for PID");
 
     // STEP 2: Assign gain constants and init conditions
+    PID->Enable = false;
     PID->ProportionalGain = Kp;
     PID->IntegralGain = Ki;
     PID->DerivativeGain = Kd;
     PID->PreviousError = 0;
     PID->Integral = 0;
     PID->Output = 0;
+    PID->PotStep = 0;
+    PID->MaxStepValue = MaxStepValue;
 
     return(PID);
 
@@ -81,7 +85,6 @@ Type_PID_Controller * Init_PID_Controller(float Kp, float Ki, float Kd)
 * @param MeasuredCurrent: Present current value
 * @param CurrentLimit: current limit allowed
 * @param DeltTime: Time between current samples
-* @param PotMaxValue: Max (step resolution) value of the POT - max value of the POT corresponds to min output
 *
 * @return: Pot value
 *
@@ -92,7 +95,7 @@ Type_PID_Controller * Init_PID_Controller(float Kp, float Ki, float Kd)
 * STEP 5: Calculate the output by summing the P, I, D errors
 * STEP 6: The output is adjusted for the pot - must be of type uint8_t and clamped to match the pot min max
 ********************************************************************************************************/
-uint8_t PID_updateDigitalPot(Type_PID_Controller *PID, float MeasuredCurrent, float CurrentLimit, float DeltaTime, uint8_t PotMaxValue)
+Type_PID_Status PID_updateDigitalPot(Type_PID_Controller *PID, float MeasuredCurrent, float CurrentLimit, float DeltaTime)
 {
     // STEP 1: Calculate the present error
     float PresentError = MeasuredCurrent - CurrentLimit;
@@ -102,8 +105,7 @@ uint8_t PID_updateDigitalPot(Type_PID_Controller *PID, float MeasuredCurrent, fl
     {
         PID->PreviousError = 0;
         PID->Integral = 0;
-        PID->Output = 0;
-        return(PID->Output);
+        return(PID_NO_UPDATE);
     }
 
     // PID CALCULATE:
@@ -119,6 +121,10 @@ uint8_t PID_updateDigitalPot(Type_PID_Controller *PID, float MeasuredCurrent, fl
 
     // STEP 6: The output is adjusted for the pot - must be of type uint8_t and clamped to match the pot min max
     uint8_t PotValue = (uint8_t)(PID->Output + INTEGER_ROUNDING);
-    return(MIN_MAX_CLAMP(PotValue, 0, PotMaxValue));
+    PotValue = PID->MaxStepValue - PotValue;
+    PotValue = MIN_MAX_CLAMP(PotValue, 0, PID->MaxStepValue);
+    PID->PotStep = PotValue;
+
+    return(PID_UPDATE);
 
 } // END OF PID_updateDigitalPot

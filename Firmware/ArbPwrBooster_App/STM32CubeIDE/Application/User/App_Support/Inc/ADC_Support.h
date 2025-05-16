@@ -55,7 +55,7 @@ extern"C" {
 // ACCEPTABLE CONVERSION LIMITS
 #define SYSTEM_POS_VS_LIMIT     15.5
 #define SYSTEM_POS_VS_HIGH      15.3
-#define SYSTEM_POS_VS_LOW       14.5
+#define SYSTEM_POS_VS_LOW       14.0    // TODO: Hab this should be 14.5V - this is temp until I can figure out the measure accuracy
 #define SYSTEM_NEG_VS_LIMIT     -15.5
 #define SYSTEM_NEG_VS_HIGH      -14.5
 #define SYSTEM_NEG_VS_LOW       -15.3

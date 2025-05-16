@@ -91,12 +91,12 @@ Generating : Signal Layer 1
 Used DCodes :
     D43
     D44
-    D53
+    D50
+    D52
     D56
-    D58
-    D60
-    D63
-    D70
+    D59
+    D62
+    D64
     D71
 *************************************************************
 
@@ -115,9 +115,9 @@ Used DCodes :
     D43
     D44
     D52
-    D53
     D56
-    D70
+    D59
+    D68
     D71
 *************************************************************
 
@@ -133,10 +133,10 @@ Generating : Bottom Layer
 
 
 Used DCodes :
-    D14
+    D11
     D43
     D44
-    D46
+    D45
     D49
     D50
     D51
@@ -216,7 +216,6 @@ Used DCodes :
     D26
     D27
     D28
-    D29
     D30
     D31
     D32
@@ -224,6 +223,7 @@ Used DCodes :
     D34
     D35
     D36
+    D37
     D38
     D39
     D40
@@ -322,7 +322,7 @@ Generating : Bottom Solder
 Used DCodes :
     D43
     D44
-    D83
+    D80
     D111
     D112
     D113
@@ -363,7 +363,7 @@ Generating : Bottom Paste
 
 
 Used DCodes :
-    D14
+    D11
     D43
     D44
     D72
@@ -381,9 +381,23 @@ Generating : Bottom Overlay
 Used DCodes :
     D43
     D44
-    D47
-    D73
-    D77
+    D46
+    D74
+    D78
+*************************************************************
+
+*************************************************************
+Generating : Board Outline
+      File : ArbPwrBoost.GM25
+
+    Adding Layer      : Board Outline
+
+    Adding Layer      : Board Outline
+
+
+Used DCodes :
+    D43
+    D44
 *************************************************************
 
 *************************************************************
@@ -400,8 +414,8 @@ Generating : Drill Drawing
 Used DCodes :
     D43
     D44
-    D48
-    D77
+    D47
+    D78
     D135
     D136
     D137
@@ -421,6 +435,7 @@ Generating : Drill Guide
 
 Used DCodes :
     D43
-    D77
+    D44
+    D78
 *************************************************************
 

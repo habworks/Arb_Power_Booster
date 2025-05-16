@@ -183,6 +183,18 @@ void terminal_SetBrightBlueForeground(void)
 	fflush(stdout);
 }
 
+void terminal_SetMagentaForeground(void)
+{
+    printf(SET_MAGENTA_FOREGROUND);
+    fflush(stdout);
+}
+
+void terminal_SetBrightMagentaForeground(void)
+{
+    printf(SET_BRIGHT_MAGENTA_FOREGROUND);
+    fflush(stdout);
+}
+
 
 // The following functions set the text background color: Use with caution color varies based on display type and app
 // Better to use printColor()
@@ -252,5 +264,19 @@ void printBrightBlue(const char *String)
 	terminal_SetBrightBlueForeground();
 	printf("%s", String);
 	terminal_SetDefaultForegroundColor();
+}
+
+void printMagenta(const char *String)
+{
+    terminal_SetMagentaForeground();
+    printf("%s", String);
+    terminal_SetDefaultForegroundColor();
+}
+
+void printBrightMagenta(const char *String)
+{
+    terminal_SetBrightMagentaForeground();
+    printf("%s", String);
+    terminal_SetDefaultForegroundColor();
 }
 #endif

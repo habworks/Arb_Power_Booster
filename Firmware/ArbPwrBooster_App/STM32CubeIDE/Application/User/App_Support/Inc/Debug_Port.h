@@ -40,6 +40,7 @@ extern"C" {
 #define READ_DIGITAL_POT_ATTEN      "Read Pot"
 #define CHANNEL_OUTPUT_ON           "Output On"
 #define CHANNEL_OUTPUT_OFF          "Output Off"
+#define DEVICE_STATUS               "Status"
 
 // FUNCTION PROTOTYPES
 void debugConsoleTaskInit(void);

@@ -33,14 +33,23 @@ extern"C" {
 #include "Hab_Types.h"
 
 // TYPEDEFS AND ENUMS
+typedef enum
+{
+    PID_NO_UPDATE = 0,
+    PID_UPDATE
+}Type_PID_Status;
+
 typedef struct
 {
-    float   ProportionalGain;
-    float   IntegralGain;
-    float   DerivativeGain;
-    float   PreviousError;
-    float   Integral;
-    float   Output;
+    bool        Enable;
+    float       ProportionalGain;
+    float       IntegralGain;
+    float       DerivativeGain;
+    float       PreviousError;
+    float       Integral;
+    float       Output;
+    uint8_t     PotStep;
+    uint8_t     MaxStepValue;
 }Type_PID_Controller;
 
 
@@ -49,8 +58,8 @@ typedef struct
 
 
 // FUNCTION PROTOTYPES
-Type_PID_Controller * Init_PID_Controller(float Kp, float Ki, float Kd);
-uint8_t PID_updateDigitalPot(Type_PID_Controller *PID, float MeasuredCurrent, float CurrentLimit, float DeltTime, uint8_t PotMaxValue);
+Type_PID_Controller * Init_PID_Controller(float Kp, float Ki, float Kd, uint8_t MaxStepValue);
+Type_PID_Status PID_updateDigitalPot(Type_PID_Controller *PID, float MeasuredCurrent, float CurrentLimit, float DeltTime);
 
 
 #ifdef __cplusplus

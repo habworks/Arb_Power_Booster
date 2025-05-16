@@ -92,7 +92,7 @@ static float CH2_VoltMonBuffer[RMS_WINDOW_SIZE];
 static Type_RMS *RMS_CH2_VoltMon;
 
 // Static PID Controller Declarations
-static Type_PID_Controller *PID_CH1_DigitalPot;
+//static Type_PID_Controller *PID_CH1_DigitalPot;
 
 
 /********************************************************************************************************
@@ -146,7 +146,8 @@ void Init_ADC_Hardware(void)
     RMS_CH2_VoltMon = Init_RMS_Class(CH2_VoltMonBuffer, RMS_WINDOW_SIZE);
 
     // STEP 5: Init PID structures
-    PID_CH1_DigitalPot = Init_PID_Controller(100, 100, 0);
+    ArbPwrBooster.CH1.PID = Init_PID_Controller(100, 100, 0, MCP45HVX1_POT_FULL_RESOLUTION);
+    ArbPwrBooster.CH2.PID = Init_PID_Controller(100, 100, 0, MCP45HVX1_POT_FULL_RESOLUTION);
 
 } // END OF Init_ADC_Hardware
 
@@ -606,7 +607,7 @@ void monitorTaskActions(void)
             // TODO: Hab needs work - IR losses on VS input lines causes this to fail - adjust VS limit error
             if ((ConfigError & CONFIG_POS_VS_ERROR) || (ConfigError & CONFIG_NEG_VS_ERROR))
             {
-//                CH1_INPUT_DISABLE();  TODO: Hab this is temporary patch - allows max output power on channel 1
+                CH1_INPUT_DISABLE();  // TODO: Hab this is temporary patch - allows max output power on channel 1
                 CH2_INPUT_DISABLE();
             }
             else
@@ -616,21 +617,16 @@ void monitorTaskActions(void)
             }
 
             // STEP 4: Check for current limit conditions CH 1
-//            if ((ArbPwrBooster.CH1.OutputSwitch = ON) && (ArbPwrBooster.CH1.Limit.Enable))
-//            {
-//                uint8_t DigitalPotValue_CH1 = PID_updateDigitalPot(PID_CH1_DigitalPot, ArbPwrBooster.CH1.Measure.RMS_Current, ArbPwrBooster.CH1.Limit.Current, (MONITOR_UPDATE_RATE * 1E-3), MCP45HVX1_POT_FULL_RESOLUTION);
-//                if (DigitalPotValue_CH1 != 0)
-//                {
-//                    if (!MCP45HVX1_WriteWiperVerify(&hi2c1, A1A0_EXTERNAL_ADDR_CH1, DigitalPotValue_CH1))
-//                        printYellow("WARNING: Failed to adjust digital pot control\r\n");
-//                    else
-//                    {
-//                        char PrintMsg[100];
-//                        sprintf(PrintMsg, "CH1 Pot: %d\r\n", DigitalPotValue_CH1);
-//                        printGreen(PrintMsg);
-//                    }
-//                }
-//            }
+            if ((ArbPwrBooster.CH1.OutputSwitch == ON) && (ArbPwrBooster.CH1.Limit.Enable))
+            {
+                if (PID_updateDigitalPot(ArbPwrBooster.CH1.PID, ArbPwrBooster.CH1.Measure.RMS_Current, ArbPwrBooster.CH1.Limit.Current, (MONITOR_UPDATE_RATE * 1E-3)) == PID_UPDATE)
+                {
+                    MCP45HVX1_WriteWiperVerify(&hi2c1, A1A0_EXTERNAL_ADDR_CH1, ArbPwrBooster.CH1.PID->PotStep);
+                    char PrintMsg[100];
+                    sprintf(PrintMsg, "CH1 Pot: %d\r\n", ArbPwrBooster.CH1.PID->PotStep);
+                    printGreen(PrintMsg);
+                }
+            }
 
             // STEP 5: Check for current limit conditions CH 2
 

@@ -25,9 +25,9 @@
  ******************************************************************************************************/
 
 #include "MCP45HVX1_Driver.h"
+#include "Terminal_Emulator_Support.h"
 
 
-// TODO: I want to add pot control to Type_ChannelConfig
 /********************************************************************************************************
 * @brief Init of the MCP45HVX1 for use on the board.  Note there are two channels to be init.  Enable the
 * device and set the output to max span on the POT
@@ -130,7 +130,12 @@ bool MCP45HVX1_ReadWiperValue(I2C_HandleTypeDef *I2C_Handle, uint8_t A1A0_Extern
     if (Status == HAL_OK)
         return(true);
     else
+    {
+#ifdef MCP45HVX1_USES_PRINTF
+        printRed("ERROR: MCP45HVX1 Failed to read\r\n");
+#endif
         return(false);
+    }
 
 } // END OF MCP45HVX1_ReadWiperValue
 
@@ -177,6 +182,9 @@ bool MCP45HVX1_WriteWiperVerify(I2C_HandleTypeDef *I2C_Handle, uint8_t A1A0_Exte
     } while(Attempt < MaxAttempts);
 
     // If it gets this far then there was a failure to write the value
+#ifdef MCP45HVX1_USES_PRINTF
+        printRed("ERROR: MCP45HVX1 Failed to write\r\n");
+#endif
     return(false);
 
 } // END OF MCP45HVX1_WriteWiperVerify

@@ -57,6 +57,8 @@ extern"C" {
 // COMMANDS
 #define MCP45HVX1_WRITE_COMMAND         ((uint8_t)0x00)
 #define MCP45HVX1_READ_COMMAND          ((uint8_t)0x03)
+// PRE-PROCESSOR
+#define MCP45HVX1_USES_PRINTF
 
 
 // MACROS
