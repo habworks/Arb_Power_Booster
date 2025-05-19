@@ -146,8 +146,8 @@ void Init_ADC_Hardware(void)
     RMS_CH2_VoltMon = Init_RMS_Class(CH2_VoltMonBuffer, RMS_WINDOW_SIZE);
 
     // STEP 5: Init PID structures
-    ArbPwrBooster.CH1.PID = Init_PID_Controller(100, 100, 0, MCP45HVX1_POT_FULL_RESOLUTION);
-    ArbPwrBooster.CH2.PID = Init_PID_Controller(100, 100, 0, MCP45HVX1_POT_FULL_RESOLUTION);
+    ArbPwrBooster.CH1.PID = Init_PID_Controller(100, 2500, 0, MCP45HVX1_POT_FULL_RESOLUTION);
+    ArbPwrBooster.CH2.PID = Init_PID_Controller(100, 2500, 0, MCP45HVX1_POT_FULL_RESOLUTION);
 
 } // END OF Init_ADC_Hardware
 
@@ -594,6 +594,7 @@ void monitorTaskInit(void)
 void monitorTaskActions(void)
 {
     static bool CriticalSystemError = false;
+    static uint8_t LastPotValue = 0xFF;
     // STEP 1: Do nothing until introduction splash screen completed
     if (ArbPwrBooster.Ready)
     {
@@ -617,15 +618,36 @@ void monitorTaskActions(void)
             }
 
             // STEP 4: Check for current limit conditions CH 1
+            static uint16_t TickCount = 0;
+            static uint16_t DataUpdateCount = 0;
+            static bool PrintColumnHeader = true;
             if ((ArbPwrBooster.CH1.OutputSwitch == ON) && (ArbPwrBooster.CH1.Limit.Enable))
             {
+                TickCount++;
                 if (PID_updateDigitalPot(ArbPwrBooster.CH1.PID, ArbPwrBooster.CH1.Measure.RMS_Current, ArbPwrBooster.CH1.Limit.Current, (MONITOR_UPDATE_RATE * 1E-3)) == PID_UPDATE)
                 {
-                    MCP45HVX1_WriteWiperVerify(&hi2c1, A1A0_EXTERNAL_ADDR_CH1, ArbPwrBooster.CH1.PID->PotStep);
-                    char PrintMsg[100];
-                    sprintf(PrintMsg, "CH1 Pot: %d\r\n", ArbPwrBooster.CH1.PID->PotStep);
-                    printGreen(PrintMsg);
+                    if (LastPotValue != ArbPwrBooster.CH1.PID->PotStep)
+                    {
+                        if (PrintColumnHeader)
+                        {
+                            printf("\r\n\n#\tTick\tStep\tIrms\r\n");
+                            fflush(stdout);
+                            PrintColumnHeader = false;
+                        }
+                        DataUpdateCount++;
+                        MCP45HVX1_WriteWiperVerify(&hi2c1, A1A0_EXTERNAL_ADDR_CH1, ArbPwrBooster.CH1.PID->PotStep);
+                        char PrintMsg[100];
+                        sprintf(PrintMsg, "%d\t%d\t%d\t%2.3f\r\n", DataUpdateCount, TickCount, ArbPwrBooster.CH1.PID->PotStep, ArbPwrBooster.CH1.Measure.RMS_Current);
+                        printGreen(PrintMsg);
+                        LastPotValue = ArbPwrBooster.CH1.PID->PotStep;
+                    }
                 }
+            }
+            else
+            {
+                TickCount = 0;
+                DataUpdateCount = 0;
+                PrintColumnHeader = true;
             }
 
             // STEP 5: Check for current limit conditions CH 2

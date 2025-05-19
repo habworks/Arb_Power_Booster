@@ -503,4 +503,23 @@ Type_ConfigParameterStatus saveConfigParameters(void)
 } // END OF saveConfigParameters
 
 
+void switchOnAction_CH1(void)
+{
+    fflush(stdout);
+    CH1_OUTPUT_ENABLE();
+    ArbPwrBooster.CH1.Measure.ResetCurrentMinMax = true;
+    ArbPwrBooster.CH1.Measure.ResetVoltageMinMax = true;
+    PID_Reset(ArbPwrBooster.CH1.PID);
+    MCP45HVX1_WriteWiperVerify(&hi2c1, A1A0_EXTERNAL_ADDR_CH1, MCP45HVX1_POT_FULL_RESOLUTION);
+    ArbPwrBooster.CH1.OutputSwitch = ON;
+}
+
+void switchOffAction_CH1(void)
+{
+    CH1_OUTPUT_DISABLE();
+    ArbPwrBooster.CH1.OutputSwitch = OFF;
+    ArbPwrBooster.CH1.PID->Enable = false;
+    MCP45HVX1_WriteWiperVerify(&hi2c1, A1A0_EXTERNAL_ADDR_CH1, MCP45HVX1_POT_FULL_RESOLUTION);
+}
+
 

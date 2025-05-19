@@ -98,19 +98,17 @@ void Screen_MainView::outputToggle_CH1(void)
     // STEP 1: Toggle the output relay ON / OFF
     if (ArbPwrBooster.CH1.OutputSwitch == OFF)
     {
-        CH1_OUTPUT_ENABLE();
+        switchOnAction_CH1();
         box_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_ON_BOX_COLOR));
         box_CH1_Enable.setAlpha(ALPAH_FULL_VISIBLE);
         textArea_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_ON_TXT_COLOR));
-        ArbPwrBooster.CH1.OutputSwitch = ON;
     }
     else
     {
-        CH1_OUTPUT_DISABLE();
+        switchOffAction_CH1();
         box_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_BOX_COLOR));
         box_CH1_Enable.setAlpha(ALPHA_50_VISIBLE);
         textArea_CH1_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_TXT_COLOR));
-        ArbPwrBooster.CH1.OutputSwitch = OFF;
     }
     box_CH1_Enable.invalidate();
     textArea_CH1_Enable.invalidate();
@@ -409,7 +407,7 @@ void Screen_MainView::setActiveLimit_CH2(void)
 void Screen_MainView::updateMainScreen_View(void)
 {
     static uint8_t CC_ToggleRate = 0;
-    static bool CC_On = true;
+    static bool CC_StatusIndicator = true;
 
     // STEP 1: Update Channel 1
     // RMS output current
@@ -427,17 +425,17 @@ void Screen_MainView::updateMainScreen_View(void)
     // RMS input voltage
     Unicode::snprintfFloat(textArea_CH1_VrmsBuffer, TEXTAREA_CH1_VRMS_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.RMS_Voltage);
     textArea_CH1_Vrms.setWildcard(textArea_CH1_VrmsBuffer);
-    // Constant Current Mode
-    if ((ArbPwrBooster.CH1.OutputSwitch == ON) && (ArbPwrBooster.CH1.Limit.Enable) && (ArbPwrBooster.CH1.PID->Enable))
+    // Constant Current Mode: Ensure if PID disable the indicator should be off
+    if (ArbPwrBooster.CH1.PID->Enable || !CC_StatusIndicator)
     {
         CC_ToggleRate++;
         if (CC_ToggleRate == 1)
         {
-            if (CC_On)
+            if (CC_StatusIndicator)
                 textArea_CH1_CC.setVisible(true);
             else
                 textArea_CH1_CC.setVisible(false);
-            CC_On = !CC_On;
+            CC_StatusIndicator = !CC_StatusIndicator;
             CC_ToggleRate = 0;
         }
     }

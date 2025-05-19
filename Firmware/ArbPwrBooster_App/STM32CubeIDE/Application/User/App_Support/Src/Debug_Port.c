@@ -357,19 +357,27 @@ static void deviceStatus(char *CommandLine)
     printf("  Output Switch:   %d\r\n", ArbPwrBooster.CH1.OutputSwitch);
     printf("  Input Loading:   %d\r\n", ArbPwrBooster.CH1.InputImpedance);
     printf("  CC Limit Enable: %d\r\n", ArbPwrBooster.CH1.Limit.Enable);
-    printf("  Current Limit:   %2.3f\r\n", ArbPwrBooster.CH1.Limit.Current);
-    printf("  Input Volt RMS:  %2.3f\r\n", ArbPwrBooster.CH1.Measure.RMS_Voltage);
-    printf("  Current RMS:     %2.3f\r\n", ArbPwrBooster.CH1.Measure.RMS_Current);
-    printf("  Pot Divider:     %2.1f%%\r\n\n", (float)((float)ArbPwrBooster.CH1.PID->PotStep / ArbPwrBooster.CH1.PID->MaxStepValue * 100.0);
+    printf("  Current Limit:   %2.3fArms\r\n", ArbPwrBooster.CH1.Limit.Current);
+    printf("  Input Volt RMS:  %2.3fVrms\r\n", ArbPwrBooster.CH1.Measure.RMS_Voltage);
+    printf("  Input Divider:   %2.1f%%\r\n", (float)(ArbPwrBooster.CH1.PID->PotStep / ArbPwrBooster.CH1.PID->MaxStepValue) * 100.0);
+    printf("  Input Attenuate: %2.3fVrms\r\n", ArbPwrBooster.CH1.Measure.RMS_Voltage * (float)(ArbPwrBooster.CH1.PID->PotStep / ArbPwrBooster.CH1.PID->MaxStepValue));
+    printf("  Output Amp RMS:  %2.3fArms\r\n", ArbPwrBooster.CH1.Measure.RMS_Current);
+    printf("  PID Kp:          %d\r\n", (int)ArbPwrBooster.CH1.PID->ProportionalGain);
+    printf("  PID Ki:          %d\r\n", (int)ArbPwrBooster.CH1.PID->IntegralGain);
+    printf("  PID Kd:          %d\r\n\n", (int)ArbPwrBooster.CH1.PID->DerivativeGain);
 
     printBrightMagenta("CH2:\r\n");
     printf("  Output Switch:   %d\r\n", ArbPwrBooster.CH2.OutputSwitch);
     printf("  Input Loading:   %d\r\n", ArbPwrBooster.CH2.InputImpedance);
     printf("  CC Limit Enable: %d\r\n", ArbPwrBooster.CH2.Limit.Enable);
-    printf("  Current Limit:   %2.3f\r\n", ArbPwrBooster.CH2.Limit.Current);
-    printf("  Input Volt RMS:  %2.3f\r\n", ArbPwrBooster.CH2.Measure.RMS_Voltage);
-    printf("  Current RMS:     %2.3f\r\n", ArbPwrBooster.CH2.Measure.RMS_Current);
-    printf("  Pot Divider:     %2.1f%%\r\n\n", (float)((float)ArbPwrBooster.CH2.PID->PotStep / ArbPwrBooster.CH2.PID->MaxStepValue) * 100.0);
+    printf("  Current Limit:   %2.3fArms\r\n", ArbPwrBooster.CH2.Limit.Current);
+    printf("  Input Volt RMS:  %2.3fVrms\r\n", ArbPwrBooster.CH2.Measure.RMS_Voltage);
+    printf("  Input Divider:   %2.1f%%\r\n", (float)(ArbPwrBooster.CH2.PID->PotStep / ArbPwrBooster.CH2.PID->MaxStepValue) * 100.0);
+    printf("  Input Attenuate: %2.3fVrms\r\n", ArbPwrBooster.CH2.Measure.RMS_Voltage * (float)(ArbPwrBooster.CH2.PID->PotStep / ArbPwrBooster.CH2.PID->MaxStepValue));
+    printf("  Output Amp RMS:  %2.3fArms\r\n", ArbPwrBooster.CH2.Measure.RMS_Current);
+    printf("  PID Kp:          %d\r\n", (int)ArbPwrBooster.CH2.PID->ProportionalGain);
+    printf("  PID Ki:          %d\r\n", (int)ArbPwrBooster.CH2.PID->IntegralGain);
+    printf("  PID Kd:          %d\r\n\n", (int)ArbPwrBooster.CH2.PID->DerivativeGain);
 }
 
 

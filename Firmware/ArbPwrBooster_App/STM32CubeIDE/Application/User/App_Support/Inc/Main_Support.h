@@ -200,6 +200,8 @@ void mainUpdateTaskActions(void);
 void mainUpdateTaskInit(void);
 Type_ConfigParameterStatus loadConfigParameters(void);
 Type_ConfigParameterStatus saveConfigParameters(void);
+void switchOnAction_CH1(void);
+void switchOffAction_CH1(void);
 
 #ifdef __cplusplus
 }

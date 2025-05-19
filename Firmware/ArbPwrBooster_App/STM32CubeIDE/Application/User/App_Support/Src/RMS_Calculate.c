@@ -57,6 +57,7 @@ Type_RMS *Init_RMS_Class(float *Buffer, uint16_t BufferLength)
     // STEP 2 Assign reset values
     RMS_Object->Index = 0;
     RMS_Object->Count = 0;
+    RMS_Object->SumOfSquares = 0;
     RMS_Object->WindowSize = BufferLength;
     RMS_Object->BufferWindow = Buffer;
 

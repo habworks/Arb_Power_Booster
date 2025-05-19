@@ -36,6 +36,9 @@ extern"C" {
 
 
 // DEFINES
+// PRE-PROCESSOR
+// USE PRINTF OR NOT IN DRIVER - COMMENT OUT IF NOT USED
+#define MCP45HVX1_USES_PRINTF
 // PART NUMBER IN USE DEFINE ONLY ONE
 //#define USING_MCP45HV31                 // POT TAPS 127
 #define USING_MCP45HV51                 // POT TAPS 255
@@ -57,8 +60,6 @@ extern"C" {
 // COMMANDS
 #define MCP45HVX1_WRITE_COMMAND         ((uint8_t)0x00)
 #define MCP45HVX1_READ_COMMAND          ((uint8_t)0x03)
-// PRE-PROCESSOR
-#define MCP45HVX1_USES_PRINTF
 
 
 // MACROS

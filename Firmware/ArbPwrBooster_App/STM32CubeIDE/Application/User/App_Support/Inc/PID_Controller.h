@@ -59,6 +59,7 @@ typedef struct
 
 // FUNCTION PROTOTYPES
 Type_PID_Controller * Init_PID_Controller(float Kp, float Ki, float Kd, uint8_t MaxStepValue);
+void PID_Reset(Type_PID_Controller *PID_Controller);
 Type_PID_Status PID_updateDigitalPot(Type_PID_Controller *PID, float MeasuredCurrent, float CurrentLimit, float DeltTime);
 
 

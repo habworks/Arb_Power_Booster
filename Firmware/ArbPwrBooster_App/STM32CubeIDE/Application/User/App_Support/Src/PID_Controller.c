@@ -70,6 +70,14 @@ Type_PID_Controller * Init_PID_Controller(float Kp, float Ki, float Kd, uint8_t 
 } // END OF Init_PID_Controller
 
 
+void PID_Reset(Type_PID_Controller *PID_Controller)
+{
+    PID_Controller->Enable = false;
+    PID_Controller->Integral = 0;
+    PID_Controller->PreviousError = 0;
+}
+
+
 
 /********************************************************************************************************
 * @brief Update the digital pot to control the current set point.  The digital pot is a divider to the output
@@ -100,31 +108,48 @@ Type_PID_Status PID_updateDigitalPot(Type_PID_Controller *PID, float MeasuredCur
     // STEP 1: Calculate the present error
     float PresentError = MeasuredCurrent - CurrentLimit;
 
-    // STEP 2: Take action only if Measured current is more than the limit
-    if (PresentError <= 0)
-    {
-        PID->PreviousError = 0;
-        PID->Integral = 0;
-        return(PID_NO_UPDATE);
-    }
+    // STEP 2: Clamp negative error to zero to prevent reverse action
+//    if (PresentError < 0.0f)
+//    {
+//        PresentError = 0.0f;
+//    }
 
-    // PID CALCULATE:
-    // STEP 3: Calculate the Integral
+    // STEP 3: Calculate the Integral term
     PID->Integral += PresentError * DeltaTime;
 
-    // STEP 4: Calculate the derivative
+    // Optional: Integral anti-windup clamp (commented out, can be enabled if needed)
+    // if (PID->Integral > MaxIntegral) PID->Integral = MaxIntegral;
+    // else if (PID->Integral < 0.0f) PID->Integral = 0.0f;
+
+    // STEP 4: Calculate the Derivative term
     float Derivative = (PresentError - PID->PreviousError) / DeltaTime;
     PID->PreviousError = PresentError;
 
-    // STEP 5: Calculate the output by summing the P, I, D errors
-    PID->Output = (PID->ProportionalGain * PresentError) + (PID->IntegralGain * PID->Integral) + (PID->DerivativeGain * Derivative);
+    // STEP 5: Calculate the PID output (before conversion to digital pot units)
+    PID->Output = (PID->ProportionalGain * PresentError)
+                + (PID->IntegralGain * PID->Integral)
+                + (PID->DerivativeGain * Derivative);
 
-    // STEP 6: The output is adjusted for the pot - must be of type uint8_t and clamped to match the pot min max
-    uint8_t PotValue = (uint8_t)(PID->Output + INTEGER_ROUNDING);
-    PotValue = PID->MaxStepValue - PotValue;
-    PotValue = MIN_MAX_CLAMP(PotValue, 0, PID->MaxStepValue);
-    PID->PotStep = PotValue;
+    // STEP 6: Convert PID output to digital pot value
+    int PotValue = (int)(PID->Output + 0.5f); // round to nearest int
+    PotValue = PID->MaxStepValue - PotValue;  // invert: 0 = max attenuation, 255 = no attenuation
 
-    return(PID_UPDATE);
+    // STEP 7: Clamp PotValue within allowed range
+    if (PotValue < 0)
+    {
+        PotValue = 0;
+    }
+    else if (PotValue > PID->MaxStepValue)
+    {
+        PotValue = PID->MaxStepValue;
+    }
+
+    // STEP 8: Update digital pot step value
+    PID->PotStep = (uint8_t)PotValue;
+    PID->Enable = (PID->PotStep == PID->MaxStepValue)? false:true;
+    if (!PID->Enable)
+        PID_Reset(PID);
+
+    return PID_UPDATE;
 
 } // END OF PID_updateDigitalPot
