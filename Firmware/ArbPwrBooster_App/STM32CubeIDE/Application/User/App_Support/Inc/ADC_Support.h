@@ -45,7 +45,16 @@ extern"C" {
 #define SYSTEM_VS_DIVIDER       9.0645      // External divider ratio = 0.1103 with an equivalence of 3.3V (reference) to 30V external
 #define AMP_MONITOR_GAIN        50          // Value in V/V this is the Gain of the current sense Amplifier
 #define AMP_SENSE_RESISTOR      6.5E-3      // Value in ohms
-#define VOLT_MON_DIVIDER        4.333       // External divider ration = .2308 with an equivlence of 3.3V (reference) to 14.3V external
+#define VOLT_MON_DIVIDER        4.3333      // External divider ration = .2308 with an equivlence of 3.3V (reference) to 14.3V external
+// ADC GAIN AND OFFSET ERRORS
+#define ADC_PVS_OFFSET_ERROR    2           // Value is ADC Counts
+#define ADC_PVS_GAIN_ERROR      1.0005
+#define ADC_NVS_OFFSET_ERROR    0           // Value is ADC Counts
+#define ADC_NVS_GAIN_ERROR      0.9961
+#define ADC_VMON1_OFFSET_ERROR  0
+#define ADC_VMON1_GAIN_ERROR    1.0107
+#define ADC_VMON2_OFFSET_ERROR  0
+#define ADC_VMON2_GAIN_ERROR    1.0107
 // VREFINT RELATED (SYSTEM 3.3V)
 #define VREFINT_CAL_ADDR        ((uint16_t*) ((uint32_t) 0x1FF0F44A)) //0x1FFF75AA)
 // TEMP SENSOR RELATED

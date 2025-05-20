@@ -51,9 +51,9 @@ static Type_16b_FIFO *Init_FIFO_Buffer(uint16_t *Buffer, uint8_t BufferLength, u
 static void writeTo_FIFO_Buffer(Type_16b_FIFO *Buffer, uint16_t Value);
 static double calculateSystem_3V3(void);
 static double calculateSystemTemp(void);
-static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail);
+static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail, uint8_t InputOffsetError, double GainError);
 static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *FIFO_AmpMon, Type_ChannelConfig *ChannelMeasure, Type_RMS *RMS_AmpMon);
-static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *FIFO_VoltMon, Type_ChannelMeasure *VoltageMeasure, Type_RMS *RMS_VoltMon);
+static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *FIFO_VoltMon, Type_ChannelMeasure *VoltageMeasure, Type_RMS *RMS_VoltMon, uint8_t InputOffsetError, double GainError);
 
 // Static FIFO Declarations
 // System 3V3
@@ -254,10 +254,10 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
     {
         // -VS Supply Rail
         writeTo_FIFO_Buffer(FIFO_NVS_Supply, ADC3_CountValue[RANK_1]);
-        ArbPwrBooster.SystemMeasure.Negative_VS = calculateSystemSupply(FIFO_NVS_Supply) * -1.0;
+        ArbPwrBooster.SystemMeasure.Negative_VS = calculateSystemSupply(FIFO_NVS_Supply, ADC_PVS_OFFSET_ERROR, ADC_PVS_GAIN_ERROR) * -1.0;
         // +VS Supply Rail
         writeTo_FIFO_Buffer(FIFO_PVS_Supply, ADC3_CountValue[RANK_2]);
-        ArbPwrBooster.SystemMeasure.Positive_VS = calculateSystemSupply(FIFO_PVS_Supply);
+        ArbPwrBooster.SystemMeasure.Positive_VS = calculateSystemSupply(FIFO_PVS_Supply, ADC_NVS_OFFSET_ERROR, ADC_NVS_GAIN_ERROR);
         // Current Monitor CH1
         writeTo_FIFO_Buffer(FIFO_CH1_AmpMon, ADC3_CountValue[RANK_4]);
         calculateChannelCurrent(ADC3_CountValue[RANK_4], FIFO_CH1_AmpMon, &ArbPwrBooster.CH1, RMS_CH1_AmpMon);
@@ -266,10 +266,10 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
         calculateChannelCurrent(ADC3_CountValue[RANK_3], FIFO_CH2_AmpMon, &ArbPwrBooster.CH2, RMS_CH2_AmpMon);
         // Voltage Monitor CH1
         writeTo_FIFO_Buffer(FIFO_CH1_VoltMon, ADC3_CountValue[RANK_6]);
-        calculateChannelVoltage(ADC3_CountValue[RANK_6], FIFO_CH1_VoltMon, &ArbPwrBooster.CH1.Measure, RMS_CH1_VoltMon);
+        calculateChannelVoltage(ADC3_CountValue[RANK_6], FIFO_CH1_VoltMon, &ArbPwrBooster.CH1.Measure, RMS_CH1_VoltMon, ADC_VMON1_OFFSET_ERROR, ADC_VMON1_GAIN_ERROR);
         // Voltage Monitor CH2
         writeTo_FIFO_Buffer(FIFO_CH2_VoltMon, ADC3_CountValue[RANK_5]);
-        calculateChannelVoltage(ADC3_CountValue[RANK_5], FIFO_CH2_VoltMon, &ArbPwrBooster.CH2.Measure, RMS_CH2_VoltMon);
+        calculateChannelVoltage(ADC3_CountValue[RANK_5], FIFO_CH2_VoltMon, &ArbPwrBooster.CH2.Measure, RMS_CH2_VoltMon, ADC_VMON1_OFFSET_ERROR, ADC_VMON1_GAIN_ERROR);
         // Toggle at the end of conversion - for testing: ADC3 actual conversion rate versus calculated
         ADC3_C_RATE_TOGGLE();
     }
@@ -434,7 +434,7 @@ static double calculateSystemTemp(void)
 
 
 /********************************************************************************************************
-* @brief Calculates the SYSTEM ± supply rail voltage.  The negative supply rail is inverted externally so it is
+* @brief Calculates the SYSTEM ±VS supply rail voltage.  The negative supply rail is inverted externally so it is
 * read here as a positive value.  If the calling function is passing the negative supply rail FIFO it must
 * also multiply the return value by -1.
 *
@@ -445,19 +445,26 @@ static double calculateSystemTemp(void)
 * @note: Nominal supply voltage is 15V
 * @note: SYSTEM refers to quantities that impact the entire device - CHANNEL impacts on CH1 or CH2
 *
+* @param FIFO_SupplyRail FIFO struct associated with specific supply voltage channel
+* @param InputOffsetError: ADC Input offset error as measured at ADC input for +VS or -VS
+* @param GainError: ADC Gain error measured at the max value of VS as a ratio of expected counts / actual counts
+*
 * @return As a positive number only the supply rail voltage
 *
 * STEP 1: Calculate the mean of the ADC Supply rail counts
-* STEP 2: Using the mean value calculate supply rail according to input divider ratio
+* STEP 2: Apply the error terms
+* STEP 3: Using the mean value calculate supply rail according to input divider ratio
 ********************************************************************************************************/
-static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail)
+static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail, uint8_t InputOffsetError, double GainError)
 {
     // STEP 1: Calculate the mean of the ADC Supply rail counts
-    double MeanSupplyRailCount = 0.0;
-    MeanSupplyRailCount = (double)((double)FIFO_SupplyRail->Sum / FIFO_SupplyRail->Depth);
+    double MeanSupplyRailCount = (double)((double)FIFO_SupplyRail->Sum / FIFO_SupplyRail->Depth);
 
-    // STEP 2: Using the mean value calculate supply rail according to input divider ratio
-    double SupplyRailVoltage = MeanSupplyRailCount * LSB_12BIT_VALUE * System_ADC_Reference * SYSTEM_VS_DIVIDER;
+    // STEP 2: Apply the error terms
+    double ErrorCompensatedCount = (MeanSupplyRailCount - InputOffsetError) / GainError;
+
+    // STEP 3: Using the mean value calculate supply rail according to input divider ratio
+    double SupplyRailVoltage = ErrorCompensatedCount * LSB_12BIT_VALUE * System_ADC_Reference * SYSTEM_VS_DIVIDER;
     return(SupplyRailVoltage);
 
 } // END OF calculateSystemSupply
@@ -549,15 +556,17 @@ static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *F
 * STEP 4: Update Max voltage or reset max if so desired
 * STEP 5: Calculate the RMS voltage
 ********************************************************************************************************/
-static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *FIFO_VoltMon, Type_ChannelMeasure *Measure, Type_RMS *RMS_VoltMon)
+static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *FIFO_VoltMon, Type_ChannelMeasure *Measure, Type_RMS *RMS_VoltMon, uint8_t InputOffsetError, double GainError)
 {
     // TODO Think about a periodic min max reset
     // STEP 1: Calculate the mean of the Voltage Monitor
     double MeanVoltageCount = (double)FIFO_VoltMon->Sum / FIFO_VoltMon->Depth;
-    Measure->MeanVoltage = MeanVoltageCount * LSB_12BIT_VALUE * System_ADC_Reference * VOLT_MON_DIVIDER;
+    double ErrorCompensatedCount = (MeanVoltageCount - InputOffsetError) / GainError;
+    Measure->MeanVoltage = ErrorCompensatedCount * LSB_12BIT_VALUE * System_ADC_Reference * VOLT_MON_DIVIDER;
 
     // STEP 2: Calculate the instantaneous voltage
-    double VoltMonitorVoltage = ADC_VoltMonitorCount * LSB_12BIT_VALUE * System_ADC_Reference * VOLT_MON_DIVIDER;
+    ErrorCompensatedCount = (ADC_VoltMonitorCount - InputOffsetError) / GainError;
+    double VoltMonitorVoltage = ErrorCompensatedCount * LSB_12BIT_VALUE * System_ADC_Reference * VOLT_MON_DIVIDER;
 
     // STEP 3: Update Min voltage or reset min if so desired
 #ifdef CAL_MIN_MAX_VOLTAGE
