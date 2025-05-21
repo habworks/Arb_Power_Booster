@@ -94,6 +94,10 @@ extern"C" {
 #endif
 // RMS SPECIFIC
 #define RMS_WINDOW_SIZE         1024
+// PID RELATED
+#define PID_Pk                  100
+#define PID_Pi                  2500
+#define PID_Pd                  0
 // MISC
 #define MONITOR_UPDATE_RATE     10U
 

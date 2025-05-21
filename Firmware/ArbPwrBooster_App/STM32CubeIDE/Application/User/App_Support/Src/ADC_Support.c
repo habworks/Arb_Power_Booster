@@ -147,8 +147,8 @@ void Init_ADC_Hardware(void)
     RMS_CH2_VoltMon = Init_RMS_Class(CH2_VoltMonBuffer, RMS_WINDOW_SIZE);
 
     // STEP 5: Init PID structures
-    ArbPwrBooster.CH1.PID = Init_PID_Controller(100, 2500, 0, MCP45HVX1_POT_FULL_RESOLUTION);
-    ArbPwrBooster.CH2.PID = Init_PID_Controller(100, 2500, 0, MCP45HVX1_POT_FULL_RESOLUTION);
+    ArbPwrBooster.CH1.PID = Init_PID_Controller(PID_Pk, PID_Pi, PID_Pd, MCP45HVX1_POT_FULL_RESOLUTION);
+    ArbPwrBooster.CH2.PID = Init_PID_Controller(PID_Pk, PID_Pi, PID_Pd, MCP45HVX1_POT_FULL_RESOLUTION);
 
 } // END OF Init_ADC_Hardware
 
