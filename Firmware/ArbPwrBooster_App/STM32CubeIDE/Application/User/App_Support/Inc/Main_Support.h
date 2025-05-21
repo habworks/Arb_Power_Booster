@@ -142,6 +142,7 @@ typedef struct
     double                  MaxCurrent;
     double                  MeanCurrent;
     double                  RMS_Current;
+    double                  ZeroCurrentVoltage;
     Type_RMS_Calculate      RMS_CurrentFunction;
     bool                    ResetVoltageMinMax;
     double                  MinVoltage;

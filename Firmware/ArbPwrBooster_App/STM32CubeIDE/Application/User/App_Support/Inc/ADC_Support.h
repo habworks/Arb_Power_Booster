@@ -31,9 +31,13 @@ extern"C" {
 #endif
 
 #include "Hab_Types.h"
+#include "Main_Support.h"
 
 
 // DEFINES
+// PRE-PROCESSOR                            // Un-comment to use
+//#define CAL_MIN_MAX_VOLTAGE
+//#define PRINT_CC_PID_UPDATES
 // ADC CHANNEL
 #define ADC1_NUMBER_OF_CHANNELS 2U
 #define ADC3_NUMBER_OF_CHANNELS 6U
@@ -46,6 +50,7 @@ extern"C" {
 #define AMP_MONITOR_GAIN        50          // Value in V/V this is the Gain of the current sense Amplifier
 #define AMP_SENSE_RESISTOR      6.5E-3      // Value in ohms
 #define VOLT_MON_DIVIDER        4.3333      // External divider ration = .2308 with an equivlence of 3.3V (reference) to 14.3V external
+#define CURRENT_MON_ZERO_OFFSET 1.6500      // Value in volts this is the mid value (0A) reference voltage
 // ADC GAIN AND OFFSET ERRORS
 #define ADC_PVS_OFFSET_ERROR    2           // Value is ADC Counts
 #define ADC_PVS_GAIN_ERROR      1.0005
@@ -80,28 +85,17 @@ extern"C" {
 #if (CH1_AMP_MON_BUFFER_SIZE != CH2_AMP_MON_BUFFER_SIZE)
 #warning Hab the buffersize of the the current monitor channels should be the same
 #endif
-#define SYSTEM_PVS_BUFFER_SIZE 16U     // Expected DC Value
-#define SYSTEM_NVS_BUFFER_SIZE 16U     // Expected DC Value
+#define SYSTEM_PVS_BUFFER_SIZE  16U     // Expected DC Value
+#define SYSTEM_NVS_BUFFER_SIZE  16U     // Expected DC Value
 #define CH1_VOLT_MON_BUFFER_SIZE 16U
 #define CH2_VOLT_MON_BUFFER_SIZE 16U
 #if (CH1_VOLT_MON_BUFFER_SIZE != CH2_VOLT_MON_BUFFER_SIZE)
 #warning Hab the buffersize of the the voltage monitor channels should be the same
 #endif
-//#define RMS_BUFFER_SIZE         16U     // For use with the average RMS value over time
-// FACTORY CALIBRATION VALUES AT SPECIFIC ADDRESS
-//#define TS_CAL1_ADDR            ((uint16_t*)0x1FFF75A8)     // Factory V_25 (25°C)
-//#define TS_CAL2_ADDR            ((uint16_t*)0x1FFF75CA)     // Factory V_110 (110°C)
-//#define TS_CAL1_ADDR            ((uint16_t*) 0x1FF0F44C)  // ADC value at 30°C
-//#define TS_CAL2_ADDR            ((uint16_t*) 0x1FF0F44E)  // ADC value at 110°C
-//#define ADC_BASE_ADDR   0x40012000  // ADC register base address
-//#define ADC_CCR_OFFSET  0x308       // Offset for ADC_CCR register
-//#define ADC_CCR_ADDR    (ADC_BASE_ADDR + ADC_CCR_OFFSET)
 // RMS SPECIFIC
 #define RMS_WINDOW_SIZE         1024
 // MISC
 #define MONITOR_UPDATE_RATE     10U
-// PRE-PROCESSOR
-//#define CAL_MIN_MAX_VOLTAGE
 
 
 // TYPEDEFS AND ENUMS
@@ -147,12 +141,9 @@ void Init_ADC_Hardware(void);
 void ADC13_StartConversion(void);
 void ADC1_StartConversion(void);
 bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber);
-//double update_CH1_RMS_Current(double NewSampleValue);
-//double update_CH2_RMS_Current(double NewSampleValue);
-//double update_CH1_RMS_Voltage(double NewSampleValue);
-//double update_CH2_RMS_Voltage(double NewSampleValue);
 void monitorTaskInit(void);
 void monitorTaskActions(void);
+bool updateAmpMonitorZeroVoltage(Type_Channel Channel);
 
 #ifdef __cplusplus
 }

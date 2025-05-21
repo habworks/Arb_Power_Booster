@@ -70,12 +70,25 @@ Type_PID_Controller * Init_PID_Controller(float Kp, float Ki, float Kd, uint8_t 
 } // END OF Init_PID_Controller
 
 
+
+/********************************************************************************************************
+* @brief Reseting of the PID values when not in use - By resetting the error when not in use, the error terms
+* in particular the integral term does not grow unbounded.
+*
+* @author original: Hab Collector \n
+*
+* @param PID: PID Controller Handle
+*
+* STEP 1: PID_Reset
+* ********************************************************************************************************/
 void PID_Reset(Type_PID_Controller *PID_Controller)
 {
+    // STEP 1: PID_Reset
     PID_Controller->Enable = false;
     PID_Controller->Integral = 0;
     PID_Controller->PreviousError = 0;
-}
+
+} // END OF PID_Reset
 
 
 
@@ -83,7 +96,8 @@ void PID_Reset(Type_PID_Controller *PID_Controller)
 * @brief Update the digital pot to control the current set point.  The digital pot is a divider to the output
 * signal.  When the current limit is surpassed, the digital pot is used to limit the output voltage.  By
 * limiting the output voltage, the output current is reduced.  When the output voltage is reduced to the point
-* the output current matches the current limit - this is in effect constant current mode.
+* the output current matches the current limit - this is in effect constant current mode.  The feedback loop
+* encompasses the output current measure, the current limit, and the digital POT control.
 *
 * @author original: Hab Collector \n
 *
@@ -94,47 +108,45 @@ void PID_Reset(Type_PID_Controller *PID_Controller)
 * @param CurrentLimit: current limit allowed
 * @param DeltTime: Time between current samples
 *
-* @return: Pot value
+* @return: PID status
 *
 * STEP 1: Calculate the present error
-* STEP 2: Take action only if Measured current is more than the limit
-* STEP 3: Calculate the Integral
-* STEP 4: Calculate the derivative
-* STEP 5: Calculate the output by summing the P, I, D errors
-* STEP 6: The output is adjusted for the pot - must be of type uint8_t and clamped to match the pot min max
-********************************************************************************************************/
+* STEP 2: Calculate the Integral term
+* STEP 3: Calculate the Derivative term
+* STEP 4: Calculate the PID output (before conversion to digital pot units) by the sum of all errors
+* STEP 5: Convert PID output to digital pot value
+* STEP 6: Clamp PotValue within allowed range (0 to Total number of pot steps)
+* STEP 7: Update digital pot step value - if step results in no attenuation reset the PID values
+* ********************************************************************************************************/
 Type_PID_Status PID_updateDigitalPot(Type_PID_Controller *PID, float MeasuredCurrent, float CurrentLimit, float DeltaTime)
 {
     // STEP 1: Calculate the present error
     float PresentError = MeasuredCurrent - CurrentLimit;
 
-    // STEP 2: Clamp negative error to zero to prevent reverse action
-//    if (PresentError < 0.0f)
-//    {
-//        PresentError = 0.0f;
-//    }
-
-    // STEP 3: Calculate the Integral term
+    // STEP 2: Calculate the Integral term
     PID->Integral += PresentError * DeltaTime;
 
     // Optional: Integral anti-windup clamp (commented out, can be enabled if needed)
-    // if (PID->Integral > MaxIntegral) PID->Integral = MaxIntegral;
-    // else if (PID->Integral < 0.0f) PID->Integral = 0.0f;
+    // For now covered in step 7
+//    if (PID->Integral > MaxIntegral)
+//        PID->Integral = MaxIntegral;
+//    else if (PID->Integral < 0.0f)
+//        PID->Integral = 0.0f;
 
-    // STEP 4: Calculate the Derivative term
+    // STEP 3: Calculate the Derivative term
     float Derivative = (PresentError - PID->PreviousError) / DeltaTime;
     PID->PreviousError = PresentError;
 
-    // STEP 5: Calculate the PID output (before conversion to digital pot units)
+    // STEP 4: Calculate the PID output (before conversion to digital pot units) by the sum of all errors
     PID->Output = (PID->ProportionalGain * PresentError)
                 + (PID->IntegralGain * PID->Integral)
                 + (PID->DerivativeGain * Derivative);
 
-    // STEP 6: Convert PID output to digital pot value
-    int PotValue = (int)(PID->Output + 0.5f); // round to nearest int
-    PotValue = PID->MaxStepValue - PotValue;  // invert: 0 = max attenuation, 255 = no attenuation
+    // STEP 5: Convert PID output to digital pot value
+    int PotValue = (int)(PID->Output + 0.5f);   // Round to nearest integer
+    PotValue = PID->MaxStepValue - PotValue;    // Must Invert Pot value: 0 = max attenuation, 255 = no attenuation
 
-    // STEP 7: Clamp PotValue within allowed range
+    // STEP 6: Clamp PotValue within allowed range (0 to Total number of pot steps)
     if (PotValue < 0)
     {
         PotValue = 0;
@@ -143,13 +155,15 @@ Type_PID_Status PID_updateDigitalPot(Type_PID_Controller *PID, float MeasuredCur
     {
         PotValue = PID->MaxStepValue;
     }
+    // TODO: Hab test this MACRO - if good use it
+    // PotValue = MIN_MAX_CLAMP(PotValue, 0, PID->MaxStepValue);
 
-    // STEP 8: Update digital pot step value
+    // STEP 7: Update digital pot step value - if step results in no attenuation reset the PID values
     PID->PotStep = (uint8_t)PotValue;
     PID->Enable = (PID->PotStep == PID->MaxStepValue)? false:true;
     if (!PID->Enable)
         PID_Reset(PID);
 
-    return PID_UPDATE;
+    return(PID_UPDATE);
 
 } // END OF PID_updateDigitalPot

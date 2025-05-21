@@ -89,6 +89,7 @@ void Init_ArbPwrBoosterClass(void)
     ArbPwrBooster.CH1.Measure.MaxCurrent = 0;
     ArbPwrBooster.CH1.Measure.MinCurrent = 0;
     ArbPwrBooster.CH1.Measure.RMS_CurrentFunction = update_RMS_Value;
+    ArbPwrBooster.CH1.Measure.ZeroCurrentVoltage = CURRENT_MON_ZERO_OFFSET;
     ArbPwrBooster.CH1.Measure.ResetVoltageMinMax = true;
     ArbPwrBooster.CH1.Measure.MinVoltage = 0;
     ArbPwrBooster.CH1.Measure.MaxVoltage = 0;
@@ -102,6 +103,7 @@ void Init_ArbPwrBoosterClass(void)
     ArbPwrBooster.CH2.Measure.MaxCurrent = 0;
     ArbPwrBooster.CH2.Measure.MinCurrent = 0;
     ArbPwrBooster.CH2.Measure.RMS_CurrentFunction = update_RMS_Value;
+    ArbPwrBooster.CH2.Measure.ZeroCurrentVoltage = CURRENT_MON_ZERO_OFFSET;
     ArbPwrBooster.CH2.Measure.ResetVoltageMinMax = true;
     ArbPwrBooster.CH2.Measure.MinVoltage = 0;
     ArbPwrBooster.CH2.Measure.MaxVoltage = 0;
@@ -123,6 +125,7 @@ void Init_ArbPwrBoosterClass(void)
 *
 * @note: Values are rounded up to the nearest thousandths
 * @note: Integer, Tenths, Hundredths, Thousandths are returned by reference
+* @note: Used in setting of current limit
 *
 * @param RationalNumber: Value to be converted
 * @param Integer: Said place holder within a rational number
@@ -183,7 +186,10 @@ void digitsFromDouble(double RationalNumber, int8_t *Integer, uint8_t *Tenths, u
 *   y = Hundredths
 *   z = Thousandths
 * Example digits A = 3, x = 1, y = 4, z = 3 becomes rational number 3.1429
+*
 * @author original: Hab Collector \n
+*
+* @note: Used in setting of current limit
 *
 * @param Integer: Said place holder within a rational number
 * @param Tenths: Said place holder within a rational number
@@ -495,6 +501,7 @@ Type_ConfigParameterStatus saveConfigParameters(void)
         ConfigSaveStatus = (TotalBytesWritten == ConfigParameterTotalBytes)? CONFIG_SAVE_OK : CONFIG_FILE_ERROR;
     }
 
+    // STEP 3: Sync and close file, unmount and return
     f_sync(&ConfigFileObject);
     f_close(&ConfigFileObject);
     f_mount(0, (TCHAR const*)SDPath, 0);
@@ -503,23 +510,57 @@ Type_ConfigParameterStatus saveConfigParameters(void)
 } // END OF saveConfigParameters
 
 
+
+/********************************************************************************************************
+* @brief A series of actions that must be taken when turning on the output of channel 1.  This action works
+* with the corresponding off action when the output switch is toggled.
+*
+* @author original: Hab Collector \n
+*
+* STEP 1: Before turn on mark what the zero is - this will help with accuracy
+* STEP 2: Turn output, reset the min max current and voltage limits, reset the PID, and no pot attenuation
+* STEP 3: Switch output relay on
+********************************************************************************************************/
 void switchOnAction_CH1(void)
 {
-    fflush(stdout);
-    CH1_OUTPUT_ENABLE();
+    // STEP 1: Before turn on mark what the zero is - this will help with accuracy
+    updateAmpMonitorZeroVoltage(CHANNEL_1);
+
+    // STEP 2: Turn output, reset the min max current and voltage limits, reset the PID, and no pot attenuation
     ArbPwrBooster.CH1.Measure.ResetCurrentMinMax = true;
     ArbPwrBooster.CH1.Measure.ResetVoltageMinMax = true;
     PID_Reset(ArbPwrBooster.CH1.PID);
     MCP45HVX1_WriteWiperVerify(&hi2c1, A1A0_EXTERNAL_ADDR_CH1, MCP45HVX1_POT_FULL_RESOLUTION);
-    ArbPwrBooster.CH1.OutputSwitch = ON;
-}
 
+    // STEP 3: Switch output relay on
+    CH1_OUTPUT_ENABLE();
+    ArbPwrBooster.CH1.OutputSwitch = ON;
+
+} // END OF switchOnAction_CH1
+
+
+
+/********************************************************************************************************
+* @brief A series of actions that must be taken when turning off the output of channel 1.  This action works
+* with the corresponding on action when the output switch is toggled.
+*
+* @author original: Hab Collector \n
+*
+* STEP 1: Turn off relay
+* STEP 2: Set pot to no attenuation
+********************************************************************************************************/
 void switchOffAction_CH1(void)
 {
+    // STEP 1: Turn off relay
     CH1_OUTPUT_DISABLE();
     ArbPwrBooster.CH1.OutputSwitch = OFF;
+
+    // STEP 2: Set pot to no attenuation
     ArbPwrBooster.CH1.PID->Enable = false;
     MCP45HVX1_WriteWiperVerify(&hi2c1, A1A0_EXTERNAL_ADDR_CH1, MCP45HVX1_POT_FULL_RESOLUTION);
-}
+
+} // END OF switchOffAction_CH1
+
+
 
 

@@ -121,6 +121,7 @@ static Type_RMS *RMS_CH2_VoltMon;
 * STEP 2: Init FIFO Buffers for use with ADC1: Micro-Temp Sensor, System 3.3V
 * STEP 3: Init FIFO Buffers for use with ADC3: ±VS rail, CH1 & CH2 Amp Monitor
 * STEP 4: Init RMS structures
+* STEP 5: Init PID structures
 ********************************************************************************************************/
 void Init_ADC_Hardware(void)
 {
@@ -203,8 +204,8 @@ void ADC13_StartConversion(void)
 *
 * ADC3 Configuration:
 * RANK  ADC_CH  Port    Cycles  Net Name
-* 1     6       PF8     144      -VS_MON
-* 2     7       PF9     144      +VS-MON
+* 1     6       PF8     144     -VS_MON
+* 2     7       PF9     144     +VS-MON
 * 3     0       PA0     144     IO_MON_2
 * 4     8       PF10    144     IO_MON_1
 * 5     4       PF6     144     VI_MON_2
@@ -226,7 +227,7 @@ void ADC13_StartConversion(void)
 * calculated for RMS you can definitely run at 20KHz sampling.  However the 15.63KHz sample is adjusted for
 * both channels current and voltage monitoring RMS.
 *
-* @param hadc: Pointer to the ADC handler
+* @param hadc: Pointer to the ADC handler (ADC1 or ADC3)
 *
 * STEP 1: ADC1 Conversions: Micro-Temp Sensor, System 3.3V
 * STEP 2: ADC3 Conversions: ±VS rail, CH1 & CH2 Amp Monitor
@@ -249,7 +250,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
         ADC1_C_RATE_TOGGLE();
     }
 
-    // STEP 2: ADC3 Conversions: ±VS rail, CH1 & CH2 Amp Monitor
+    // STEP 2: ADC3 Conversions: ±VS rail, CH1 & CH2 Amp Monitor, CH1 & CH2 Volt Monitor
     if (hadc == &hadc3)
     {
         // -VS Supply Rail
@@ -269,7 +270,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
         calculateChannelVoltage(ADC3_CountValue[RANK_6], FIFO_CH1_VoltMon, &ArbPwrBooster.CH1.Measure, RMS_CH1_VoltMon, ADC_VMON1_OFFSET_ERROR, ADC_VMON1_GAIN_ERROR);
         // Voltage Monitor CH2
         writeTo_FIFO_Buffer(FIFO_CH2_VoltMon, ADC3_CountValue[RANK_5]);
-        calculateChannelVoltage(ADC3_CountValue[RANK_5], FIFO_CH2_VoltMon, &ArbPwrBooster.CH2.Measure, RMS_CH2_VoltMon, ADC_VMON1_OFFSET_ERROR, ADC_VMON1_GAIN_ERROR);
+        calculateChannelVoltage(ADC3_CountValue[RANK_5], FIFO_CH2_VoltMon, &ArbPwrBooster.CH2.Measure, RMS_CH2_VoltMon, ADC_VMON2_OFFSET_ERROR, ADC_VMON2_GAIN_ERROR);
         // Toggle at the end of conversion - for testing: ADC3 actual conversion rate versus calculated
         ADC3_C_RATE_TOGGLE();
     }
@@ -286,6 +287,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 *
 * @note: The passed buffer must be of type uint16_t
 * @note: This memory is allocated and should never be freed
+* @note: Buffers used for the collection of data used in a rolling average
 *
 * @param Buffer: Pointer to memory that will hold the buffer
 * @param BufferLength: The total number of uint16_t
@@ -382,7 +384,7 @@ static void writeTo_FIFO_Buffer(Type_16b_FIFO *FIFO, uint16_t NewValue)
 * @note: For the STM32F746G-DISCO The Vref and VDD are the same
 * @note: SYSTEM refers to quantities that impact the entire device - CHANNEL impacts on CH1 or CH2
 *
-* @return System 3.3V value
+* @return System VREF value the actual value we do not presume it is 3.3V
 *
 * STEP 1: Write Value to the present location
 * STEP 2: Advance write pointer to next address - loop back when end of write locations reached
@@ -500,11 +502,11 @@ static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *F
     {
         // STEP 1: Calculate the mean of the Current Monitor
         double MeanCount_ADC = (double)FIFO_AmpMon->Sum / FIFO_AmpMon->Depth;
-        double MeanDiffVolt = ((MeanCount_ADC * LSB_12BIT_VALUE * System_ADC_Reference) - (System_ADC_Reference / 2.0)) / AMP_MONITOR_GAIN;
+        double MeanDiffVolt = ((MeanCount_ADC * LSB_12BIT_VALUE * System_ADC_Reference) - (ChannelMeasure->Measure.ZeroCurrentVoltage)) / AMP_MONITOR_GAIN;
         ChannelMeasure->Measure.MeanCurrent = MeanDiffVolt / AMP_SENSE_RESISTOR;
 
         // STEP 2: Calculate the instantaneous current
-        double DiffVolt = ((ADC_AmpMonitorCount * LSB_12BIT_VALUE * System_ADC_Reference) - (System_ADC_Reference / 2.0)) / AMP_MONITOR_GAIN;
+        double DiffVolt = ((ADC_AmpMonitorCount * LSB_12BIT_VALUE * System_ADC_Reference) - (ChannelMeasure->Measure.ZeroCurrentVoltage)) / AMP_MONITOR_GAIN;
         AmpMonitorCurrent = DiffVolt / AMP_SENSE_RESISTOR;
     }
     else
@@ -594,16 +596,41 @@ static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *
 
 
 
+/********************************************************************************************************
+* @brief Pre-actions to be performed before monitorTaskActions - These actions are performed only once.
+*
+* @author original: Hab Collector \n
+*
+********************************************************************************************************/
 void monitorTaskInit(void)
 {
     DO_NOTHING();
-}
+
+} // END OF monitorTaskInit
 
 
+
+/********************************************************************************************************
+* @brief Monitor device actions for error conditions in VS System Supply rails, over temperature, out of
+* tolerance 3V3 and PID control of Constant Current operation for channel 1 and 2
+*
+* @author original: Hab Collector \n
+*
+* @note This is where PID control occurs
+*
+* STEP 1: Do nothing until introduction splash screen completed
+* STEP 2: Do nothing if a system error has occurred
+* STEP 3: Check that VS supply within limits - if not disable input
+* STEP 4: Check for current limit CH 1 - Constant Current Mode
+* STEP 5: Check for current limit CH 2 - Constant Current Mode
+* STEP 6: Check for critical system error conditions
+* STEP 7: Make task inactive for a period of time
+********************************************************************************************************/
 void monitorTaskActions(void)
 {
     static bool CriticalSystemError = false;
-    static uint8_t LastPotValue = 0xFF;
+    static uint8_t LastPotValue = MCP45HVX1_POT_FULL_RESOLUTION;
+
     // STEP 1: Do nothing until introduction splash screen completed
     if (ArbPwrBooster.Ready)
     {
@@ -617,7 +644,7 @@ void monitorTaskActions(void)
             // TODO: Hab needs work - IR losses on VS input lines causes this to fail - adjust VS limit error
             if ((ConfigError & CONFIG_POS_VS_ERROR) || (ConfigError & CONFIG_NEG_VS_ERROR))
             {
-                CH1_INPUT_DISABLE();  // TODO: Hab this is temporary patch - allows max output power on channel 1
+                CH1_INPUT_DISABLE();
                 CH2_INPUT_DISABLE();
             }
             else
@@ -626,17 +653,22 @@ void monitorTaskActions(void)
                 CH2_INPUT_ENABLE();
             }
 
-            // STEP 4: Check for current limit conditions CH 1
-            static uint16_t TickCount = 0;
-            static uint16_t DataUpdateCount = 0;
-            static bool PrintColumnHeader = true;
+            // STEP 4: Check for current limit CH 1 - Constant Current Mode
             if ((ArbPwrBooster.CH1.OutputSwitch == ON) && (ArbPwrBooster.CH1.Limit.Enable))
             {
+#ifdef PRINT_CC_PID_UPDATES
+                static uint16_t TickCount = 0;
+                static uint16_t DataUpdateCount = 0;
+                static bool PrintColumnHeader = true;
                 TickCount++;
+#endif
                 if (PID_updateDigitalPot(ArbPwrBooster.CH1.PID, ArbPwrBooster.CH1.Measure.RMS_Current, ArbPwrBooster.CH1.Limit.Current, (MONITOR_UPDATE_RATE * 1E-3)) == PID_UPDATE)
                 {
                     if (LastPotValue != ArbPwrBooster.CH1.PID->PotStep)
                     {
+                        MCP45HVX1_WriteWiperVerify(&hi2c1, A1A0_EXTERNAL_ADDR_CH1, ArbPwrBooster.CH1.PID->PotStep);
+                        LastPotValue = ArbPwrBooster.CH1.PID->PotStep;
+#ifdef PRINT_CC_PID_UPDATES
                         if (PrintColumnHeader)
                         {
                             printf("\r\n\n#\tTick\tStep\tIrms\r\n");
@@ -644,25 +676,28 @@ void monitorTaskActions(void)
                             PrintColumnHeader = false;
                         }
                         DataUpdateCount++;
-                        MCP45HVX1_WriteWiperVerify(&hi2c1, A1A0_EXTERNAL_ADDR_CH1, ArbPwrBooster.CH1.PID->PotStep);
-                        char PrintMsg[100];
+                         char PrintMsg[100];
                         sprintf(PrintMsg, "%d\t%d\t%d\t%2.3f\r\n", DataUpdateCount, TickCount, ArbPwrBooster.CH1.PID->PotStep, ArbPwrBooster.CH1.Measure.RMS_Current);
                         printGreen(PrintMsg);
-                        LastPotValue = ArbPwrBooster.CH1.PID->PotStep;
+#endif
                     }
                 }
             }
             else
             {
+#ifdef PRINT_CC_PID_UPDATES
                 TickCount = 0;
                 DataUpdateCount = 0;
                 PrintColumnHeader = true;
+#endif
             }
 
-            // STEP 5: Check for current limit conditions CH 2
+            // STEP 5: Check for current limit CH 1 - Constant Current Mode
+            // TODO: Hab add step 5 for channel 2
 
 
             // STEP 6: Check for critical system error conditions
+            // TODO: Hab this can be combined with STEP 2 - seems redundant here
             // Over Voltage on ±VS supply
             if ((ArbPwrBooster.SystemMeasure.Positive_VS >= SYSTEM_POS_VS_LIMIT) || (ArbPwrBooster.SystemMeasure.Negative_VS <= SYSTEM_NEG_VS_LIMIT))
             {
@@ -684,7 +719,8 @@ void monitorTaskActions(void)
 
     // STEP 7: Make task inactive for a period of time
     osDelay(MONITOR_UPDATE_RATE);
-}
+
+} // END OF monitorTaskActions
 
 
 
@@ -695,8 +731,6 @@ void monitorTaskActions(void)
 * this function at the end of conversion if you want another conversion - and so on and so on.
 *
 * @author original: Hab Collector \n
-*
-* @note: SYSTEM refers to quantities that impact the entire device - CHANNEL impacts on CH1 or CH2
 *
 * STEP 1: Start ADC 1 conversion all channels in single shot DMA mode
 ********************************************************************************************************/
@@ -717,6 +751,11 @@ void ADC1_StartConversion(void)
 * @author original: Hab Collector \n
 *
 * @note: SYSTEM refers to quantities that impact the entire device - CHANNEL impacts on CH1 or CH2
+*
+* @param ErrorDescription: Returned by reference a description of the error
+* @param ErrorNumber: Returned by reference the error number
+*
+* @return True if no config errror found otherwise returns false
 *
 * STEP 1: Check System +VS
 * STEP 2: Check System -VS
@@ -788,121 +827,60 @@ bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber)
 
 
 
+/********************************************************************************************************
+* @brief When no current flows through the sense resistor the actual measured current should be zero Amps.
+* This value in volts should be the current shunt monitor reference voltage.  The reference voltage is 1/2
+* 3.3V (VREF) = 1.650V.  To account for inaccuracies in the system this function should be called when the
+* output is disconnected (no current flowing) to establish the true reference for 0 Amp current flow.
+*
+* @author original: Hab Collector \n
+*
+* @note: ***This function should only be called when the channel output is switched off - no current flow
+* @note: If called when the output is switched on the default value (1.650V) is used with a false return
+*
+* @param Channel: Should be CHANNEL_1 or CHANNEL_2
+*
+* @return True with the ArbPwrBooster struct member ZeroCurrentVoltage set to the value when output is off
+*
+* STEP 1: CH 1: Set the zero offset voltage (the present mean value) if channel is switched off
+* STEP 2: CH 2: Set the zero offset voltage (the present mean value) if channel is switched off
+********************************************************************************************************/
+bool updateAmpMonitorZeroVoltage(Type_Channel Channel)
+{
+    if (Channel == CHANNEL_1)
+    {
+        // STEP 1: CH 1: Set the zero offset voltage (the present mean value) if channel is switched off
+        if (ArbPwrBooster.CH1.OutputSwitch == OFF)
+        {
+            double MeanCount_ADC = (double)FIFO_CH1_AmpMon->Sum / FIFO_CH1_AmpMon->Depth;
+            ArbPwrBooster.CH1.Measure.ZeroCurrentVoltage = MeanCount_ADC * LSB_12BIT_VALUE * System_ADC_Reference;
+            return(true);
+        }
+        else
+        {
+            ArbPwrBooster.CH1.Measure.ZeroCurrentVoltage = CURRENT_MON_ZERO_OFFSET;
+            return(false);
+        }
+    }
+    else
+    {
+        // STEP 2: CH 2: Set the zero offset voltage (the present mean value) if channel is switched off
+        if (ArbPwrBooster.CH2.OutputSwitch == OFF)
+        {
+            double MeanCount_ADC = (double)FIFO_CH2_AmpMon->Sum / FIFO_CH2_AmpMon->Depth;
+            ArbPwrBooster.CH2.Measure.ZeroCurrentVoltage = MeanCount_ADC * LSB_12BIT_VALUE * System_ADC_Reference;
+            return(true);
+        }
+        else
+        {
+            ArbPwrBooster.CH2.Measure.ZeroCurrentVoltage = CURRENT_MON_ZERO_OFFSET;
+            return(false);
+        }
+    }
+
+} // END OF updateAmpMonitorZeroVoltage
 
 
-//// OLD RMS STUFF TO BE DELETED
-//// Circular buffer for storing recent ADC values
-//static float BufferWindow_CH1[RMS_WINDOW_SIZE] = {0};
-//// Function to update RMS in real-time
-//double update_CH1_RMS_Current(double NewSampleValue)
-//{
-//    static int Index = 0;
-//    static int Count = 0;
-//    static double SumOfSquares = 0.0;
-//
-//    double RMS_CurrentValue;
-//    // Remove the oldest value from sum_squares if buffer is full
-//    if (Count >= RMS_WINDOW_SIZE)
-//        SumOfSquares -= BufferWindow_CH1[Index] * BufferWindow_CH1[Index];  // Remove old squared value
-//    else
-//        Count++;
-//
-//    // Store new value and update sum of squares
-//    BufferWindow_CH1[Index] = NewSampleValue;
-//    SumOfSquares += NewSampleValue * NewSampleValue;
-//
-//    // Update RMS
-//    RMS_CurrentValue = sqrt(SumOfSquares / Count);
-//
-//    // Move buffer index (circular)
-//    Index = (Index + 1) % RMS_WINDOW_SIZE;
-//
-//    return(RMS_CurrentValue);
-//}
-//
-//
-//static float BufferWindow_CH2[RMS_WINDOW_SIZE] = {0};
-//double update_CH2_RMS_Current(double NewSampleValue)
-//{
-//    static int Index = 0;
-//    static int Count = 0;
-//    static double SumOfSquares = 0.0;
-//
-//    double RMS_CurrentValue;
-//    // Remove the oldest value from sum_squares if buffer is full
-//    if (Count >= RMS_WINDOW_SIZE)
-//        SumOfSquares -= BufferWindow_CH2[Index] * BufferWindow_CH2[Index];  // Remove old squared value
-//    else
-//        Count++;
-//
-//    // Store new value and update sum of squares
-//    BufferWindow_CH2[Index] = NewSampleValue;
-//    SumOfSquares += NewSampleValue * NewSampleValue;
-//
-//    // Update RMS
-//    RMS_CurrentValue = sqrt(SumOfSquares / Count);
-//
-//    // Move buffer index (circular)
-//    Index = (Index + 1) % RMS_WINDOW_SIZE;
-//
-//    return(RMS_CurrentValue);
-//}
-//
-//
-//static float BufferWindowVoltage_CH1[RMS_WINDOW_SIZE] = {0};
-//double update_CH1_RMS_Voltage(double NewSampleValue)
-//{
-//    static int Index = 0;
-//    static int Count = 0;
-//    static double SumOfSquares = 0.0;
-//
-//    double RMS_CurrentValue;
-//    // Remove the oldest value from sum_squares if buffer is full
-//    if (Count >= RMS_WINDOW_SIZE)
-//        SumOfSquares -= BufferWindowVoltage_CH1[Index] * BufferWindowVoltage_CH1[Index];  // Remove old squared value
-//    else
-//        Count++;
-//
-//    // Store new value and update sum of squares
-//    BufferWindowVoltage_CH1[Index] = NewSampleValue;
-//    SumOfSquares += NewSampleValue * NewSampleValue;
-//
-//    // Update RMS
-//    RMS_CurrentValue = sqrt(SumOfSquares / Count);
-//
-//    // Move buffer index (circular)
-//    Index = (Index + 1) % RMS_WINDOW_SIZE;
-//
-//    return(RMS_CurrentValue);
-//}
-//
-//
-//static float BufferWindowVoltage_CH2[RMS_WINDOW_SIZE] = {0};
-//double update_CH2_RMS_Voltage(double NewSampleValue)
-//{
-//    static int Index = 0;
-//    static int Count = 0;
-//    static double SumOfSquares = 0.0;
-//
-//    double RMS_CurrentValue;
-//    // Remove the oldest value from sum_squares if buffer is full
-//    if (Count >= RMS_WINDOW_SIZE)
-//        SumOfSquares -= BufferWindowVoltage_CH2[Index] * BufferWindowVoltage_CH2[Index];  // Remove old squared value
-//    else
-//        Count++;
-//
-//    // Store new value and update sum of squares
-//    BufferWindowVoltage_CH2[Index] = NewSampleValue;
-//    SumOfSquares += NewSampleValue * NewSampleValue;
-//
-//    // Update RMS
-//    RMS_CurrentValue = sqrt(SumOfSquares / Count);
-//
-//    // Move buffer index (circular)
-//    Index = (Index + 1) % RMS_WINDOW_SIZE;
-//
-//    return(RMS_CurrentValue);
-//}
-//
-//
-//
+
+
+

@@ -287,7 +287,8 @@ static void printDebugConsoleHelp(void)
 } // END OF printDebugConsoleHelp
 
 
-
+// TODO: Hab these functions should accommodate channel 1 and 2 - currently only works for channel 1
+// TODO: Hab add function header comments for all such functions
 static void writeDigitalPotAttenuation(char *CommandLine)
 {
     // STEP 1: Make sure there is a space after command
@@ -340,12 +341,14 @@ static void readDigitalPotAttenuation(char *CommandLine)
 
 static void channelOutputEnable(char *CommandLine)
 {
+    // TODO: Hab call the toggle touch UI instead or whatever it calls otherwise it will get out of sync
     CH1_OUTPUT_ENABLE();
 }
 
 
 static void channelOutputDisable(char *CommandLine)
 {
+    // TODO: Hab call the toggle touch UI instead or whatever it calls otherwise it will get out of sync
     CH1_OUTPUT_DISABLE();
 }
 
