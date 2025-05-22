@@ -51,15 +51,20 @@ extern"C" {
 #define AMP_SENSE_RESISTOR      6.5E-3      // Value in ohms
 #define VOLT_MON_DIVIDER        4.3333      // External divider ration = .2308 with an equivlence of 3.3V (reference) to 14.3V external
 #define CURRENT_MON_ZERO_OFFSET 1.6500      // Value in volts this is the mid value (0A) reference voltage
-// ADC GAIN AND OFFSET ERRORS
-#define ADC_PVS_OFFSET_ERROR    2           // Value is ADC Counts
+// ADC GAIN AND OFFSET ERRORS: ****NOTE THESE ARE CALIBRATED RESULTS FROM TESTING - MAY NEED TO BE UNIQUE PER BOARD
+#define ADC_PVS_OFFSET_ERROR    2           // Value is in ADC Counts
 #define ADC_PVS_GAIN_ERROR      1.0005
-#define ADC_NVS_OFFSET_ERROR    0           // Value is ADC Counts
+#define ADC_NVS_OFFSET_ERROR    0           // Value is in ADC Counts
 #define ADC_NVS_GAIN_ERROR      0.9961
-#define ADC_VMON1_OFFSET_ERROR  0
+#define ADC_VMON1_OFFSET_ERROR  0           // Value is in ADC Counts
 #define ADC_VMON1_GAIN_ERROR    1.0107
-#define ADC_VMON2_OFFSET_ERROR  0
+#define ADC_VMON2_OFFSET_ERROR  0           // Value is in ADC Counts
 #define ADC_VMON2_GAIN_ERROR    1.0107
+#define ADC_IMON1_OFFSET_ERROR  0           // Value is in ADC Counts
+#define ADC_IMON1_GAIN_ERROR    1.0
+#define ADC_IMON2_OFFSET_ERROR  0
+#define ADC_IMON2_GAIN_ERROR    1.0
+#define RMS_TO_MEAN_THREHOLD    0.025       // Value in Amps
 // VREFINT RELATED (SYSTEM 3.3V)
 #define VREFINT_CAL_ADDR        ((uint16_t*) ((uint32_t) 0x1FF0F44A)) //0x1FFF75AA)
 // TEMP SENSOR RELATED
