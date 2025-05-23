@@ -218,7 +218,7 @@ void ADC13_StartConversion(void)
 * @note: This is redefinition - this function is define weak in the HAL but implemented here
 * @note: The Rate toggle outputs are used to verify ADC conversion rate.  Conversion rate is calculated as:
 * PCLK2 / ADC_Clock_Presclar * Total Conversion Cycles For All ADC_Channels
-* @note: ADC3 conversion time = 64.00us or 15.63KHz (This is the sampling frequency)
+* @note: ADC3 conversion time = 64.00us or 15.625KHz (This is the sampling frequency)
 * @note: ADC1 conversion time = 71.11us but the sample rate is governed by mainUpdateTaskActions() / GUI_UPDATE_RATE
 * @note: As the sampling frequency is 15.63KHz the max frequency of the input signal (nyquist) 7.813KHz
 * @note: The sampling frequency was limited by the Touch GFX - As this computation must take place periodically and
@@ -440,6 +440,14 @@ static double calculateSystemTemp(void)
 * read here as a positive value.  If the calling function is passing the negative supply rail FIFO it must
 * also multiply the return value by -1.
 *
+* An ADC offset error and gain error are channel specific measurements that are made to improve the overall
+* accuracy of the ADC count reading.  The offset error is measure in ADC counts when the input to the ADC
+* is at GND - ideally it should be 0, but if not, this is how many counts the ADC is offset by and therefore
+* must be subtracted out.  The gain error relates more to quanization effects of the ADC.  It is measure at the
+* highest ADC input possible (System Reference Voltage if possible, but certainly as large as you can get)
+* and its value should ideally be 4096 (12b ADC) if input is System Reference Voltage or the expected calculated
+* value. The Gain Error (GE) is calculated as Measured / Expected - no gain error would be a value of 1.0
+*
 * @author original: Hab Collector \n
 *
 * @note: External divider ratio of .110 (30V to 3.3V)
@@ -474,13 +482,22 @@ static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail, uint8_t Inpu
 
 
 /********************************************************************************************************
-* @brief Calculates the CHANNEL mean, max, min and RMS current.
+* @brief Calculates the CHANNEL mean, max, min and RMS current.  The RMS value is used in the PID control
+* of Constant Current Mode at the point of measure.  As such its accuracy needs to be right.  The RMS is
+* a true RMS it is calculated by the formula RMS = sqrt(1/N * Sum(x*x)).
+*
+* An ADC offset error and gain error are channel specific measurements that are made to improve the overall
+* accuracy of the ADC count reading.  The offset error is measure in ADC counts when the input to the ADC
+* is at GND - ideally it should be 0, but if not, this is how many counts the ADC is offset by and therefore
+* must be subtracted out.  The gain error relates more to quantization effects of the ADC.  It is measure at the
+* highest ADC input possible (System Reference Voltage if possible, but certainly as large as you can get)
+* and its value should ideally be 4096 (12b ADC) if input is System Reference Voltage or the expected calculated
+* value. The Gain Error (GE) is calculated as Measured / Expected - no gain error would be a value of 1.0
 *
 * @author original: Hab Collector \n
 *
-* @note: TODO MORE NOTES
-* @note: TODO MORE NOTES
 * @note: SYSTEM refers to quantities that impact the entire device - CHANNEL impacts on CH1 or CH2
+* @note: TODO It was necessary to set the offset and gain errors to 0 and 1 (basically no errors) or PID would not work - needs to be investigated when time permits
 *
 * @param ADC_AmpMonitorCount: ADC Count from ADC channel for the specific current monitor
 * @param FIFO_AmpMon: FIFO structure associated with the specific Amp Monitor channel
@@ -508,8 +525,7 @@ static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *F
         // STEP 2: Calculate the instantaneous current
         ErrorCompensatedCount = (ADC_AmpMonitorCount - InputOffsetError) / GainError;
         ErrorCompensatedCount -= (Channel->Measure.ZeroCurrentVoltage * ADC_12BIT_FULL_COUNT) / System_ADC_Reference;
-//        double DiffVolt = ((ErrorCompensatedCount * LSB_12BIT_VALUE * System_ADC_Reference) - (Channel->Measure.ZeroCurrentVoltage)) / (AMP_MONITOR_GAIN);
-        double DiffVolt = ((ErrorCompensatedCount * LSB_12BIT_VALUE * System_ADC_Reference) - (0)) / (AMP_MONITOR_GAIN);
+        double DiffVolt = ((ErrorCompensatedCount * LSB_12BIT_VALUE * System_ADC_Reference) - (InputOffsetError)) / (GainError);
         AmpMonitorCurrent = DiffVolt / AMP_SENSE_RESISTOR;
     }
     else
@@ -546,12 +562,18 @@ static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *F
 
 
 /********************************************************************************************************
-* @brief Calculates the CHANNEL mean, max, min and RMS voltage.
+* @brief Calculates the CHANNEL mean, max, min and RMS voltage.  See notes on function calculateChannelCurrent
+*
+* An ADC offset error and gain error are channel specific measurements that are made to improve the overall
+* accuracy of the ADC count reading.  The offset error is measure in ADC counts when the input to the ADC
+* is at GND - ideally it should be 0, but if not, this is how many counts the ADC is offset by and therefore
+* must be subtracted out.  The gain error relates more to quantization effects of the ADC.  It is measure at the
+* highest ADC input possible (System Reference Voltage if possible, but certainly as large as you can get)
+* and its value should ideally be 4096 (12b ADC) if input is System Reference Voltage or the expected calculated
+* value. The Gain Error (GE) is calculated as Measured / Expected - no gain error would be a value of 1.0
 *
 * @author original: Hab Collector \n
 *
-* @note: TODO MORE NOTES
-* @note: TODO MORE NOTES
 * @note: SYSTEM refers to quantities that impact the entire device - CHANNEL impacts on CH1 or CH2
 *
 * @param ADC_VoltMonitorCount: ADC Count from ADC channel for the specific voltage monitor

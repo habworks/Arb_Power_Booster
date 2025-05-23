@@ -70,11 +70,21 @@ Type_RMS *Init_RMS_Class(float *Buffer, uint16_t BufferLength)
 /********************************************************************************************************
 * @brief RMS calculate function.  This function refers to updating as the RMS value is based on a buffer
 * window.  As the buffer is updated with new sample values the RMS output will be updated.  This is a true
-* RMS calculation as it computes the square root of the mean sum of squares.
+* RMS calculation as it computes the square root of the mean sum of squares.  The window size must be
+* adjusted - theoretically it must accommodate the slowest frequency you expect to measure.  Slower frequency
+* requires a larger windows size than higher frequency.  Measuring a 10Hz (Period = .1s) signal at a sample rate of Ts samples
+* per second will require a minimum Buffer Window (BW) size of BW = .1/Ts.  The more samples the better but
+* it is limited by the available memory that can be allocated for windows.  The algorithm computational
+* speed is BW size independent - it calculates a BW size of 64 in the same speed of one 1024 - as such larger
+* windows create more accurate RMS measurements (filter out noise and anomalies better) but the limiting factor
+* will be memory.
 *
 * @author original: Hab Collector \n
 *
 * @note: True RMS calculation
+* @note: The RMS is calculated by the formula RMS = sqrt(1/N * Sum(x*x))
+* @note: At the frequency of measure the Window size is too large and can be reduced - a project for later
+* @note: TODO: Hab Adjust the buffer window size once the final sample rate speed is known
 *
 * @param RMS_Object: The RMS Object to be operated on
 * @param NewSampleValue: New sample for which to update the RMS value
