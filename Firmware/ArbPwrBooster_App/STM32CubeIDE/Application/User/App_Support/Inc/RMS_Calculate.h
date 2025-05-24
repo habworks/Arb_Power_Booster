@@ -39,7 +39,7 @@ typedef struct
     uint16_t    Count;
     uint16_t    WindowSize;
     double      SumOfSquares;
-    float *     BufferWindow;
+    float *     BufferWindow;       // Making this a float as to make it a double would require too much memory
 }Type_RMS;
 
 

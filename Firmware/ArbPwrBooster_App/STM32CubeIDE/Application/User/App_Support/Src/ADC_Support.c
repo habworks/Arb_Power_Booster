@@ -36,6 +36,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 
 extern ADC_HandleTypeDef hadc1;
@@ -443,7 +444,7 @@ static double calculateSystemTemp(void)
 * An ADC offset error and gain error are channel specific measurements that are made to improve the overall
 * accuracy of the ADC count reading.  The offset error is measure in ADC counts when the input to the ADC
 * is at GND - ideally it should be 0, but if not, this is how many counts the ADC is offset by and therefore
-* must be subtracted out.  The gain error relates more to quanization effects of the ADC.  It is measure at the
+* must be subtracted out.  The gain error relates more to quantization effects of the ADC.  It is measure at the
 * highest ADC input possible (System Reference Voltage if possible, but certainly as large as you can get)
 * and its value should ideally be 4096 (12b ADC) if input is System Reference Voltage or the expected calculated
 * value. The Gain Error (GE) is calculated as Measured / Expected - no gain error would be a value of 1.0
@@ -503,6 +504,8 @@ static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail, uint8_t Inpu
 * @param FIFO_AmpMon: FIFO structure associated with the specific Amp Monitor channel
 * @param Channel: ArbPwrBooster current measure struct associated with the specific channel
 * @param RMS_AmpMon: Associated RMS structure
+* @param InputOffsetError: The ADC input offset error measured in ADC counts 0 - indicates there is no measured offset
+* @param GainError: The ADC gain error it is the unit-less ratio of the actual ADC count value at max divide by the calculated count value
 *
 * STEP 1: Calculate the mean of the Current Monitor
 * STEP 2: Calculate the instantaneous current
@@ -580,6 +583,8 @@ static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *F
 * @param FIFO_VoltMon: FIFO structure associated with the specific Volt Monitor channel
 * @param Channel: ArbPwrBooster current measure struct associated with the specific channel
 * @param RMS_VoltMon: Associated RMS structure
+* @param InputOffsetError: The ADC input offset error measured in ADC counts 0 - indicates there is no measured offset
+* @param GainError: The ADC gain error it is the unit-less ratio of the actual ADC count value at max divide by the calculated count value
 *
 * STEP 1: Calculate the mean of the Voltage Monitor
 * STEP 2: Calculate the instantaneous voltage
@@ -640,8 +645,8 @@ void monitorTaskInit(void)
 
 
 /********************************************************************************************************
-* @brief Monitor device actions for error conditions in VS System Supply rails, over temperature, out of
-* tolerance 3V3 and PID control of Constant Current operation for channel 1 and 2
+* @brief Task monitors and controls device actions for error conditions in VS System Supply rails, over temperature,
+* out of tolerance 3V3, PID control of Constant Current operation for channel 1 and 2 and Fan 1 and 2 control.
 *
 * @author original: Hab Collector \n
 *
@@ -846,6 +851,7 @@ bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber)
     }
 
     // STEP 4: Check System Temperature
+    // TODO: Hab you only care about an upper limit not a lower
     if ((ArbPwrBooster.SystemMeasure.TempDegreeC >= SYSTEM_TEMP_UPPER_LIMIT) || (ArbPwrBooster.SystemMeasure.TempDegreeC <= SYSTEM_TEMP_LOWER_LIMIT))
     {
         *ErrorNumber |= (uint8_t)(1 << CONFIG_TEMP_MASK);
@@ -873,7 +879,7 @@ bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber)
 
 /********************************************************************************************************
 * @brief When no current flows through the sense resistor the actual measured current should be zero Amps.
-* This value in volts should be the current shunt monitor reference voltage.  The reference voltage is 1/2
+* This value in volts should be the current shunt monitor IC reference voltage.  The reference voltage is 1/2
 * 3.3V (VREF) = 1.650V.  To account for inaccuracies in the system this function should be called when the
 * output is disconnected (no current flowing) to establish the true reference for 0 Amp current flow.
 *

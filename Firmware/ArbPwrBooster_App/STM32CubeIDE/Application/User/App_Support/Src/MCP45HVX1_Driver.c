@@ -142,7 +142,7 @@ bool MCP45HVX1_ReadWiperValue(I2C_HandleTypeDef *I2C_Handle, uint8_t A1A0_Extern
 
 
 /********************************************************************************************************
-* @brief Write the wiper value to the device.  After write verify it is correct.  Use upto 3 attempts to
+* @brief Write the wiper value to the device.  After write verify it is correct.  Use up to 3 attempts to
 * set the value to what is requested.
 *
 * @author original: Hab Collector \n

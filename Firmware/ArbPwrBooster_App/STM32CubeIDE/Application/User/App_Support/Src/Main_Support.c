@@ -518,7 +518,7 @@ Type_ConfigParameterStatus saveConfigParameters(void)
 * @author original: Hab Collector \n
 *
 * STEP 1: Before turn on mark what the zero is - this will help with accuracy
-* STEP 2: Turn output, reset the min max current and voltage limits, reset the PID, and no pot attenuation
+* STEP 2: Reset the min max current and voltage limits, reset the PID, and no pot attenuation
 * STEP 3: Switch output relay on
 ********************************************************************************************************/
 void switchOnAction_CH1(void)
@@ -526,7 +526,7 @@ void switchOnAction_CH1(void)
     // STEP 1: Before turn on mark what the zero is - this will help with accuracy
     updateAmpMonitorZeroVoltage(CHANNEL_1);
 
-    // STEP 2: Turn output, reset the min max current and voltage limits, reset the PID, and no pot attenuation
+    // STEP 2: Reset the min max current and voltage limits, reset the PID, and no pot attenuation
     ArbPwrBooster.CH1.Measure.ResetCurrentMinMax = true;
     ArbPwrBooster.CH1.Measure.ResetVoltageMinMax = true;
     PID_Reset(ArbPwrBooster.CH1.PID);
