@@ -41,12 +41,13 @@ void Init_GPIO_Hardware(void)
     CH1_INPUT_DISABLE();
     CH1_INPUT_50_DISABLE();
     CH1_OUTPUT_DISABLE();
+    CH1_FAN_DISABLE();
     // Channel 2
     CH2_INPUT_DISABLE();
     CH2_INPUT_50_DISABLE();
     CH2_OUTPUT_DISABLE();
+    CH2_FAN_DISABLE();
     // ADC Conversion rate
-    ADC1_C_RATE_DISABLE();
     ADC3_C_RATE_DISABLE();
 
 } // END OF Init_GPIO_Hardware

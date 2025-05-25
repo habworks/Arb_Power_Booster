@@ -58,8 +58,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define VSYNC_FREQ_Pin GPIO_PIN_4
-#define VSYNC_FREQ_GPIO_Port GPIOB
+#define EN_VO_2_Pin GPIO_PIN_4
+#define EN_VO_2_GPIO_Port GPIOB
 #define R_SHDN_1_Pin GPIO_PIN_15
 #define R_SHDN_1_GPIO_Port GPIOA
 #define EN_50_Z_2_Pin GPIO_PIN_3
@@ -70,14 +70,14 @@ void Error_Handler(void);
 #define USD_DETECT_GPIO_Port GPIOC
 #define LCD_BL_CTRL_Pin GPIO_PIN_3
 #define LCD_BL_CTRL_GPIO_Port GPIOK
-#define ADC1_CRATE_Pin GPIO_PIN_1
-#define ADC1_CRATE_GPIO_Port GPIOI
+#define EN_FAN_1_Pin GPIO_PIN_1
+#define EN_FAN_1_GPIO_Port GPIOI
 #define LCD_DISP_Pin GPIO_PIN_12
 #define LCD_DISP_GPIO_Port GPIOI
 #define EN_CH_1_Pin GPIO_PIN_8
 #define EN_CH_1_GPIO_Port GPIOA
-#define EN_VO_2_Pin GPIO_PIN_7
-#define EN_VO_2_GPIO_Port GPIOG
+#define EN_FAN_2_Pin GPIO_PIN_7
+#define EN_FAN_2_GPIO_Port GPIOG
 #define MAIN_PWR_EN_Pin GPIO_PIN_6
 #define MAIN_PWR_EN_GPIO_Port GPIOG
 #define IO_MON_2_Pin GPIO_PIN_10

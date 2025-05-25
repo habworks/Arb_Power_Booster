@@ -996,13 +996,13 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOH_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, VSYNC_FREQ_Pin|ADC3_CRATE_Pin|EN_50_Z_1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, EN_VO_2_Pin|ADC3_CRATE_Pin|EN_50_Z_1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, R_SHDN_1_Pin|EN_CH_1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOI, EN_50_Z_2_Pin|EN_VO_1_Pin|ADC1_CRATE_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOI, EN_50_Z_2_Pin|EN_VO_1_Pin|EN_FAN_1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LCD_BL_CTRL_GPIO_Port, LCD_BL_CTRL_Pin, GPIO_PIN_SET);
@@ -1011,17 +1011,17 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(LCD_DISP_GPIO_Port, LCD_DISP_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOG, EN_VO_2_Pin|MAIN_PWR_EN_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOG, EN_FAN_2_Pin|MAIN_PWR_EN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(EN_CH_2_GPIO_Port, EN_CH_2_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : VSYNC_FREQ_Pin */
-  GPIO_InitStruct.Pin = VSYNC_FREQ_Pin;
+  /*Configure GPIO pin : EN_VO_2_Pin */
+  GPIO_InitStruct.Pin = EN_VO_2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  HAL_GPIO_Init(VSYNC_FREQ_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(EN_VO_2_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : R_SHDN_1_Pin EN_CH_1_Pin */
   GPIO_InitStruct.Pin = R_SHDN_1_Pin|EN_CH_1_Pin;
@@ -1030,8 +1030,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : EN_50_Z_2_Pin EN_VO_1_Pin ADC1_CRATE_Pin LCD_DISP_Pin */
-  GPIO_InitStruct.Pin = EN_50_Z_2_Pin|EN_VO_1_Pin|ADC1_CRATE_Pin|LCD_DISP_Pin;
+  /*Configure GPIO pins : EN_50_Z_2_Pin EN_VO_1_Pin EN_FAN_1_Pin LCD_DISP_Pin */
+  GPIO_InitStruct.Pin = EN_50_Z_2_Pin|EN_VO_1_Pin|EN_FAN_1_Pin|LCD_DISP_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -1050,12 +1050,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LCD_BL_CTRL_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : EN_VO_2_Pin */
-  GPIO_InitStruct.Pin = EN_VO_2_Pin;
+  /*Configure GPIO pin : EN_FAN_2_Pin */
+  GPIO_InitStruct.Pin = EN_FAN_2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(EN_VO_2_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(EN_FAN_2_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : MAIN_PWR_EN_Pin */
   GPIO_InitStruct.Pin = MAIN_PWR_EN_Pin;

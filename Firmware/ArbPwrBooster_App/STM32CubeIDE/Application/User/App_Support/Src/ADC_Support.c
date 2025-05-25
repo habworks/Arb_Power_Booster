@@ -207,8 +207,8 @@ void ADC13_StartConversion(void)
 * RANK  ADC_CH  Port    Cycles  Net Name
 * 1     6       PF8     144     -VS_MON
 * 2     7       PF9     144     +VS-MON
-* 3     0       PA0     144     IO_MON_2
-* 4     8       PF10    144     IO_MON_1
+* 3     0       PA0     144     IO_MON_1
+* 4     8       PF10    144     IO_MON_2
 * 5     4       PF6     144     VI_MON_2
 * 6     5       PF7     144     VI_MON_1
 *
@@ -247,8 +247,8 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
         ArbPwrBooster.SystemMeasure.VDD_VDREF = System_ADC_Reference;
         // Stop the one shot ADC - it must be started
         HAL_ADC_Stop_DMA(&hadc1);
-        // Toggle at the end of conversion - for testing: ADC1 actual conversion rate versus calculated
-        ADC1_C_RATE_TOGGLE();
+        // Toggle at the end of conversion - for testing: ADC1 actual conversion rate versus calculated - using here ADC3_C_RATE_TOGGLE() must comment out its use in step 2
+        // ADC3_C_RATE_TOGGLE();
     }
 
     // STEP 2: ADC3 Conversions: ±VS rail, CH1 & CH2 Amp Monitor, CH1 & CH2 Volt Monitor
@@ -261,11 +261,11 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
         writeTo_FIFO_Buffer(FIFO_PVS_Supply, ADC3_CountValue[RANK_2]);
         ArbPwrBooster.SystemMeasure.Positive_VS = calculateSystemSupply(FIFO_PVS_Supply, ADC_NVS_OFFSET_ERROR, ADC_NVS_GAIN_ERROR);
         // Current Monitor CH1
-        writeTo_FIFO_Buffer(FIFO_CH1_AmpMon, ADC3_CountValue[RANK_4]);
-        calculateChannelCurrent(ADC3_CountValue[RANK_4], FIFO_CH1_AmpMon, &ArbPwrBooster.CH1, RMS_CH1_AmpMon, ADC_IMON1_OFFSET_ERROR, ADC_IMON1_GAIN_ERROR);
+        writeTo_FIFO_Buffer(FIFO_CH1_AmpMon, ADC3_CountValue[RANK_3]);
+        calculateChannelCurrent(ADC3_CountValue[RANK_3], FIFO_CH1_AmpMon, &ArbPwrBooster.CH1, RMS_CH1_AmpMon, ADC_IMON1_OFFSET_ERROR, ADC_IMON1_GAIN_ERROR);
         // Current Monitor CH2
-        writeTo_FIFO_Buffer(FIFO_CH2_AmpMon, ADC3_CountValue[RANK_3]);
-        calculateChannelCurrent(ADC3_CountValue[RANK_3], FIFO_CH2_AmpMon, &ArbPwrBooster.CH2, RMS_CH2_AmpMon, ADC_IMON2_OFFSET_ERROR, ADC_IMON2_GAIN_ERROR);
+        writeTo_FIFO_Buffer(FIFO_CH2_AmpMon, ADC3_CountValue[RANK_4]);
+        calculateChannelCurrent(ADC3_CountValue[RANK_4], FIFO_CH2_AmpMon, &ArbPwrBooster.CH2, RMS_CH2_AmpMon, ADC_IMON2_OFFSET_ERROR, ADC_IMON2_GAIN_ERROR);
         // Voltage Monitor CH1
         writeTo_FIFO_Buffer(FIFO_CH1_VoltMon, ADC3_CountValue[RANK_6]);
         calculateChannelVoltage(ADC3_CountValue[RANK_6], FIFO_CH1_VoltMon, &ArbPwrBooster.CH1, RMS_CH1_VoltMon, ADC_VMON1_OFFSET_ERROR, ADC_VMON1_GAIN_ERROR);
