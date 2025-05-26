@@ -52,9 +52,9 @@ static Type_16b_FIFO *Init_FIFO_Buffer(uint16_t *Buffer, uint8_t BufferLength, u
 static void writeTo_FIFO_Buffer(Type_16b_FIFO *Buffer, uint16_t Value);
 static double calculateSystem_3V3(void);
 static double calculateSystemTemp(void);
-static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail, uint8_t InputOffsetError, double GainError);
-static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *FIFO_AmpMon, Type_ChannelConfig *Channel, Type_RMS *RMS_AmpMon, uint8_t InputOffsetError, double GainError);
-static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *FIFO_VoltMon, Type_ChannelConfig *Channel, Type_RMS *RMS_VoltMon, uint8_t InputOffsetError, double GainError);
+static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail);
+static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *FIFO_AmpMon, Type_ChannelConfig *Channel, Type_RMS *RMS_AmpMon);
+static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *FIFO_VoltMon, Type_ChannelConfig *Channel, Type_RMS *RMS_VoltMon);
 
 // Static FIFO Declarations
 // System 3V3
@@ -185,7 +185,14 @@ void ADC13_StartConversion(void)
 /********************************************************************************************************
 * @brief Redefinition of the weak callback function for ADC conversion complete.  ADC1 and ADC3 values
 * have been acquired this function updates the corresponding FIFO buffers and calls a unique function that
-* performs the channel conversion.
+* performs the channel conversion.  Within ADC3 an attempt is made to make a more accurate (calibrated) measure
+* An ADC offset error and gain error are channel specific measurements that are made to improve the overall
+* accuracy of the ADC count reading.  The offset error is measure in ADC counts when the input to the ADC channel
+* is at GND - ideally it should be 0, but if not, this is how many counts the ADC is offset by and therefore
+* must be subtracted out.  The gain error relates more to quantization effects of the ADC.  It is measured at the
+* highest ADC input possible (System Reference Voltage if possible, but certainly as large as you can get)
+* and its value should ideally be 4096 (12b ADC) (if input is System Reference Voltage) or the expected calculated
+* value. The Gain Error (GE) is calculated as Measured / Expected - no gain error would be a value of 1.0
 *
 * ADC1 handles:
 *    Temperature
@@ -205,12 +212,12 @@ void ADC13_StartConversion(void)
 *
 * ADC3 Configuration:
 * RANK  ADC_CH  Port    Cycles  Net Name
-* 1     6       PF8     144     -VS_MON
-* 2     7       PF9     144     +VS-MON
-* 3     0       PA0     144     IO_MON_1
-* 4     8       PF10    144     IO_MON_2
-* 5     4       PF6     144     VI_MON_2
-* 6     5       PF7     144     VI_MON_1
+* 1     IN6     PF8     144     -VS_MON
+* 2     IN7     PF9     144     +VS-MON
+* 3     IN0     PA0     144     IO_MON_1
+* 4     IN8     PF10    144     IO_MON_2
+* 5     IN4     PF6     144     VI_MON_2
+* 6     IN5     PF7     144     VI_MON_1
 *
 * ADC uses PCLK2 (108MHz) with a divisor of 8
 *
@@ -254,24 +261,31 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
     // STEP 2: ADC3 Conversions: ±VS rail, CH1 & CH2 Amp Monitor, CH1 & CH2 Volt Monitor
     if (hadc == &hadc3)
     {
+        double ADC3_ErrorCompensatedCount;
         // -VS Supply Rail
-        writeTo_FIFO_Buffer(FIFO_NVS_Supply, ADC3_CountValue[RANK_1]);
-        ArbPwrBooster.SystemMeasure.Negative_VS = calculateSystemSupply(FIFO_NVS_Supply, ADC_PVS_OFFSET_ERROR, ADC_PVS_GAIN_ERROR) * -1.0;
+        ADC3_ErrorCompensatedCount = ((double)ADC3_CountValue[RANK_1] - ADC_NVS_OFFSET_ERROR) / ADC_NVS_GAIN_ERROR;
+        writeTo_FIFO_Buffer(FIFO_NVS_Supply, ADC3_ErrorCompensatedCount);
+        ArbPwrBooster.SystemMeasure.Negative_VS = calculateSystemSupply(FIFO_NVS_Supply) * -1.0;
         // +VS Supply Rail
-        writeTo_FIFO_Buffer(FIFO_PVS_Supply, ADC3_CountValue[RANK_2]);
-        ArbPwrBooster.SystemMeasure.Positive_VS = calculateSystemSupply(FIFO_PVS_Supply, ADC_NVS_OFFSET_ERROR, ADC_NVS_GAIN_ERROR);
+        ADC3_ErrorCompensatedCount = ((double)ADC3_CountValue[RANK_2] - ADC_PVS_OFFSET_ERROR) / ADC_PVS_GAIN_ERROR;
+        writeTo_FIFO_Buffer(FIFO_PVS_Supply, ADC3_ErrorCompensatedCount);
+        ArbPwrBooster.SystemMeasure.Positive_VS = calculateSystemSupply(FIFO_PVS_Supply);
         // Current Monitor CH1
-        writeTo_FIFO_Buffer(FIFO_CH1_AmpMon, ADC3_CountValue[RANK_3]);
-        calculateChannelCurrent(ADC3_CountValue[RANK_3], FIFO_CH1_AmpMon, &ArbPwrBooster.CH1, RMS_CH1_AmpMon, ADC_IMON1_OFFSET_ERROR, ADC_IMON1_GAIN_ERROR);
+        ADC3_ErrorCompensatedCount = ((double)ADC3_CountValue[RANK_3] - ADC_IMON1_OFFSET_ERROR) / ADC_IMON1_GAIN_ERROR;
+        writeTo_FIFO_Buffer(FIFO_CH1_AmpMon, ADC3_ErrorCompensatedCount);
+        calculateChannelCurrent(ADC3_ErrorCompensatedCount, FIFO_CH1_AmpMon, &ArbPwrBooster.CH1, RMS_CH1_AmpMon);
         // Current Monitor CH2
-        writeTo_FIFO_Buffer(FIFO_CH2_AmpMon, ADC3_CountValue[RANK_4]);
-        calculateChannelCurrent(ADC3_CountValue[RANK_4], FIFO_CH2_AmpMon, &ArbPwrBooster.CH2, RMS_CH2_AmpMon, ADC_IMON2_OFFSET_ERROR, ADC_IMON2_GAIN_ERROR);
+        ADC3_ErrorCompensatedCount = ((double)ADC3_CountValue[RANK_4] - ADC_IMON2_OFFSET_ERROR) / ADC_IMON2_GAIN_ERROR;
+        writeTo_FIFO_Buffer(FIFO_CH2_AmpMon, ADC3_ErrorCompensatedCount);
+        calculateChannelCurrent(ADC3_ErrorCompensatedCount, FIFO_CH2_AmpMon, &ArbPwrBooster.CH2, RMS_CH2_AmpMon);
         // Voltage Monitor CH1
-        writeTo_FIFO_Buffer(FIFO_CH1_VoltMon, ADC3_CountValue[RANK_6]);
-        calculateChannelVoltage(ADC3_CountValue[RANK_6], FIFO_CH1_VoltMon, &ArbPwrBooster.CH1, RMS_CH1_VoltMon, ADC_VMON1_OFFSET_ERROR, ADC_VMON1_GAIN_ERROR);
+        ADC3_ErrorCompensatedCount = ((double)ADC3_CountValue[RANK_6] - ADC_VMON1_OFFSET_ERROR) / ADC_VMON1_GAIN_ERROR;
+        writeTo_FIFO_Buffer(FIFO_CH1_VoltMon, ADC3_ErrorCompensatedCount);
+        calculateChannelVoltage(ADC3_ErrorCompensatedCount, FIFO_CH1_VoltMon, &ArbPwrBooster.CH1, RMS_CH1_VoltMon);
         // Voltage Monitor CH2
-        writeTo_FIFO_Buffer(FIFO_CH2_VoltMon, ADC3_CountValue[RANK_5]);
-        calculateChannelVoltage(ADC3_CountValue[RANK_5], FIFO_CH2_VoltMon, &ArbPwrBooster.CH2, RMS_CH2_VoltMon, ADC_VMON2_OFFSET_ERROR, ADC_VMON2_GAIN_ERROR);
+        ADC3_ErrorCompensatedCount = ((double)ADC3_CountValue[RANK_5] - ADC_VMON2_OFFSET_ERROR) / ADC_VMON2_GAIN_ERROR;
+        writeTo_FIFO_Buffer(FIFO_CH2_VoltMon, ADC3_ErrorCompensatedCount);
+        calculateChannelVoltage(ADC3_ErrorCompensatedCount, FIFO_CH2_VoltMon, &ArbPwrBooster.CH2, RMS_CH2_VoltMon);
         // Toggle at the end of conversion - for testing: ADC3 actual conversion rate versus calculated
         ADC3_C_RATE_TOGGLE();
     }
@@ -441,14 +455,6 @@ static double calculateSystemTemp(void)
 * read here as a positive value.  If the calling function is passing the negative supply rail FIFO it must
 * also multiply the return value by -1.
 *
-* An ADC offset error and gain error are channel specific measurements that are made to improve the overall
-* accuracy of the ADC count reading.  The offset error is measure in ADC counts when the input to the ADC
-* is at GND - ideally it should be 0, but if not, this is how many counts the ADC is offset by and therefore
-* must be subtracted out.  The gain error relates more to quantization effects of the ADC.  It is measure at the
-* highest ADC input possible (System Reference Voltage if possible, but certainly as large as you can get)
-* and its value should ideally be 4096 (12b ADC) if input is System Reference Voltage or the expected calculated
-* value. The Gain Error (GE) is calculated as Measured / Expected - no gain error would be a value of 1.0
-*
 * @author original: Hab Collector \n
 *
 * @note: External divider ratio of .110 (30V to 3.3V)
@@ -463,19 +469,15 @@ static double calculateSystemTemp(void)
 * @return As a positive number only the supply rail voltage
 *
 * STEP 1: Calculate the mean of the ADC Supply rail counts
-* STEP 2: Apply the error terms
-* STEP 3: Using the mean value calculate supply rail according to input divider ratio
+* STEP 2: Using the mean value calculate supply rail according to input divider ratio
 ********************************************************************************************************/
-static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail, uint8_t InputOffsetError, double GainError)
+static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail)
 {
     // STEP 1: Calculate the mean of the ADC Supply rail counts
     double MeanSupplyRailCount = (double)((double)FIFO_SupplyRail->Sum / FIFO_SupplyRail->Depth);
 
-    // STEP 2: Apply the error terms
-    double ErrorCompensatedCount = (MeanSupplyRailCount - InputOffsetError) / GainError;
-
-    // STEP 3: Using the mean value calculate supply rail according to input divider ratio
-    double SupplyRailVoltage = ErrorCompensatedCount * LSB_12BIT_VALUE * System_ADC_Reference * SYSTEM_VS_DIVIDER;
+    // STEP 2: Using the mean value calculate supply rail according to input divider ratio
+    double SupplyRailVoltage = MeanSupplyRailCount * LSB_12BIT_VALUE * System_ADC_Reference * SYSTEM_VS_DIVIDER;
     return(SupplyRailVoltage);
 
 } // END OF calculateSystemSupply
@@ -487,14 +489,6 @@ static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail, uint8_t Inpu
 * of Constant Current Mode at the point of measure.  As such its accuracy needs to be right.  The RMS is
 * a true RMS it is calculated by the formula RMS = sqrt(1/N * Sum(x*x)).
 *
-* An ADC offset error and gain error are channel specific measurements that are made to improve the overall
-* accuracy of the ADC count reading.  The offset error is measure in ADC counts when the input to the ADC
-* is at GND - ideally it should be 0, but if not, this is how many counts the ADC is offset by and therefore
-* must be subtracted out.  The gain error relates more to quantization effects of the ADC.  It is measure at the
-* highest ADC input possible (System Reference Voltage if possible, but certainly as large as you can get)
-* and its value should ideally be 4096 (12b ADC) if input is System Reference Voltage or the expected calculated
-* value. The Gain Error (GE) is calculated as Measured / Expected - no gain error would be a value of 1.0
-*
 * @author original: Hab Collector \n
 *
 * @note: SYSTEM refers to quantities that impact the entire device - CHANNEL impacts on CH1 or CH2
@@ -504,32 +498,26 @@ static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail, uint8_t Inpu
 * @param FIFO_AmpMon: FIFO structure associated with the specific Amp Monitor channel
 * @param Channel: ArbPwrBooster current measure struct associated with the specific channel
 * @param RMS_AmpMon: Associated RMS structure
-* @param InputOffsetError: The ADC input offset error measured in ADC counts 0 - indicates there is no measured offset
-* @param GainError: The ADC gain error it is the unit-less ratio of the actual ADC count value at max divide by the calculated count value
 *
 * STEP 1: Calculate the mean of the Current Monitor
 * STEP 2: Calculate the instantaneous current
-* STEP 3: Update Min current or reset min if so desired
-* STEP 4: Update Max current or reset max if so desired
-* STEP 5: Calculate the RMS current
+* STEP 3: Update Min Max current or reset min if so desired
+* STEP 4: Calculate the RMS current
 ********************************************************************************************************/
-static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *FIFO_AmpMon, Type_ChannelConfig *Channel, Type_RMS *RMS_AmpMon, uint8_t InputOffsetError, double GainError)
+static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *FIFO_AmpMon, Type_ChannelConfig *Channel, Type_RMS *RMS_AmpMon)
 {
-    double AmpMonitorCurrent = 0;
+    double AmpMonitorCurrent;
 
     if (Channel->OutputSwitch == ON)
     {
         // STEP 1: Calculate the mean of the Current Monitor
         double MeanCurrentCount = (double)FIFO_AmpMon->Sum / FIFO_AmpMon->Depth;
-        double ErrorCompensatedCount = (MeanCurrentCount - InputOffsetError) / GainError;
-        double MeanDiffVolt = ((ErrorCompensatedCount * LSB_12BIT_VALUE * System_ADC_Reference) - (Channel->Measure.ZeroCurrentVoltage)) / (AMP_MONITOR_GAIN);
+        double MeanDiffVolt = ((MeanCurrentCount * LSB_12BIT_VALUE * System_ADC_Reference) - (Channel->Measure.ZeroCurrentVoltage)) / (AMP_MONITOR_GAIN);
         Channel->Measure.MeanCurrent = MeanDiffVolt / AMP_SENSE_RESISTOR;
 
         // STEP 2: Calculate the instantaneous current
-        ErrorCompensatedCount = (ADC_AmpMonitorCount - InputOffsetError) / GainError;
-        ErrorCompensatedCount -= (Channel->Measure.ZeroCurrentVoltage * ADC_12BIT_FULL_COUNT) / System_ADC_Reference;
-        double DiffVolt = ((ErrorCompensatedCount * LSB_12BIT_VALUE * System_ADC_Reference) - (InputOffsetError)) / (GainError);
-        AmpMonitorCurrent = DiffVolt / AMP_SENSE_RESISTOR;
+        double AmpMonitorDiffVolt = ((ADC_AmpMonitorCount * LSB_12BIT_VALUE * System_ADC_Reference) - Channel->Measure.ZeroCurrentVoltage) / AMP_MONITOR_GAIN;
+        AmpMonitorCurrent = AmpMonitorDiffVolt / AMP_SENSE_RESISTOR;
     }
     else
     {
@@ -538,24 +526,22 @@ static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *F
         return;
     }
 
-    // STEP 3: Update Min current or reset min if so desired
-    if (Channel->Measure.ResetCurrentMinMax)
-        Channel->Measure.MinCurrent = AmpMonitorCurrent;
-    else if (AmpMonitorCurrent < Channel->Measure.MinCurrent)
-        Channel->Measure.MinCurrent = AmpMonitorCurrent;
-
-    // STEP 4: Update Max current or reset max if so desired
+    // STEP 3: Update Min Max current or reset min if so desired
     if (Channel->Measure.ResetCurrentMinMax)
     {
-        Channel->Measure.MaxCurrent = AmpMonitorCurrent;
+        Channel->Measure.MinCurrent = Channel->Measure.MeanCurrent;
+        Channel->Measure.MaxCurrent = Channel->Measure.MeanCurrent;
         Channel->Measure.ResetCurrentMinMax = false;
     }
-    else if (AmpMonitorCurrent > Channel->Measure.MaxCurrent)
+    else
     {
-        Channel->Measure.MaxCurrent = AmpMonitorCurrent;
+        if (AmpMonitorCurrent < Channel->Measure.MinCurrent)
+            Channel->Measure.MinCurrent = AmpMonitorCurrent;
+        if (AmpMonitorCurrent > Channel->Measure.MaxCurrent)
+            Channel->Measure.MaxCurrent = AmpMonitorCurrent;
     }
 
-    // STEP 5: Calculate the RMS current
+    // STEP 4: Calculate the RMS current
     Channel->Measure.RMS_Current = Channel->Measure.RMS_CurrentFunction(RMS_AmpMon, AmpMonitorCurrent);
     if (Channel->Measure.RMS_Current < RMS_TO_MEAN_THREHOLD)
         Channel->Measure.RMS_Current = fabs(Channel->Measure.MeanCurrent);
@@ -567,14 +553,6 @@ static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *F
 /********************************************************************************************************
 * @brief Calculates the CHANNEL mean, max, min and RMS voltage.  See notes on function calculateChannelCurrent
 *
-* An ADC offset error and gain error are channel specific measurements that are made to improve the overall
-* accuracy of the ADC count reading.  The offset error is measure in ADC counts when the input to the ADC
-* is at GND - ideally it should be 0, but if not, this is how many counts the ADC is offset by and therefore
-* must be subtracted out.  The gain error relates more to quantization effects of the ADC.  It is measure at the
-* highest ADC input possible (System Reference Voltage if possible, but certainly as large as you can get)
-* and its value should ideally be 4096 (12b ADC) if input is System Reference Voltage or the expected calculated
-* value. The Gain Error (GE) is calculated as Measured / Expected - no gain error would be a value of 1.0
-*
 * @author original: Hab Collector \n
 *
 * @note: SYSTEM refers to quantities that impact the entire device - CHANNEL impacts on CH1 or CH2
@@ -583,47 +561,39 @@ static void calculateChannelCurrent(double ADC_AmpMonitorCount, Type_16b_FIFO *F
 * @param FIFO_VoltMon: FIFO structure associated with the specific Volt Monitor channel
 * @param Channel: ArbPwrBooster current measure struct associated with the specific channel
 * @param RMS_VoltMon: Associated RMS structure
-* @param InputOffsetError: The ADC input offset error measured in ADC counts 0 - indicates there is no measured offset
-* @param GainError: The ADC gain error it is the unit-less ratio of the actual ADC count value at max divide by the calculated count value
 *
 * STEP 1: Calculate the mean of the Voltage Monitor
 * STEP 2: Calculate the instantaneous voltage
-* STEP 3: Update Min voltage or reset min if so desired
-* STEP 4: Update Max voltage or reset max if so desired
-* STEP 5: Calculate the RMS voltage
+* STEP 3: Update Min Max voltage or reset min if so desired
+* STEP 4: Calculate the RMS voltage
 ********************************************************************************************************/
-static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *FIFO_VoltMon, Type_ChannelConfig *Channel, Type_RMS *RMS_VoltMon, uint8_t InputOffsetError, double GainError)
+static void calculateChannelVoltage(double ADC_VoltMonitorCount, Type_16b_FIFO *FIFO_VoltMon, Type_ChannelConfig *Channel, Type_RMS *RMS_VoltMon)
 {
-    // TODO Think about a periodic min max reset
     // STEP 1: Calculate the mean of the Voltage Monitor
     double MeanVoltageCount = (double)FIFO_VoltMon->Sum / FIFO_VoltMon->Depth;
-    double ErrorCompensatedCount = (MeanVoltageCount - InputOffsetError) / GainError;
-    Channel->Measure.MeanVoltage = ErrorCompensatedCount * LSB_12BIT_VALUE * System_ADC_Reference * VOLT_MON_DIVIDER;
+    Channel->Measure.MeanVoltage = MeanVoltageCount * LSB_12BIT_VALUE * System_ADC_Reference * VOLT_MON_DIVIDER;
 
     // STEP 2: Calculate the instantaneous voltage
-    ErrorCompensatedCount = (ADC_VoltMonitorCount - InputOffsetError) / GainError;
-    double VoltMonitorVoltage = ErrorCompensatedCount * LSB_12BIT_VALUE * System_ADC_Reference * VOLT_MON_DIVIDER;
+    double VoltMonitorVoltage = ADC_VoltMonitorCount * LSB_12BIT_VALUE * System_ADC_Reference * VOLT_MON_DIVIDER;
 
-    // STEP 3: Update Min voltage or reset min if so desired
+    // STEP 3: Update Min Max voltage or reset min if so desired
 #ifdef CAL_MIN_MAX_VOLTAGE
     if (Channel->Measure.ResetVoltageMinMax)
-        Channel->Measure.MinVoltage = VoltMonitorVoltage;
-    else if (VoltMonitorVoltage < Channel->Measure.MinVoltage)
-        Channel->Measure.MinVoltage = VoltMonitorVoltage;
-
-    // STEP 4: Update Max voltage or reset max if so desired
-    if (Channel->Measure.ResetVoltageMinMax)
     {
-        Channel->Measure.MaxVoltage = VoltMonitorVoltage;
+        Channel->Measure.MinVoltage = Channel->Measure.MeanVoltage;
+        Channel->Measure.MaxVoltage = Channel->Measure.MeanVoltage;
         Channel->Measure.ResetVoltageMinMax = false;
     }
-    else if (VoltMonitorVoltage > Channel->Measure.MaxVoltage)
+    else
     {
-        Channel->Measure.MaxVoltage = VoltMonitorVoltage;
+        if (VoltMonitorVoltage < Channel->Measure.MinVoltage)
+            Channel->Measure.MinVoltage = VoltMonitorVoltage;
+        if (VoltMonitorVoltage > Channel->Measure.MaxVoltage)
+            Channel->Measure.MaxVoltage = VoltMonitorVoltage;
     }
 #endif
 
-    // STEP 5: Calculate the RMS voltage
+    // STEP 4: Calculate the RMS voltage
     Channel->Measure.RMS_Voltage = Channel->Measure.RMS_VoltageFunction(RMS_VoltMon, VoltMonitorVoltage);
 
 } // END OF calculateChannelVoltage
@@ -654,7 +624,7 @@ void monitorTaskInit(void)
 *
 * STEP 1: Do nothing until introduction splash screen completed
 * STEP 2: Do nothing if a system error has occurred
-* STEP 3: Check that VS supply within limits - if not disable input
+* STEP 3: Check System VS supply rail and temperature for errors
 * STEP 4: Check for current limit CH 1 - Constant Current Mode
 * STEP 5: Check for current limit CH 2 - Constant Current Mode
 * STEP 6: Check for critical system error conditions
@@ -671,11 +641,11 @@ void monitorTaskActions(void)
         // STEP 2: Do nothing if a system error has occurred
         if (!CriticalSystemError)
         {
-            // STEP 3: Check that VS supply within limits - if not disable input
+            // STEP 3: Check System VS supply rail and temperature for errors
             char NotUsedStatusMsg[25] = {0x00};
             uint8_t ConfigError = 0;
             systemMeasureWithinLimits(NotUsedStatusMsg, &ConfigError);
-            // TODO: Hab needs work - IR losses on VS input lines causes this to fail - adjust VS limit error
+            // System VS rails not within limits but not worthy of shutdown - disable input
             if ((ConfigError & CONFIG_POS_VS_ERROR) || (ConfigError & CONFIG_NEG_VS_ERROR))
             {
                 CH1_INPUT_DISABLE();
@@ -686,6 +656,48 @@ void monitorTaskActions(void)
                 CH1_INPUT_ENABLE();
                 CH2_INPUT_ENABLE();
             }
+            // System VS rails are critically OV - device damage may occur
+            if (ConfigError & CONFIG_VS_CRITICAL_ERROR)
+            {
+                CriticalSystemError = true;
+                MAIN_PWR_OFF();
+                printBrightRed("\r\nERROR: Critical on VS supply rail\r\n");
+                printBrightRed("Correct supply rail then reset\r\n");
+            }
+            // System temperature over the limit - device damage may occur
+            if (ConfigError & CONFIG_TEMP_ERROR)
+            {
+                CriticalSystemError = true;
+                MAIN_PWR_OFF();
+                printBrightRed("\r\nERROR: Critical over temperature\r\n");
+                printBrightRed("Cool device then reset\r\n");
+            }
+
+            // STEP 4: Turn on Channel 1 fan based on power dissipated - turn off after power level drops consistently for 30s
+            double PowerDisipated_OPA549 = (NOMINAL_SUPPLY_RAIL_V - (ArbPwrBooster.CH1.Measure.RMS_Voltage * ArbPwrBooster.CH1.PID->PotStep / ArbPwrBooster.CH1.PID->MaxStepValue)) * ArbPwrBooster.CH1.Measure.RMS_Current;
+            if ((ArbPwrBooster.CH1.OutputSwitch == ON) && (!ArbPwrBooster.CH1.Fan.Enable) && (PowerDisipated_OPA549 >= MAX_PD_WITHOUT_HEATSINK))
+            {
+                ArbPwrBooster.CH1.Fan.Enable = true;
+                ArbPwrBooster.CH1.Fan.FanOnDownCounter = FAN_ON_COUNTER_30S;
+                CH1_FAN_ENABLE();
+            }
+            if (ArbPwrBooster.CH1.Fan.Enable)
+            {
+                if (PowerDisipated_OPA549 < MAX_PD_WITHOUT_HEATSINK)
+                {
+                    ArbPwrBooster.CH1.Fan.FanOnDownCounter--;
+                    if (ArbPwrBooster.CH1.Fan.FanOnDownCounter == 0)
+                    {
+                        ArbPwrBooster.CH1.Fan.Enable = false;
+                        CH1_FAN_DISABLE();
+                    }
+                }
+                else
+                {
+                    ArbPwrBooster.CH1.Fan.FanOnDownCounter = FAN_ON_COUNTER_30S;
+                }
+            }
+
 
             // STEP 4: Check for current limit CH 1 - Constant Current Mode
             if ((ArbPwrBooster.CH1.OutputSwitch == ON) && (ArbPwrBooster.CH1.Limit.Enable))
@@ -726,43 +738,10 @@ void monitorTaskActions(void)
 #endif
             }
 
-            // STEP 5: Check for current limit CH 1 - Constant Current Mode
+            // STEP 5: Check for current limit CH 2 - Constant Current Mode
             // TODO: Hab add step 5 for channel 2
-
-
-            // STEP 6: Check for critical system error conditions
-            // TODO: Hab this can be combined with STEP 2 - seems redundant here
-            // Over Voltage on ±VS supply
-            if ((ArbPwrBooster.SystemMeasure.Positive_VS >= SYSTEM_POS_VS_LIMIT) || (ArbPwrBooster.SystemMeasure.Negative_VS <= SYSTEM_NEG_VS_LIMIT))
-            {
-                CriticalSystemError = true;
-                MAIN_PWR_OFF();
-                printBrightRed("\r\nERROR: Critical on VS supply rail\r\n");
-                printBrightRed("Correct supply rail then reset\r\n");
-            }
-            // Over Temperature
-            if (ArbPwrBooster.SystemMeasure.TempDegreeC >= SYSTEM_TEMP_UPPER_LIMIT)
-            {
-                CriticalSystemError = true;
-                MAIN_PWR_OFF();
-                printBrightRed("\r\nERROR: Critical over temperature\r\n");
-                printBrightRed("Cool device then reset\r\n");
-            }
         }
     }
-
-//    uint8_t static PrintCount = 0;
-//    if (ArbPwrBooster.CH1.OutputSwitch == ON)
-//    {
-//        PrintCount++;
-//        if (PrintCount >= 20)
-//        {
-//    //        printf("%d\t%2.3f\%2.3f\r\n", TestCount, AmpMonitorCurrent, Channel->Measure.RMS_Current);
-//            printf("%2.3f\r\n", (float)FIFO_CH1_AmpMon->Sum / 16.0);
-//            fflush(stdout);
-//            PrintCount = 0;
-//        }
-//    }
 
     // STEP 7: Make task inactive for a period of time
     osDelay(MONITOR_UPDATE_RATE);
@@ -806,21 +785,22 @@ void ADC1_StartConversion(void)
 *
 * @return True if no config errror found otherwise returns false
 *
-* STEP 1: Check System +VS
-* STEP 2: Check System -VS
-* STEP 3: Check System Vref
-* STEP 4: Check System Temperature
-* STEP 5: For no error
+* STEP 1: Check System +VS within operation limits
+* STEP 2: Check System -VS within operation limits
+* STEP 3: Check for a fault critical VS supply OV condition - device damage may occur
+* STEP 4: Check System Vref
+* STEP 5: Check System Temperature
+* STEP 6: For no error
 ********************************************************************************************************/
 bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber)
 {
     bool FirstErrorFound = false;
     *ErrorNumber = CONFIG_NO_ERROR;
 
-    // STEP 1: Check System +VS
+    // STEP 1: Check System +VS within operation limits
     if ((ArbPwrBooster.SystemMeasure.Positive_VS > SYSTEM_POS_VS_HIGH) || (ArbPwrBooster.SystemMeasure.Positive_VS < SYSTEM_POS_VS_LOW))
     {
-        *ErrorNumber |= (1 << CONFIG_POS_VS_MASK);
+        *ErrorNumber |= (1 << CONFIG_POS_VS_LIMIT_MASK);
         if (!FirstErrorFound)
         {
             sprintf(ErrorDescription, "+VS: %3.1fV to %3.1fV", SYSTEM_POS_VS_LOW, SYSTEM_POS_VS_HIGH);
@@ -828,10 +808,10 @@ bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber)
         }
     }
 
-    // STEP 2: Check System -VS
+    // STEP 2: Check System -VS within operation limits
     if ((ArbPwrBooster.SystemMeasure.Negative_VS > SYSTEM_NEG_VS_HIGH) || (ArbPwrBooster.SystemMeasure.Negative_VS < SYSTEM_NEG_VS_LOW))
     {
-        *ErrorNumber |= (uint8_t)(1 << CONFIG_NEG_VS_MASK);
+        *ErrorNumber |= (uint8_t)(1 << CONFIG_NEG_VS_LIMIT_MASK);
         if (!FirstErrorFound)
         {
             sprintf(ErrorDescription, "-VS: %3.1fV to %3.1fV", SYSTEM_NEG_VS_LOW, SYSTEM_NEG_VS_HIGH);
@@ -839,7 +819,13 @@ bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber)
         }
     }
 
-    // STEP 3: Check System Vref
+    // STEP 3: Check for a fault critical VS supply OV condition - device damage may occur
+    if ((ArbPwrBooster.SystemMeasure.Positive_VS >= SYSTEM_POS_VS_LIMIT) || (ArbPwrBooster.SystemMeasure.Negative_VS <= SYSTEM_NEG_VS_LIMIT))
+    {
+        *ErrorNumber |= (uint8_t)(1 << CONFIG_VS_CRITICAL_ERROR_MASK);
+    }
+
+    // STEP 4: Check System Vref
     if ((ArbPwrBooster.SystemMeasure.VDD_VDREF > SYSTEM_3V3_UPPER_LIMIT) || (ArbPwrBooster.SystemMeasure.VDD_VDREF < SYSTEM_3V3_LOWER_LIMIT))
     {
         *ErrorNumber |= (uint8_t)(1 << CONFIG_VREF_MASK);
@@ -850,7 +836,7 @@ bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber)
         }
     }
 
-    // STEP 4: Check System Temperature
+    // STEP 5: Check System Temperature
     // TODO: Hab you only care about an upper limit not a lower
     if ((ArbPwrBooster.SystemMeasure.TempDegreeC >= SYSTEM_TEMP_UPPER_LIMIT) || (ArbPwrBooster.SystemMeasure.TempDegreeC <= SYSTEM_TEMP_LOWER_LIMIT))
     {
@@ -862,7 +848,7 @@ bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber)
         }
     }
 
-    // STEP 5: For no error
+    // STEP 6: For no error
     if (*ErrorNumber == CONFIG_NO_ERROR)
     {
         sprintf(ErrorDescription, "I'm good how about you.");

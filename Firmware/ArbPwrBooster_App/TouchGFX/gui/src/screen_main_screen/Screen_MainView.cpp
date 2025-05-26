@@ -423,8 +423,12 @@ void Screen_MainView::updateMainScreen_View(void)
         Unicode::snprintfFloat(textArea_CH1_AminBuffer, TEXTAREA_CH1_AMIN_SIZE, "%05.2f", ArbPwrBooster.CH1.Measure.MinCurrent);
     textArea_CH1_Amin.setWildcard(textArea_CH1_AminBuffer);
     // RMS input voltage
-    Unicode::snprintfFloat(textArea_CH1_VrmsBuffer, TEXTAREA_CH1_VRMS_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.RMS_Voltage);
-    textArea_CH1_Vrms.setWildcard(textArea_CH1_VrmsBuffer);
+    if (!ArbPwrBooster.CH1.PID->Enable)
+    {
+        Unicode::snprintfFloat(textArea_CH1_VrmsBuffer, TEXTAREA_CH1_VRMS_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.RMS_Voltage);
+        textArea_CH1_Vrms.setWildcard(textArea_CH1_VrmsBuffer);
+        textArea_CH1_Vrms.setVisible(true);
+    }
     // Constant Current Mode: Ensure if PID disable the indicator should be off
     if (ArbPwrBooster.CH1.PID->Enable || !CC_StatusIndicator)
     {
@@ -432,9 +436,17 @@ void Screen_MainView::updateMainScreen_View(void)
         if (CC_ToggleRate == 1)
         {
             if (CC_StatusIndicator)
+            {
                 textArea_CH1_CC.setVisible(true);
+                Unicode::snprintfFloat(textArea_CH1_VrmsBuffer, TEXTAREA_CH1_VRMS_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.RMS_Voltage * ((double)ArbPwrBooster.CH1.PID->PotStep / ArbPwrBooster.CH1.PID->MaxStepValue));
+                textArea_CH1_Vrms.setWildcard(textArea_CH1_VrmsBuffer);
+                textArea_CH1_Vrms.setVisible(true);
+            }
             else
+            {
                 textArea_CH1_CC.setVisible(false);
+                textArea_CH1_Vrms.setVisible(false);
+            }
             CC_StatusIndicator = !CC_StatusIndicator;
             CC_ToggleRate = 0;
         }

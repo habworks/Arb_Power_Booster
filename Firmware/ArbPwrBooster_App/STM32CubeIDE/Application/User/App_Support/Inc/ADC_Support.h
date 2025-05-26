@@ -60,8 +60,8 @@ extern"C" {
 #define ADC_VMON1_GAIN_ERROR    1.0107
 #define ADC_VMON2_OFFSET_ERROR  0           // Value is in ADC Counts
 #define ADC_VMON2_GAIN_ERROR    1.0107
-#define ADC_IMON1_OFFSET_ERROR  0           // Value is in ADC Counts
-#define ADC_IMON1_GAIN_ERROR    1.0
+#define ADC_IMON1_OFFSET_ERROR  2           // Value is in ADC Counts
+#define ADC_IMON1_GAIN_ERROR    0.9948
 #define ADC_IMON2_OFFSET_ERROR  0
 #define ADC_IMON2_GAIN_ERROR    1.0
 #define RMS_TO_MEAN_THREHOLD    0.025       // Value in Amps
@@ -74,7 +74,7 @@ extern"C" {
 // ACCEPTABLE CONVERSION LIMITS
 #define SYSTEM_POS_VS_LIMIT     15.5
 #define SYSTEM_POS_VS_HIGH      15.3
-#define SYSTEM_POS_VS_LOW       14.0    // TODO: Hab this should be 14.5V - this is temp until I can figure out the measure accuracy
+#define SYSTEM_POS_VS_LOW       14.5
 #define SYSTEM_NEG_VS_LIMIT     -15.5
 #define SYSTEM_NEG_VS_HIGH      -14.5
 #define SYSTEM_NEG_VS_LOW       -15.3
@@ -103,26 +103,33 @@ extern"C" {
 #define PID_Pk                  100
 #define PID_Pi                  2500
 #define PID_Pd                  0
-// MISC
-#define MONITOR_UPDATE_RATE     10U
+// TASK UPDATE RATE
+#define MONITOR_UPDATE_RATE     10U     // Value in ms
+// POWER CALCULATION RELATED
+#define MAX_PD_WITHOUT_HEATSINK 3.5     // Value in Watts max allowable power dissipation by the OPA549s without a heat sink
+#define NOMINAL_SUPPLY_RAIL_V   15.0    // Nominal supply rail voltage - assumption is made power is taken from one not both supply rails - the output voltage is either totally positive or negative not both
+#define FAN_ON_COUNTER_30S      (30 / (MONITOR_UPDATE_RATE * 1E-3))
+
 
 
 // TYPEDEFS AND ENUMS
 typedef enum
 {
-    CONFIG_POS_VS_MASK = 0,
-    CONFIG_NEG_VS_MASK,
+    CONFIG_POS_VS_LIMIT_MASK = 0,
+    CONFIG_NEG_VS_LIMIT_MASK,
     CONFIG_TEMP_MASK,
-    CONFIG_VREF_MASK
+    CONFIG_VREF_MASK,
+    CONFIG_VS_CRITICAL_ERROR_MASK
 }Type_ConfigErrorMask;
 
 typedef enum
 {
     CONFIG_NO_ERROR = 0,
-    CONFIG_POS_VS_ERROR = (1 << CONFIG_POS_VS_MASK),
-    CONFIG_NEG_VS_ERROR = (1 << CONFIG_NEG_VS_MASK),
+    CONFIG_POS_VS_ERROR = (1 << CONFIG_POS_VS_LIMIT_MASK),
+    CONFIG_NEG_VS_ERROR = (1 << CONFIG_NEG_VS_LIMIT_MASK),
     CONFIG_TEMP_ERROR = (1 << CONFIG_TEMP_MASK),
-    CONFIG_VREF_ERROR = (1 << CONFIG_VREF_MASK)
+    CONFIG_VREF_ERROR = (1 << CONFIG_VREF_MASK),
+    CONFIG_VS_CRITICAL_ERROR = (1 << CONFIG_VS_CRITICAL_ERROR_MASK)
 }Type_ConfigError;
 
 typedef enum

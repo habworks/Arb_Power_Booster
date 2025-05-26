@@ -162,11 +162,18 @@ typedef struct
 
 typedef struct
 {
+    bool                    Enable;
+    uint32_t                FanOnDownCounter;
+}Type_Fan;
+
+typedef struct
+{
     Type_SetLimits          Limit;
     Type_InputImpedance     InputImpedance;
     Type_RelaySwitch        OutputSwitch;
     Type_ChannelMeasure     Measure;
     Type_PID_Controller *   PID;
+    Type_Fan                Fan;
 }Type_ChannelConfig;
 
 typedef struct

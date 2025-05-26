@@ -94,6 +94,7 @@ void Init_ArbPwrBoosterClass(void)
     ArbPwrBooster.CH1.Measure.MinVoltage = 0;
     ArbPwrBooster.CH1.Measure.MaxVoltage = 0;
     ArbPwrBooster.CH1.Measure.RMS_VoltageFunction = update_RMS_Value;
+    ArbPwrBooster.CH1.Fan.Enable = false;
     // Channel 2 Init
     ArbPwrBooster.CH2.InputImpedance = ONE_MEG_OHM;
     ArbPwrBooster.CH2.OutputSwitch = OFF;
@@ -108,6 +109,7 @@ void Init_ArbPwrBoosterClass(void)
     ArbPwrBooster.CH2.Measure.MinVoltage = 0;
     ArbPwrBooster.CH2.Measure.MaxVoltage = 0;
     ArbPwrBooster.CH2.Measure.RMS_VoltageFunction = update_RMS_Value;
+    ArbPwrBooster.CH2.Fan.Enable = false;
 
 } // END OF Init_ArbPwrBoosterClass
 
