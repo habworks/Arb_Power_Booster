@@ -52,14 +52,14 @@ extern"C" {
 #define VOLT_MON_DIVIDER        4.3333      // External divider ration = .2308 with an equivlence of 3.3V (reference) to 14.3V external
 #define CURRENT_MON_ZERO_OFFSET 1.6500      // Value in volts this is the mid value (0A) reference voltage
 // ADC GAIN AND OFFSET ERRORS: ****NOTE THESE ARE CALIBRATED RESULTS FROM TESTING - MAY NEED TO BE UNIQUE PER BOARD
-#define ADC_PVS_OFFSET_ERROR    2           // Value is in ADC Counts
+#define ADC_PVS_OFFSET_ERROR    0           // Value is in ADC Counts
 #define ADC_PVS_GAIN_ERROR      1.0005
 #define ADC_NVS_OFFSET_ERROR    0           // Value is in ADC Counts
 #define ADC_NVS_GAIN_ERROR      0.9961
 #define ADC_VMON1_OFFSET_ERROR  0           // Value is in ADC Counts
-#define ADC_VMON1_GAIN_ERROR    1.0107
+#define ADC_VMON1_GAIN_ERROR    0.9922
 #define ADC_VMON2_OFFSET_ERROR  0           // Value is in ADC Counts
-#define ADC_VMON2_GAIN_ERROR    1.0107
+#define ADC_VMON2_GAIN_ERROR    0.9785
 #define ADC_IMON1_OFFSET_ERROR  2           // Value is in ADC Counts
 #define ADC_IMON1_GAIN_ERROR    0.9948
 #define ADC_IMON2_OFFSET_ERROR  0

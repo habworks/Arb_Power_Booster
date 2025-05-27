@@ -565,4 +565,56 @@ void switchOffAction_CH1(void)
 
 
 
+/********************************************************************************************************
+* @brief A series of actions that must be taken when turning on the output of channel 2.  This action works
+* with the corresponding off action when the output switch is toggled.
+*
+* @author original: Hab Collector \n
+*
+* STEP 1: Before turn on mark what the zero is - this will help with accuracy
+* STEP 2: Reset the min max current and voltage limits, reset the PID, and no pot attenuation
+* STEP 3: Switch output relay on
+********************************************************************************************************/
+void switchOnAction_CH2(void)
+{
+    // STEP 1: Before turn on mark what the zero is - this will help with accuracy
+    updateAmpMonitorZeroVoltage(CHANNEL_2);
+
+    // STEP 2: Reset the min max current and voltage limits, reset the PID, and no pot attenuation
+    ArbPwrBooster.CH2.Measure.ResetCurrentMinMax = true;
+    ArbPwrBooster.CH2.Measure.ResetVoltageMinMax = true;
+    PID_Reset(ArbPwrBooster.CH2.PID);
+    MCP45HVX1_WriteWiperVerify(&hi2c1, A1A0_EXTERNAL_ADDR_CH2, MCP45HVX1_POT_FULL_RESOLUTION);
+
+    // STEP 3: Switch output relay on
+    CH2_OUTPUT_ENABLE();
+    ArbPwrBooster.CH2.OutputSwitch = ON;
+
+} // END OF switchOnAction_CH1
+
+
+
+/********************************************************************************************************
+* @brief A series of actions that must be taken when turning off the output of channel 2.  This action works
+* with the corresponding on action when the output switch is toggled.
+*
+* @author original: Hab Collector \n
+*
+* STEP 1: Turn off relay
+* STEP 2: Set pot to no attenuation
+********************************************************************************************************/
+void switchOffAction_CH2(void)
+{
+    // STEP 1: Turn off relay
+    CH2_OUTPUT_DISABLE();
+    ArbPwrBooster.CH2.OutputSwitch = OFF;
+
+    // STEP 2: Set pot to no attenuation
+    ArbPwrBooster.CH2.PID->Enable = false;
+    MCP45HVX1_WriteWiperVerify(&hi2c1, A1A0_EXTERNAL_ADDR_CH2, MCP45HVX1_POT_FULL_RESOLUTION);
+
+} // END OF switchOffAction_CH1
+
+
+
 

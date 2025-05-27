@@ -44,8 +44,7 @@ static void resetDebugCommandSearch(void);
 static void printDebugConsoleHelp(void);
 static void writeDigitalPotAttenuation(char *CommandLine);
 static void readDigitalPotAttenuation(char *CommandLine);
-static void channelOutputEnable(char *CommandLine);
-static void channelOutputDisable(char *CommandLine);
+static void channelOutputSwitch(char *CommandLine);
 static void deviceStatus(char *CommandLine);
 // Global
 static char CharsToProcessBuffer[10] = {0};
@@ -215,13 +214,9 @@ static void callDebugFunction(char *CommandToProcess)
     {
         readDigitalPotAttenuation(CommandToProcess);
     }
-    else if (strstr(CommandToProcess, CHANNEL_OUTPUT_ON) != NULL)
+    else if (strstr(CommandToProcess, CHANNEL_OUTPUT_SWITCH) != NULL)
     {
-        channelOutputEnable(CommandToProcess);
-    }
-    else if (strstr(CommandToProcess, CHANNEL_OUTPUT_OFF) != NULL)
-    {
-        channelOutputDisable(CommandToProcess);
+        channelOutputSwitch(CommandToProcess);
     }
     else if (strstr(CommandToProcess, DEVICE_STATUS) != NULL)
     {
@@ -271,6 +266,7 @@ static void resetDebugCommandSearch(void)
 * @author original: Hab Collector \n
 *
 * @note: I did not automate this as much as I have in the past - be sure to enter all commands here
+* @note: This command is called by typing "?" or "Help"
 *
 * STEP 1: Print debug command help
 ********************************************************************************************************/
@@ -278,19 +274,37 @@ static void printDebugConsoleHelp(void)
 {
     // STEP 1: Print debug command help
     printf("\r\nDEBUG COMMANDS: \r\n");
-    printf("  Write Pot X #:   Where X is value 0 to 255 of wiper (255 = full resistance)\r\n");
+    printf("  Write Pot # X :  Where X is value 0 to 255 of wiper (255 = full resistance)\r\n");
     printf("  Read Pot #:      Returns value of pot wiper 0 - 255\r\n");
-    printf("  Output On/Off #: Turns the Output On/Off\r\n");
+    printf("  Output # On/Off: Turns the Output On/Off\r\n");
     printf("  Status:          Show device status\r\n");
     printf("\r\nWhere # is Channel Number (1 or 2)\r\n");
 
 } // END OF printDebugConsoleHelp
 
 
-// TODO: Hab these functions should accommodate channel 1 and 2 - currently only works for channel 1
-// TODO: Hab add function header comments for all such functions
+
+/********************************************************************************************************
+* @brief Write to the digital pot of channel 1 or 2 the pot value step.  The pot value has 256 steps.  Valid
+* step values are 0 to 255, with 127 consider mid way.  A pot value of 255 sets the max resistance, while 0
+* sets the min resistance (0).
+*
+* @author original: Hab Collector \n
+*
+* @note: Example Format for this command "Write Pot 1 127" - sets the value of the channel 1 pot to 50% resistance
+* @note: The pot acts a voltage divider within the circuit and is part of the PID control control loop
+* @note: Valid channels are 1 and 2
+* @note: Command is case sensitive
+*
+* STEP 1: Make sure there is a space after command
+* STEP 2: Get the channel number
+* STEP 3: Get the value and convert it
+* STEP 4: Writ the POT Value
+********************************************************************************************************/
 static void writeDigitalPotAttenuation(char *CommandLine)
 {
+    uint8_t DigitalPotAddress = 0;
+
     // STEP 1: Make sure there is a space after command
     char *SpaceChar = CommandLine + strlen(WRITE_DIGITAL_POT_ATTEN);
     if (*SpaceChar != ' ')
@@ -299,13 +313,23 @@ static void writeDigitalPotAttenuation(char *CommandLine)
         return;
     }
 
-    // TODO: Hab extract the channel value and make channel specific writes
+    // STEP 2: Get the channel number
+    char *ChannelNumberChar = SpaceChar + 1;
+    if (*ChannelNumberChar == '1')
+        DigitalPotAddress = A1A0_EXTERNAL_ADDR_CH1;
+    else if (*ChannelNumberChar == '2')
+        DigitalPotAddress = A1A0_EXTERNAL_ADDR_CH2;
+    else
+    {
+        printRed("Error: Channel number must be 1 or 2\r\n");
+        return;
+    }
 
-    // STEP 2: Get the value and convert it
+    // STEP 3: Get the value and convert it
     uint16_t PotWiperValue;
     uint8_t CommandLenght = strlen(CommandLine);
     char *EndofCommandLinePointer = CommandLine + CommandLenght;
-    char *PotValuePointer = SpaceChar + 1;
+    char *PotValuePointer = ChannelNumberChar + 1 + 1; // ChannelNumber_#
     char SetPotValue[4] = {0}; // 3 Digits terminated with null
     uint8_t NumberOfDigits = EndofCommandLinePointer - PotValuePointer;
     if (NumberOfDigits > (sizeof(SetPotValue) - 1))
@@ -319,7 +343,8 @@ static void writeDigitalPotAttenuation(char *CommandLine)
         PotWiperValue = atoi(SetPotValue);
     }
 
-    if (MCP45HVX1_WriteWiperVerify(&hi2c1, A1A0_EXTERNAL_ADDR_CH1, PotWiperValue))
+    // STEP 4: Writ the POT Value
+    if (MCP45HVX1_WriteWiperVerify(&hi2c1, DigitalPotAddress, PotWiperValue))
         printf("Pot Wiper Value: %d\r\n", (int)PotWiperValue);
     else
         printf("Error: Setting pot wiper value\r\n");
@@ -327,11 +352,41 @@ static void writeDigitalPotAttenuation(char *CommandLine)
 } // END OF writeDigitalPotAttenuation
 
 
+
+/********************************************************************************************************
+* @brief Read of the digital pot of channel 1 or 2 the pot value step.  The pot value has 256 steps.  Valid
+* step values are 0 to 255, with 127 consider mid way.  A pot value of 255 sets the max resistance, while 0
+* sets the min resistance (0).
+*
+* @author original: Hab Collector \n
+*
+* @note: Example Format for this command "Read Pot 1" - Reads the step value of channel 1 pot
+* @note: The pot acts a voltage divider within the circuit and is part of the PID control control loop
+* @note: Valid channels are 1 and 2
+* @note: Command is case sensitive
+*
+* STEP 1: Get the channel number
+* STEP 2: Read the pot value
+********************************************************************************************************/
 static void readDigitalPotAttenuation(char *CommandLine)
 {
-    // TODO: Hab extract the channel value and make channel specific reads
+    uint8_t DigitalPotAddress = 0;
+
+    // STEP 1: Get the channel number
+    char *ChannelNumberChar = CommandLine + strlen(READ_DIGITAL_POT_ATTEN) + 1;
+    if (*ChannelNumberChar == '1')
+        DigitalPotAddress = A1A0_EXTERNAL_ADDR_CH1;
+    else if (*ChannelNumberChar == '2')
+        DigitalPotAddress = A1A0_EXTERNAL_ADDR_CH2;
+    else
+    {
+        printRed("Error: Channel number must be 1 or 2\r\n");
+        return;
+    }
+
+    // STEP 2: Read the pot value
     uint8_t PotWiperValue = 0;
-    if (MCP45HVX1_ReadWiperValue(&hi2c1, A1A0_EXTERNAL_ADDR_CH1, &PotWiperValue))
+    if (MCP45HVX1_ReadWiperValue(&hi2c1, DigitalPotAddress, &PotWiperValue))
         printf("Read Pot Wiper Value: %d\r\n", PotWiperValue);
     else
         printf("Error: Reading pot wiper value\r\n");
@@ -339,23 +394,79 @@ static void readDigitalPotAttenuation(char *CommandLine)
 } // END OF readDigitalPotAttenuation
 
 
-static void channelOutputEnable(char *CommandLine)
+
+/********************************************************************************************************
+* @brief Turn On or Off Channel 1 or 2 output relay.
+*
+* @author original: Hab Collector \n
+*
+* @note: Example Format for this command "Output 1 On" - Turns On Channel 1 output relay
+* @note: Valid channels are 1 and 2, valid switch is On or Off
+* @note: Command is case sensitive
+*
+* STEP 1: Get the channel number
+* STEP 2: Read the pot value
+********************************************************************************************************/
+static void channelOutputSwitch(char *CommandLine)
 {
-    // TODO: Hab call the toggle touch UI instead or whatever it calls otherwise it will get out of sync
-    CH1_OUTPUT_ENABLE();
-}
+    uint8_t ChannelNumber = 0;
+    Type_RelaySwitch ChannelSwitch;
+
+    // STEP 1: Get the channel number
+    char *ChannelNumberChar = CommandLine + strlen(CHANNEL_OUTPUT_SWITCH) + 1;
+    if (*ChannelNumberChar == '1')
+        ChannelNumber = 1;
+    else if (*ChannelNumberChar == '2')
+        ChannelNumber = 2;
+    else
+    {
+        printRed("Error: Channel number must be 1 or 2\r\n");
+        return;
+    }
+
+    // STEP 2: Get the switch status
+    char *SwitchStatusPointer = ChannelNumberChar + 1 + 1;
+    if (strstr(SwitchStatusPointer, "On") != NULL)
+        ChannelSwitch = ON;
+    else if (strstr(SwitchStatusPointer, "Off") != NULL)
+        ChannelSwitch = OFF;
+    else
+    {
+        printRed("Error: Channel must be On or Off\r\n");
+        return;
+    }
+
+    // STEP 3: Switch channel accordingly
+    if (ChannelNumber == 1)
+        (ChannelSwitch == ON)? CH1_OUTPUT_ENABLE() : CH1_OUTPUT_DISABLE();
+    if (ChannelNumber == 2)
+        (ChannelSwitch == ON)? CH2_OUTPUT_ENABLE() : CH2_OUTPUT_DISABLE();
+
+    if (ChannelSwitch)
+        printf("Channel On\r\n");
+    else
+        printf("Channel Off\r\n");
+
+} // END OF channelOutputSwitch
 
 
-static void channelOutputDisable(char *CommandLine)
-{
-    // TODO: Hab call the toggle touch UI instead or whatever it calls otherwise it will get out of sync
-    CH1_OUTPUT_DISABLE();
-}
 
-
+/********************************************************************************************************
+* @brief Display device status by channel
+*
+* @author original: Hab Collector \n
+*
+* @note: Example Format for this command "Status"
+* @note: Command is case sensitive
+*
+* STEP 1: Display Channel 1 status
+* STEP 2: Display Channel 2 status
+********************************************************************************************************/
 static void deviceStatus(char *CommandLine)
 {
     NOT_USED(CommandLine);
+
+    // STEP 1: Display Channel 1 status
     printBrightYellow("CH1:\r\n");
     printf("  Output Switch:   %d\r\n", ArbPwrBooster.CH1.OutputSwitch);
     printf("  Input Loading:   %d\r\n", ArbPwrBooster.CH1.InputImpedance);
@@ -369,6 +480,7 @@ static void deviceStatus(char *CommandLine)
     printf("  PID Ki:          %d\r\n", (int)ArbPwrBooster.CH1.PID->IntegralGain);
     printf("  PID Kd:          %d\r\n\n", (int)ArbPwrBooster.CH1.PID->DerivativeGain);
 
+    // STEP 2: Display Channel 2 status
     printBrightMagenta("CH2:\r\n");
     printf("  Output Switch:   %d\r\n", ArbPwrBooster.CH2.OutputSwitch);
     printf("  Input Loading:   %d\r\n", ArbPwrBooster.CH2.InputImpedance);
@@ -381,7 +493,8 @@ static void deviceStatus(char *CommandLine)
     printf("  PID Kp:          %d\r\n", (int)ArbPwrBooster.CH2.PID->ProportionalGain);
     printf("  PID Ki:          %d\r\n", (int)ArbPwrBooster.CH2.PID->IntegralGain);
     printf("  PID Kd:          %d\r\n\n", (int)ArbPwrBooster.CH2.PID->DerivativeGain);
-}
+
+} // END OF deviceStatus
 
 
 

@@ -10,10 +10,9 @@ R2 VO N001 10K
 R3 N003 N002 10K
 R4 N002 VIN 10K
 R5 N001 VIN 10K
-V3 VIN 0 PULSE(-5 1 0 .00001 .00001 .0005 .001 3)
-R6 VO VO/2 10K
-R7 VO/2 0 3K
-R8 NC_01 0 1e6
+V3 VIN 0 10
+R6 VO VO/2 5K
+R7 VO/2 0 5K
 .model D D
 .lib C:\Users\habco\Documents\LTspiceXVII\lib\cmp\standard.dio
 .tran .003

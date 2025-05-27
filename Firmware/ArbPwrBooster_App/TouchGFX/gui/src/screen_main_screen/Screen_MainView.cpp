@@ -406,8 +406,10 @@ void Screen_MainView::setActiveLimit_CH2(void)
 ********************************************************************************************************/
 void Screen_MainView::updateMainScreen_View(void)
 {
-    static uint8_t CC_ToggleRate = 0;
-    static bool CC_StatusIndicator = true;
+    static uint8_t CC_ToggleRate_CH1 = 0;
+    static bool CC_StatusIndicator_CH1 = true;
+    static uint8_t CC_ToggleRate_CH2 = 0;
+    static bool CC_StatusIndicator_CH2 = true;
 
     // STEP 1: Update Channel 1
     // RMS output current
@@ -430,12 +432,12 @@ void Screen_MainView::updateMainScreen_View(void)
         textArea_CH1_Vrms.setVisible(true);
     }
     // Constant Current Mode: Ensure if PID disable the indicator should be off
-    if (ArbPwrBooster.CH1.PID->Enable || !CC_StatusIndicator)
+    if (ArbPwrBooster.CH1.PID->Enable || !CC_StatusIndicator_CH1)
     {
-        CC_ToggleRate++;
-        if (CC_ToggleRate == 1)
+        CC_ToggleRate_CH1++;
+        if (CC_ToggleRate_CH1 == 1)
         {
-            if (CC_StatusIndicator)
+            if (CC_StatusIndicator_CH1)
             {
                 textArea_CH1_CC.setVisible(true);
                 Unicode::snprintfFloat(textArea_CH1_VrmsBuffer, TEXTAREA_CH1_VRMS_SIZE, "%05.3f", ArbPwrBooster.CH1.Measure.RMS_Voltage * ((double)ArbPwrBooster.CH1.PID->PotStep / ArbPwrBooster.CH1.PID->MaxStepValue));
@@ -447,8 +449,8 @@ void Screen_MainView::updateMainScreen_View(void)
                 textArea_CH1_CC.setVisible(false);
                 textArea_CH1_Vrms.setVisible(false);
             }
-            CC_StatusIndicator = !CC_StatusIndicator;
-            CC_ToggleRate = 0;
+            CC_StatusIndicator_CH1 = !CC_StatusIndicator_CH1;
+            CC_ToggleRate_CH1 = 0;
         }
     }
 
@@ -466,10 +468,35 @@ void Screen_MainView::updateMainScreen_View(void)
         Unicode::snprintfFloat(textArea_CH2_AminBuffer, TEXTAREA_CH2_AMIN_SIZE, "%05.2f", ArbPwrBooster.CH2.Measure.MinCurrent);
     textArea_CH2_Amin.setWildcard(textArea_CH2_AminBuffer);
     // RMS input voltage
-    Unicode::snprintfFloat(textArea_CH2_VrmsBuffer, TEXTAREA_CH2_VRMS_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.RMS_Voltage);
-    textArea_CH2_Vrms.setWildcard(textArea_CH2_VrmsBuffer);
-    // Constant Current Mode
-    // TODO: Hab copy and adjust the working code for channel 2
+    if (!ArbPwrBooster.CH2.PID->Enable)
+    {
+        Unicode::snprintfFloat(textArea_CH2_VrmsBuffer, TEXTAREA_CH2_VRMS_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.RMS_Voltage);
+        textArea_CH2_Vrms.setWildcard(textArea_CH2_VrmsBuffer);
+        textArea_CH2_Vrms.setVisible(true);
+    }
+    // Constant Current Mode: Ensure if PID disable the indicator should be off
+    if (ArbPwrBooster.CH2.PID->Enable || !CC_StatusIndicator_CH2)
+    {
+        CC_ToggleRate_CH2++;
+        if (CC_ToggleRate_CH2 == 1)
+        {
+            if (CC_StatusIndicator_CH2)
+            {
+                textArea_CH2_CC.setVisible(true);
+                Unicode::snprintfFloat(textArea_CH2_VrmsBuffer, TEXTAREA_CH2_VRMS_SIZE, "%05.3f", ArbPwrBooster.CH2.Measure.RMS_Voltage * ((double)ArbPwrBooster.CH2.PID->PotStep / ArbPwrBooster.CH2.PID->MaxStepValue));
+                textArea_CH2_Vrms.setWildcard(textArea_CH2_VrmsBuffer);
+                textArea_CH2_Vrms.setVisible(true);
+            }
+            else
+            {
+                textArea_CH2_CC.setVisible(false);
+                textArea_CH2_Vrms.setVisible(false);
+            }
+            CC_StatusIndicator_CH2 = !CC_StatusIndicator_CH2;
+            CC_ToggleRate_CH2 = 0;
+        }
+    }
+
 
     // STEP 3: Config Icon Color
     char NotUsedStatusText[25];

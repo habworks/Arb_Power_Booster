@@ -1002,7 +1002,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, R_SHDN_1_Pin|EN_CH_1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOI, EN_50_Z_2_Pin|EN_VO_1_Pin|EN_FAN_1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOI, EN_50_Z_2_Pin|EN_VO_1_Pin|EN_FAN_1_Pin|R_SHDN_2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LCD_BL_CTRL_GPIO_Port, LCD_BL_CTRL_Pin, GPIO_PIN_SET);
@@ -1030,8 +1030,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : EN_50_Z_2_Pin EN_VO_1_Pin EN_FAN_1_Pin LCD_DISP_Pin */
-  GPIO_InitStruct.Pin = EN_50_Z_2_Pin|EN_VO_1_Pin|EN_FAN_1_Pin|LCD_DISP_Pin;
+  /*Configure GPIO pins : EN_50_Z_2_Pin EN_VO_1_Pin EN_FAN_1_Pin LCD_DISP_Pin
+                           R_SHDN_2_Pin */
+  GPIO_InitStruct.Pin = EN_50_Z_2_Pin|EN_VO_1_Pin|EN_FAN_1_Pin|LCD_DISP_Pin
+                          |R_SHDN_2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

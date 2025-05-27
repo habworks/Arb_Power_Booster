@@ -492,7 +492,6 @@ static double calculateSystemSupply(Type_16b_FIFO *FIFO_SupplyRail)
 * @author original: Hab Collector \n
 *
 * @note: SYSTEM refers to quantities that impact the entire device - CHANNEL impacts on CH1 or CH2
-* @note: TODO It was necessary to set the offset and gain errors to 0 and 1 (basically no errors) or PID would not work - needs to be investigated when time permits
 *
 * @param ADC_AmpMonitorCount: ADC Count from ADC channel for the specific current monitor
 * @param FIFO_AmpMon: FIFO structure associated with the specific Amp Monitor channel
@@ -625,10 +624,11 @@ void monitorTaskInit(void)
 * STEP 1: Do nothing until introduction splash screen completed
 * STEP 2: Do nothing if a system error has occurred
 * STEP 3: Check System VS supply rail and temperature for errors
-* STEP 4: Check for current limit CH 1 - Constant Current Mode
-* STEP 5: Check for current limit CH 2 - Constant Current Mode
-* STEP 6: Check for critical system error conditions
-* STEP 7: Make task inactive for a period of time
+* STEP 4: Turn on Channel 1 fan based on power dissipated - turn off after power level drops consistently for 30s
+* STEP 5: Check for current limit CH 1 - Constant Current Mode
+* STEP 6: Turn on Channel 2 fan based on power dissipated - turn off after power level drops consistently for 30s
+* STEP 7: Check for current limit CH 2 - Constant Current Mode
+* STEP 8: Make task inactive for a period of time
 ********************************************************************************************************/
 void monitorTaskActions(void)
 {
@@ -636,117 +636,151 @@ void monitorTaskActions(void)
     static uint8_t LastPotValue = MCP45HVX1_POT_FULL_RESOLUTION;
 
     // STEP 1: Do nothing until introduction splash screen completed
-    if (ArbPwrBooster.Ready)
+    if (!ArbPwrBooster.Ready)
+        return;
+
+    // STEP 2: Do nothing if a system error has occurred
+    if (CriticalSystemError)
+        return;
+
+    // STEP 3: Check System VS supply rail and temperature for errors
+    char NotUsedStatusMsg[25] = {0x00};
+    uint8_t ConfigError = 0;
+    systemMeasureWithinLimits(NotUsedStatusMsg, &ConfigError);
+    // System VS rails not within limits but not worthy of shutdown - disable input
+    if ((ConfigError & CONFIG_POS_VS_ERROR) || (ConfigError & CONFIG_NEG_VS_ERROR))
     {
-        // STEP 2: Do nothing if a system error has occurred
-        if (!CriticalSystemError)
+        CH1_INPUT_DISABLE();
+        CH2_INPUT_DISABLE();
+    }
+    else
+    {
+        CH1_INPUT_ENABLE();
+        CH2_INPUT_ENABLE();
+    }
+    // System VS rails are critically OV - device damage may occur
+    if (ConfigError & CONFIG_VS_CRITICAL_ERROR)
+    {
+        CriticalSystemError = true;
+        MAIN_PWR_OFF();
+        printBrightRed("\r\nERROR: Critical on VS supply rail\r\n");
+        printBrightRed("Correct supply rail then reset\r\n");
+    }
+    // System temperature over the limit - device damage may occur
+    if (ConfigError & CONFIG_TEMP_ERROR)
+    {
+        CriticalSystemError = true;
+        MAIN_PWR_OFF();
+        printBrightRed("\r\nERROR: Critical over temperature\r\n");
+        printBrightRed("Cool device then reset\r\n");
+    }
+
+    // CHANNEL 1 MONITOR AND CONTROL
+    // STEP 4: Turn on Channel 1 fan based on power dissipated - turn off after power level drops consistently for 30s
+    double PowerDisipated_OPA549 = (NOMINAL_SUPPLY_RAIL_V - (ArbPwrBooster.CH1.Measure.RMS_Voltage * ArbPwrBooster.CH1.PID->PotStep / ArbPwrBooster.CH1.PID->MaxStepValue)) * ArbPwrBooster.CH1.Measure.RMS_Current;
+    if ((ArbPwrBooster.CH1.OutputSwitch == ON) && (!ArbPwrBooster.CH1.Fan.Enable) && (PowerDisipated_OPA549 >= MAX_PD_WITHOUT_HEATSINK))
+    {
+        ArbPwrBooster.CH1.Fan.Enable = true;
+        ArbPwrBooster.CH1.Fan.FanOnDownCounter = FAN_ON_COUNTER_30S;
+        CH1_FAN_ENABLE();
+    }
+    if (ArbPwrBooster.CH1.Fan.Enable)
+    {
+        if (PowerDisipated_OPA549 < MAX_PD_WITHOUT_HEATSINK)
         {
-            // STEP 3: Check System VS supply rail and temperature for errors
-            char NotUsedStatusMsg[25] = {0x00};
-            uint8_t ConfigError = 0;
-            systemMeasureWithinLimits(NotUsedStatusMsg, &ConfigError);
-            // System VS rails not within limits but not worthy of shutdown - disable input
-            if ((ConfigError & CONFIG_POS_VS_ERROR) || (ConfigError & CONFIG_NEG_VS_ERROR))
+            ArbPwrBooster.CH1.Fan.FanOnDownCounter--;
+            if (ArbPwrBooster.CH1.Fan.FanOnDownCounter == 0)
             {
-                CH1_INPUT_DISABLE();
-                CH2_INPUT_DISABLE();
+                ArbPwrBooster.CH1.Fan.Enable = false;
+                CH1_FAN_DISABLE();
             }
-            else
-            {
-                CH1_INPUT_ENABLE();
-                CH2_INPUT_ENABLE();
-            }
-            // System VS rails are critically OV - device damage may occur
-            if (ConfigError & CONFIG_VS_CRITICAL_ERROR)
-            {
-                CriticalSystemError = true;
-                MAIN_PWR_OFF();
-                printBrightRed("\r\nERROR: Critical on VS supply rail\r\n");
-                printBrightRed("Correct supply rail then reset\r\n");
-            }
-            // System temperature over the limit - device damage may occur
-            if (ConfigError & CONFIG_TEMP_ERROR)
-            {
-                CriticalSystemError = true;
-                MAIN_PWR_OFF();
-                printBrightRed("\r\nERROR: Critical over temperature\r\n");
-                printBrightRed("Cool device then reset\r\n");
-            }
-
-            // STEP 4: Turn on Channel 1 fan based on power dissipated - turn off after power level drops consistently for 30s
-            double PowerDisipated_OPA549 = (NOMINAL_SUPPLY_RAIL_V - (ArbPwrBooster.CH1.Measure.RMS_Voltage * ArbPwrBooster.CH1.PID->PotStep / ArbPwrBooster.CH1.PID->MaxStepValue)) * ArbPwrBooster.CH1.Measure.RMS_Current;
-            if ((ArbPwrBooster.CH1.OutputSwitch == ON) && (!ArbPwrBooster.CH1.Fan.Enable) && (PowerDisipated_OPA549 >= MAX_PD_WITHOUT_HEATSINK))
-            {
-                ArbPwrBooster.CH1.Fan.Enable = true;
-                ArbPwrBooster.CH1.Fan.FanOnDownCounter = FAN_ON_COUNTER_30S;
-                CH1_FAN_ENABLE();
-            }
-            if (ArbPwrBooster.CH1.Fan.Enable)
-            {
-                if (PowerDisipated_OPA549 < MAX_PD_WITHOUT_HEATSINK)
-                {
-                    ArbPwrBooster.CH1.Fan.FanOnDownCounter--;
-                    if (ArbPwrBooster.CH1.Fan.FanOnDownCounter == 0)
-                    {
-                        ArbPwrBooster.CH1.Fan.Enable = false;
-                        CH1_FAN_DISABLE();
-                    }
-                }
-                else
-                {
-                    ArbPwrBooster.CH1.Fan.FanOnDownCounter = FAN_ON_COUNTER_30S;
-                }
-            }
-
-
-            // STEP 4: Check for current limit CH 1 - Constant Current Mode
-            if ((ArbPwrBooster.CH1.OutputSwitch == ON) && (ArbPwrBooster.CH1.Limit.Enable))
-            {
-#ifdef PRINT_CC_PID_UPDATES
-                static uint16_t TickCount = 0;
-                static uint16_t DataUpdateCount = 0;
-                static bool PrintColumnHeader = true;
-                TickCount++;
-#endif
-                if (PID_updateDigitalPot(ArbPwrBooster.CH1.PID, ArbPwrBooster.CH1.Measure.RMS_Current, ArbPwrBooster.CH1.Limit.Current, (MONITOR_UPDATE_RATE * 1E-3)) == PID_UPDATE)
-                {
-                    if (LastPotValue != ArbPwrBooster.CH1.PID->PotStep)
-                    {
-                        MCP45HVX1_WriteWiperVerify(&hi2c1, A1A0_EXTERNAL_ADDR_CH1, ArbPwrBooster.CH1.PID->PotStep);
-                        LastPotValue = ArbPwrBooster.CH1.PID->PotStep;
-#ifdef PRINT_CC_PID_UPDATES
-                        if (PrintColumnHeader)
-                        {
-                            printf("\r\n\n#\tTick\tStep\tIrms\r\n");
-                            fflush(stdout);
-                            PrintColumnHeader = false;
-                        }
-                        DataUpdateCount++;
-                         char PrintMsg[100];
-                        sprintf(PrintMsg, "%d\t%d\t%d\t%2.3f\r\n", DataUpdateCount, TickCount, ArbPwrBooster.CH1.PID->PotStep, ArbPwrBooster.CH1.Measure.RMS_Current);
-                        printGreen(PrintMsg);
-#endif
-                    }
-                }
-            }
-            else
-            {
-#ifdef PRINT_CC_PID_UPDATES
-                TickCount = 0;
-                DataUpdateCount = 0;
-                PrintColumnHeader = true;
-#endif
-            }
-
-            // STEP 5: Check for current limit CH 2 - Constant Current Mode
-            // TODO: Hab add step 5 for channel 2
+        }
+        else
+        {
+            ArbPwrBooster.CH1.Fan.FanOnDownCounter = FAN_ON_COUNTER_30S;
         }
     }
 
-    // STEP 7: Make task inactive for a period of time
+    // STEP 5: Check for current limit CH 1 - Constant Current Mode
+    if ((ArbPwrBooster.CH1.OutputSwitch == ON) && (ArbPwrBooster.CH1.Limit.Enable))
+    {
+#ifdef PRINT_CC_PID_UPDATES
+        static uint16_t TickCount = 0;
+        static uint16_t DataUpdateCount = 0;
+        static bool PrintColumnHeader = true;
+        TickCount++;
+#endif
+        if (PID_updateDigitalPot(ArbPwrBooster.CH1.PID, ArbPwrBooster.CH1.Measure.RMS_Current, ArbPwrBooster.CH1.Limit.Current, (MONITOR_UPDATE_RATE * 1E-3)) == PID_UPDATE)
+        {
+            if (LastPotValue != ArbPwrBooster.CH1.PID->PotStep)
+            {
+                MCP45HVX1_WriteWiperVerify(&hi2c1, A1A0_EXTERNAL_ADDR_CH1, ArbPwrBooster.CH1.PID->PotStep);
+                LastPotValue = ArbPwrBooster.CH1.PID->PotStep;
+#ifdef PRINT_CC_PID_UPDATES
+                if (PrintColumnHeader)
+                {
+                    printf("\r\n\n#\tTick\tStep\tIrms\r\n");
+                    fflush(stdout);
+                    PrintColumnHeader = false;
+                }
+                DataUpdateCount++;
+                 char PrintMsg[100];
+                sprintf(PrintMsg, "%d\t%d\t%d\t%2.3f\r\n", DataUpdateCount, TickCount, ArbPwrBooster.CH1.PID->PotStep, ArbPwrBooster.CH1.Measure.RMS_Current);
+                printGreen(PrintMsg);
+#endif
+            }
+        }
+    }
+    else
+    {
+#ifdef PRINT_CC_PID_UPDATES
+        TickCount = 0;
+        DataUpdateCount = 0;
+        PrintColumnHeader = true;
+#endif
+    }
+
+    // CHANNEL 2 MONITOR AND CONTROL
+    // STEP 6: Turn on Channel 2 fan based on power dissipated - turn off after power level drops consistently for 30s
+    PowerDisipated_OPA549 = (NOMINAL_SUPPLY_RAIL_V - (ArbPwrBooster.CH2.Measure.RMS_Voltage * ArbPwrBooster.CH2.PID->PotStep / ArbPwrBooster.CH2.PID->MaxStepValue)) * ArbPwrBooster.CH2.Measure.RMS_Current;
+    if ((ArbPwrBooster.CH2.OutputSwitch == ON) && (!ArbPwrBooster.CH2.Fan.Enable) && (PowerDisipated_OPA549 >= MAX_PD_WITHOUT_HEATSINK))
+    {
+        ArbPwrBooster.CH2.Fan.Enable = true;
+        ArbPwrBooster.CH2.Fan.FanOnDownCounter = FAN_ON_COUNTER_30S;
+        CH2_FAN_ENABLE();
+    }
+    if (ArbPwrBooster.CH2.Fan.Enable)
+    {
+        if (PowerDisipated_OPA549 < MAX_PD_WITHOUT_HEATSINK)
+        {
+            ArbPwrBooster.CH2.Fan.FanOnDownCounter--;
+            if (ArbPwrBooster.CH2.Fan.FanOnDownCounter == 0)
+            {
+                ArbPwrBooster.CH2.Fan.Enable = false;
+                CH2_FAN_DISABLE();
+            }
+        }
+        else
+        {
+            ArbPwrBooster.CH2.Fan.FanOnDownCounter = FAN_ON_COUNTER_30S;
+        }
+    }
+
+    // STEP 7: Check for current limit CH 2 - Constant Current Mode
+    if ((ArbPwrBooster.CH2.OutputSwitch == ON) && (ArbPwrBooster.CH2.Limit.Enable))
+    {
+        if (PID_updateDigitalPot(ArbPwrBooster.CH2.PID, ArbPwrBooster.CH2.Measure.RMS_Current, ArbPwrBooster.CH2.Limit.Current, (MONITOR_UPDATE_RATE * 1E-3)) == PID_UPDATE)
+        {
+            if (LastPotValue != ArbPwrBooster.CH2.PID->PotStep)
+            {
+                MCP45HVX1_WriteWiperVerify(&hi2c1, A1A0_EXTERNAL_ADDR_CH2, ArbPwrBooster.CH2.PID->PotStep);
+                LastPotValue = ArbPwrBooster.CH2.PID->PotStep;
+            }
+        }
+    }
+
+    // STEP 8: Make task inactive for a period of time
     osDelay(MONITOR_UPDATE_RATE);
-
-
 
 } // END OF monitorTaskActions
 
@@ -837,8 +871,7 @@ bool systemMeasureWithinLimits(char *ErrorDescription, uint8_t *ErrorNumber)
     }
 
     // STEP 5: Check System Temperature
-    // TODO: Hab you only care about an upper limit not a lower
-    if ((ArbPwrBooster.SystemMeasure.TempDegreeC >= SYSTEM_TEMP_UPPER_LIMIT) || (ArbPwrBooster.SystemMeasure.TempDegreeC <= SYSTEM_TEMP_LOWER_LIMIT))
+    if (ArbPwrBooster.SystemMeasure.TempDegreeC >= SYSTEM_TEMP_UPPER_LIMIT)
     {
         *ErrorNumber |= (uint8_t)(1 << CONFIG_TEMP_MASK);
         if (!FirstErrorFound)

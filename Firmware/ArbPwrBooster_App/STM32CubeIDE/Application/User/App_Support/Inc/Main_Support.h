@@ -39,7 +39,7 @@ extern"C" {
 // Revisions
 #define FW_MAJOR_REV            0U
 #define FW_MINOR_REV            0U
-#define FW_TEST_REV             5U
+#define FW_TEST_REV             6U
 #define HW_REVISION             3U
 // BASE COLOR CH1
 #define CH1_BASE_COLOR          0xD4, 0xC7, 0x19
@@ -210,6 +210,8 @@ Type_ConfigParameterStatus loadConfigParameters(void);
 Type_ConfigParameterStatus saveConfigParameters(void);
 void switchOnAction_CH1(void);
 void switchOffAction_CH1(void);
+void switchOnAction_CH2(void);
+void switchOffAction_CH2(void);
 
 #ifdef __cplusplus
 }

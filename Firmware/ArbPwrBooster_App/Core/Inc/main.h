@@ -74,6 +74,8 @@ void Error_Handler(void);
 #define EN_FAN_1_GPIO_Port GPIOI
 #define LCD_DISP_Pin GPIO_PIN_12
 #define LCD_DISP_GPIO_Port GPIOI
+#define R_SHDN_2_Pin GPIO_PIN_0
+#define R_SHDN_2_GPIO_Port GPIOI
 #define EN_CH_1_Pin GPIO_PIN_8
 #define EN_CH_1_GPIO_Port GPIOA
 #define EN_FAN_2_Pin GPIO_PIN_7
