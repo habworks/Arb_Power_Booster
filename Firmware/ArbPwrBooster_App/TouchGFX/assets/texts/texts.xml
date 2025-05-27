@@ -83,10 +83,10 @@
         <Translation Language="GB">14.95</Translation>
       </Text>
       <Text Id="__SingleUse_UN4D" Alignment="Left" TypographyId="Default">
-        <Translation Language="GB">-00.000</Translation>
+        <Translation Language="GB">00.000</Translation>
       </Text>
       <Text Id="__SingleUse_NVNE" Alignment="Left" TypographyId="Default">
-        <Translation Language="GB">-00.000</Translation>
+        <Translation Language="GB">00.000</Translation>
       </Text>
       <Text Id="__SingleUse_BOXU" Alignment="Left" TypographyId="Default">
         <Translation Language="GB">0.000</Translation>

@@ -105,9 +105,9 @@
             "Type": "FlexButton",
             "Name": "flexButton_Config",
             "X": 198,
-            "Y": 192,
+            "Y": 199,
             "Width": 83,
-            "Height": 80,
+            "Height": 71,
             "Alpha": 0,
             "ButtonTrigger": {
               "Type": "ClickButtonTrigger"
@@ -116,7 +116,7 @@
               {
                 "Type": "BoxWithBorderButtonStyle",
                 "Width": 83,
-                "Height": 80,
+                "Height": 71,
                 "LockToFlexButtonSize": true,
                 "ColorReleased": {
                   "Green": 102,
@@ -142,9 +142,9 @@
             "Type": "ScalableImage",
             "Name": "scalableImage_Config",
             "X": 198,
-            "Y": 192,
+            "Y": 198,
             "Width": 84,
-            "Height": 80,
+            "Height": 74,
             "Filename": "__generated\\icon_theme_images_action_settings_50_50_5BAD2F.svg.png",
             "ScalingAlgorithm": "Nearest-neighbor"
           },
@@ -349,7 +349,7 @@
             "Name": "textArea_CH2_CurrentSet",
             "X": 262,
             "Y": 150,
-            "Width": 128,
+            "Width": 121,
             "Height": 24,
             "TextId": "__SingleUse_6SWA",
             "TextRotation": "0",
@@ -513,7 +513,7 @@
             "Name": "line1",
             "X": 236,
             "Width": 4,
-            "Height": 192,
+            "Height": 198,
             "Color": {
               "Red": 255,
               "Green": 255,
@@ -551,7 +551,7 @@
             "Name": "textArea_CH1_CurrentSet",
             "X": 22,
             "Y": 151,
-            "Width": 128,
+            "Width": 121,
             "Height": 24,
             "TextId": "__SingleUse_FFBY",
             "TextRotation": "0",

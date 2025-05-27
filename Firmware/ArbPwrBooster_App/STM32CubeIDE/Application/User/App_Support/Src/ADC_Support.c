@@ -194,6 +194,12 @@ void ADC13_StartConversion(void)
 * and its value should ideally be 4096 (12b ADC) (if input is System Reference Voltage) or the expected calculated
 * value. The Gain Error (GE) is calculated as Measured / Expected - no gain error would be a value of 1.0
 *
+* The counter var VS_UpdateCount was added.  This callback routine really runs for too long.  Without the
+* use of VS_UpdateCount the TouchGFX will crash.  VS_UpdateCount minimize the time time spent in this callback
+* by mostly not updating the VS supply rails - which in fact will not be changing by much, nor is there an RMS
+* associated calculation - just an average.  A value of 1000 is used for the delay but as little as 10 worked.
+* It is balance between update speed of the VS supply rail mean and the smoothness of the TouchGFX operation.
+*
 * ADC1 handles:
 *    Temperature
 *    3.3V measurement
@@ -242,6 +248,8 @@ void ADC13_StartConversion(void)
 ********************************************************************************************************/
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
+    static uint16_t VS_UpdateCount = 0;
+
     // STEP 1: ADC1 Conversions: Micro-Temp Sensor, System 3.3V
     if (hadc == &hadc1)
     {
@@ -262,14 +270,19 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
     if (hadc == &hadc3)
     {
         double ADC3_ErrorCompensatedCount;
-        // -VS Supply Rail
-        ADC3_ErrorCompensatedCount = ((double)ADC3_CountValue[RANK_1] - ADC_NVS_OFFSET_ERROR) / ADC_NVS_GAIN_ERROR;
-        writeTo_FIFO_Buffer(FIFO_NVS_Supply, ADC3_ErrorCompensatedCount);
-        ArbPwrBooster.SystemMeasure.Negative_VS = calculateSystemSupply(FIFO_NVS_Supply) * -1.0;
-        // +VS Supply Rail
-        ADC3_ErrorCompensatedCount = ((double)ADC3_CountValue[RANK_2] - ADC_PVS_OFFSET_ERROR) / ADC_PVS_GAIN_ERROR;
-        writeTo_FIFO_Buffer(FIFO_PVS_Supply, ADC3_ErrorCompensatedCount);
-        ArbPwrBooster.SystemMeasure.Positive_VS = calculateSystemSupply(FIFO_PVS_Supply);
+        VS_UpdateCount++;
+        if (VS_UpdateCount == 1000) // 1000 Value found by trial but it worked with as little as 10
+        {
+            // -VS Supply Rail
+            ADC3_ErrorCompensatedCount = ((double)ADC3_CountValue[RANK_1] - ADC_NVS_OFFSET_ERROR) / ADC_NVS_GAIN_ERROR;
+            writeTo_FIFO_Buffer(FIFO_NVS_Supply, ADC3_ErrorCompensatedCount);
+            ArbPwrBooster.SystemMeasure.Negative_VS = calculateSystemSupply(FIFO_NVS_Supply) * -1.0;
+            // +VS Supply Rail
+            ADC3_ErrorCompensatedCount = ((double)ADC3_CountValue[RANK_2] - ADC_PVS_OFFSET_ERROR) / ADC_PVS_GAIN_ERROR;
+            writeTo_FIFO_Buffer(FIFO_PVS_Supply, ADC3_ErrorCompensatedCount);
+            ArbPwrBooster.SystemMeasure.Positive_VS = calculateSystemSupply(FIFO_PVS_Supply);
+            VS_UpdateCount = 0;
+        }
         // Current Monitor CH1
         ADC3_ErrorCompensatedCount = ((double)ADC3_CountValue[RANK_3] - ADC_IMON1_OFFSET_ERROR) / ADC_IMON1_GAIN_ERROR;
         writeTo_FIFO_Buffer(FIFO_CH1_AmpMon, ADC3_ErrorCompensatedCount);

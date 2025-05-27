@@ -423,7 +423,7 @@ Type_ConfigParameterStatus loadConfigParameters(void)
         f_read(&ConfigFileObject, &CurrentLimit.Byte0, sizeof(double), &BytesRead);
         ArbPwrBooster.CH2.Limit.Current = CurrentLimit.Value;
         TotalBytesRead += BytesRead;
-        printf("Total Bytes Read = %d\r\n", (int)TotalBytesRead);
+        printf("Config file %d Bytes read\r\n", (int)TotalBytesRead);
         ConfigLoadStatus = (TotalBytesRead == ConfigParameterTotalBytes)? CONFIG_LOAD_OK : CONFIG_FILE_ERROR;
     }
 
@@ -499,7 +499,7 @@ Type_ConfigParameterStatus saveConfigParameters(void)
         CurrentLimit.Value = ArbPwrBooster.CH2.Limit.Current;
         f_write(&ConfigFileObject, &CurrentLimit.Byte0, sizeof(double), &BytesWritten);
         TotalBytesWritten += BytesWritten;
-        printf("Bytes Written to config file = %d\r\n", (int)TotalBytesWritten);
+        printf("Config file updated %d Bytes\r\n", (int)TotalBytesWritten);
         ConfigSaveStatus = (TotalBytesWritten == ConfigParameterTotalBytes)? CONFIG_SAVE_OK : CONFIG_FILE_ERROR;
     }
 

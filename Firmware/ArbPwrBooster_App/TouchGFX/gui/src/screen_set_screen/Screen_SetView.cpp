@@ -455,7 +455,7 @@ void Screen_SetView::incrementDigitUp(void)
 
 
 /********************************************************************************************************
-* @brief Decrement the active limit digit by one.  For integers the max it can be decremented to is -10 with
+* @brief Decrement the active limit digit by one.  For integers the max it can be decremented to is 0 with
 * no role over.  For all other digits the min is 0 and the role over is to 9.  Do not decrement if limit for
 * active channel is not enabled.
 *
@@ -493,8 +493,8 @@ void Screen_SetView::incrementDigitDown(void)
     case INTEGER:
     {
         Integer--;
-        if (Integer < -10)
-            Integer = -10;
+        if (Integer < 0)
+            Integer = 0;
     }
     break;
     case TENTHS:

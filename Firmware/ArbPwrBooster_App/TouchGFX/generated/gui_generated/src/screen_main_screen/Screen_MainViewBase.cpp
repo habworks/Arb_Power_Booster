@@ -20,16 +20,16 @@ Screen_MainViewBase::Screen_MainViewBase() :
     image_Background.setBitmap(touchgfx::Bitmap(BITMAP_DARK_THEME_IMAGES_BACKGROUNDS_480X272_WAVY_LINES_ID));
     add(image_Background);
 
-    flexButton_Config.setBoxWithBorderPosition(0, 0, 83, 80);
+    flexButton_Config.setBoxWithBorderPosition(0, 0, 83, 71);
     flexButton_Config.setBorderSize(0);
     flexButton_Config.setBoxWithBorderColors(touchgfx::Color::getColorFromRGB(0, 102, 153), touchgfx::Color::getColorFromRGB(0, 153, 204), touchgfx::Color::getColorFromRGB(0, 51, 102), touchgfx::Color::getColorFromRGB(51, 102, 153));
     flexButton_Config.setAlpha(0);
     flexButton_Config.setAction(flexButtonCallback);
-    flexButton_Config.setPosition(198, 192, 83, 80);
+    flexButton_Config.setPosition(198, 199, 83, 71);
     add(flexButton_Config);
 
     scalableImage_Config.setBitmap(touchgfx::Bitmap(BITMAP_ICON_THEME_IMAGES_ACTION_SETTINGS_50_50_5BAD2F_SVG_ID));
-    scalableImage_Config.setPosition(198, 192, 84, 80);
+    scalableImage_Config.setPosition(198, 198, 84, 74);
     scalableImage_Config.setScalingAlgorithm(touchgfx::ScalableImage::NEAREST_NEIGHBOR);
     add(scalableImage_Config);
 
@@ -154,7 +154,7 @@ Screen_MainViewBase::Screen_MainViewBase() :
     textArea_CH2.setTypedText(touchgfx::TypedText(T___SINGLEUSE_WRLI));
     add(textArea_CH2);
 
-    line1.setPosition(236, 0, 4, 192);
+    line1.setPosition(236, 0, 4, 198);
     line1Painter.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     line1.setPainter(line1Painter);
     line1.setStart(2, 0);
