@@ -169,19 +169,17 @@ void Screen_MainView::outputToggle_CH2(void)
     // STEP 1: Toggle the output relay ON / OFF
     if (ArbPwrBooster.CH2.OutputSwitch == OFF)
     {
-        CH2_OUTPUT_ENABLE();
+        switchOnAction_CH2();
         box_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_ON_BOX_COLOR));
         box_CH2_Enable.setAlpha(ALPAH_FULL_VISIBLE);
         textArea_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_ON_TXT_COLOR));
-        ArbPwrBooster.CH2.OutputSwitch = ON;
     }
     else
     {
-        CH2_OUTPUT_DISABLE();
+        switchOffAction_CH2();
         box_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_BOX_COLOR));
         box_CH2_Enable.setAlpha(ALPHA_50_VISIBLE);
         textArea_CH2_Enable.setColor(touchgfx::Color::getColorFromRGB(OUTPUT_OFF_TXT_COLOR));
-        ArbPwrBooster.CH2.OutputSwitch = OFF;
     }
     box_CH2_Enable.invalidate();
     textArea_CH2_Enable.invalidate();
