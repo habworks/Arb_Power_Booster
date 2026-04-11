@@ -1,20 +1,21 @@
 # Arbitrary Power Booster
 
-Based on an ARM Cortex M7 freatures a UI touch display and 2 channel power amplication for driving heavy loads.  Designed as a test bench hardware the device measures in True RMS with settable limits for power.  Features include:<br>
-Hardware: <br>
-  25W contineous per channel <br>
-  Wide operating voltage -14V < Vo < +14V <br>
-  Precision Absolute Value Divider <br>
-  SSR Input Protection <br>
-  Selectable Input Impedance <br>
-  +/- Inrush Current Limiter <br>
-Firmware: <br>
-  FreeRTOS OS <br>
-  UI Touch Interface 242x480 <br>
-  True RMS <br>
-  PID output control <br>
-  Fault Tolerant <br>
-  Smart Cooling <br>
+Based on an ARM Cortex M7 two channel power amplication for driving heavy loads according to real world inputs.  Designed as a test equipment the device measures in True RMS with settable limits for power.  Features include:<br>
+Hardware:
+- 25W continuous per channel  
+- Wide operating voltage -14V < Vo < +14V  
+- Precision Absolute Value Divider  
+- SSR Input Protection  
+- Selectable Input Impedance  
+- +/- Inrush Current Limiter  
+
+Firmware:
+- FreeRTOS OS  
+- UI Touch Interface 242x480  
+- True RMS  
+- PID output control  
+- Fault Tolerant  
+- Smart Cooling  
 <br>
 
 Hardware and Firmware 100% designed by:<br>
