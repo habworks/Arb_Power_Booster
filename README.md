@@ -16,7 +16,6 @@ Firmware:
 - PID output control  
 - Fault Tolerant  
 - Smart Cooling  
-<br>
 
 Hardware and Firmware 100% designed by:<br>
 Hab Collector<br>
