@@ -1,10 +1,29 @@
-PROJECT BACKGROUND:
-An embedded device is usually part of a bigger system.  That said, the provided supply rail to that device can contain noise content from every other device, motor, generator, etc. within that system.  But spectral noise is common to any supply rail and any combination of ceramic capacitors, ferrites and sometimes clamps can be sprinkled to achieve the desired result.  What I am more concerned with are systems where the supply rail is impacted by heavy abrupt loading that may include a regenerative factor.  Imagine a 12V supply rail with 2Vpkpk low frequency harmonic riding on it, or weird looking power surges, or weird looking brown outs, or some weird high energy circuit that disrupts that supply rail in a very noticeable way (not millivolts but volts).  Not so much high frequency, low amplitude, spectral noise, but lower frequency and abrupt, large disruptions in power.  Condition 1, nasty supply rail.  Condition 2, your embedded device may drive a heavy load, as such, it has a fair amount of bulk capacitance attached to the supply rail, so condition 2 covers an embedded device with a relatively large capacitive load.  
+# SoftCore SA Phase 1
 
-THE PROBLEM:
-So at your desk you can conjure up some fix on your board to adjust for this “heavy noise” on your supply rail, but, at your desk, how do you test it.  At your desk is your 12V lab grade power supply.  From your desk you cannot test your embedded device against its real world, super nasty, supply rail.  Your embedded device can only truly be tested within the system wherein lives said nasty supply rail.  Now imagine that “system” neither fits on your desk nor is in your state – maybe it’s at the customer site in TX.  So what do you do?  Or how does your product responds to varying battery voltages – you could wait days to simulate a discharge cycle and hours to charge to get one test result or you can recreate the charge, discharge cycle with your arb and test dozens of cycles in a few hours or minutes.  
+A complete Signal and Audio Spectrum Analyzer Project design based on the Xilinx Artix A7 FPGA.<br>
+FPGA, Hardware and Firmware 100% designed by:<br>
+Hab Collector<br>
+Principal Engineer<br>
+IMR Engineering, LLC<br>
 
-THE SOLUTION:
-As a home project I am designing the Arbitrary Power Booster some electronics that will mimic this supply rail / battery.  The basic premise is to use an arbitrary function generator to recreate what the corrupted supply rail (or battery charge / discharge) looks like.  The output of the arb is fed into a current boost amplifier of sorts, and the output of said device drives the input to DUT supply rail.  Some additional features include: a current limit, output connect / disconnect, 50Ω input, touch screen UI GUI, 2 channel, over current (PID constant current mode), etc.  The present design is targeted to support ±15V Supply rail with an input of ±1V to ±14V at 65WA and 8A peak.  NOTE: PDFs are 3D so be sure to enable 3D mode in your pdf browser.
+## Quick Links to IMR Cloud:
+See [Video Demo](https://imrengineeringcom-my.sharepoint.com/:v:/g/personal/hab_collector_imrengineering_com/IQCNRXcKcpunQ4q-7LwDUr22AYgADxUZiHp8gwkplrM7jkg?e=7BmwQX) from IMR Cloud<br>
+See [FPGA PL Block Diagram](https://imrengineeringcom-my.sharepoint.com/:b:/g/personal/hab_collector_imrengineering_com/IQCsjQ4P0sn3SLZj1Wicb67OAVSCE_0235o4riHvLBb0ygI?e=4maNbu) from IMR Cloud<br>
+See [User Manual & Technical Specification](https://imrengineeringcom-my.sharepoint.com/:b:/g/personal/hab_collector_imrengineering_com/IQB8uARxVN-PTYQCG0TAuSPwAWNce-_PQCCQfAmf1itzjjY?e=jp2Q4u) from IMR Cloud<br>
+See [Schematics PCB and BOM](https://imrengineeringcom-my.sharepoint.com/:b:/g/personal/hab_collector_imrengineering_com/IQB8uARxVN-PTYQCG0TAuSPwAWNce-_PQCCQfAmf1itzjjY?e=jp2Q4u) from IMR Cloud<br>
 
-The hardware design (see attached Arb_Power_Booster.pdf) on this project is mostly analog and firmware.  To expedite the design the touchscreen is an off the self-development board to which I add my code (you can review the code base in github).  The GUI looks like ArbPwrBoosterScreenView.docx.
+## Project Folders:
+
+| Folder | Description |
+|-----------|-------------|
+| Audio | PCM-16 files used for audio spectrum playback|
+| Bootloader_Softcore_SA | Firmware Project Bootloader|
+| Documents | UMTS, Images, and reference material|
+| FPGA_RTL_IP | Custom RTL IP created in Verilog for this project|
+| Hardware | Hardware Design in Circuit Studio: Schematics, PCB, BOM|
+| PL_Softcore_SA | Processor Logic Vivado Project Files|
+| PS_Softcore_SA | Application Firmware|
+| Simulation | Spice Modle Simulation (LT Spice)|
+
+
+

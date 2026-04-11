@@ -1,1 +1,8 @@
-Record=TopLevelDocument|FileName=ArbPwrBoost_P1.SchDoc
+Record=TopLevelDocument|FileName=ArbPwrBoost_P1.SchDoc|SheetNumber=1
+Record=NoMainPathDocument|SourceDocument=ArbPwrBoost_P1.SchDoc|FileName=ArbPwrBoost_P2.SchDoc|SheetNumber=2
+Record=NoMainPathDocument|SourceDocument=ArbPwrBoost_P1.SchDoc|FileName=ArbPwrBoost_P3.SchDoc|SheetNumber=3
+Record=NoMainPathDocument|SourceDocument=ArbPwrBoost_P1.SchDoc|FileName=ArbPwrBoost_P4.SchDoc|SheetNumber=4
+Record=NoMainPathDocument|SourceDocument=ArbPwrBoost_P1.SchDoc|FileName=ArbPwrBoost_P5.SchDoc|SheetNumber=5
+Record=NoMainPathDocument|SourceDocument=ArbPwrBoost_P1.SchDoc|FileName=ArbPwrBoost_P6.SchDoc|SheetNumber=6
+Record=NoMainPathDocument|SourceDocument=ArbPwrBoost_P1.SchDoc|FileName=ArbPwrBoost_P7.SchDoc|SheetNumber=7
+Record=NoMainPathDocument|SourceDocument=ArbPwrBoost_P1.SchDoc|FileName=ArbPwrBoost_P8.SchDoc|SheetNumber=8
