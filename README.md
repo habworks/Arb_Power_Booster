@@ -1,5 +1,5 @@
 # Arbitrary Power Booster
-<img src="Documents/Images/PCBA_Top.png" width="25%">
+<img src="Documents/Images/PCBA_View.png" width="25%">
 
 ## Quick Visual Links:
 See [Video Demo](https://imrengineeringcom-my.sharepoint.com/:v:/g/personal/hab_collector_imrengineering_com/ETz-QbAvxjtEm_Lhyh-R2pUBUKSNs67Pcy3YFl8mtPB_mw?e=GsLUFl&referrer=Outlook.Win32&referrerScenario=email-linkwithoutembed) from IMR Cloud<br>
